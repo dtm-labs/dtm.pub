@@ -1,0 +1,17 @@
+{
+  "name": "dtm-doc",
+  "version": "0.0.1",
+  "repository": "git@github.com:yedf/yedf.github.io.git",
+  "author": "yedf",
+  "license": "MIT",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "vitepress": "^0.15.6",
+    "husky": "^7.0.0"
+  }
+}
