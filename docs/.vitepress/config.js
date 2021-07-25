@@ -28,23 +28,28 @@ module.exports = {
           ]
         },
         {
-          text: '实践',
+          text: '概况',
           children: [
             {
               text: '架构',
-              link: '/practice/arch'
+              link: '/summary/arch'
             },
             {
-              text: '项目组织',
-              link: '/practice/org'
+              text: '代码概况',
+              link: '/summary/code'
+            },
+          ]
+        },
+        {
+          text: '实践',
+          children: [
+            {
+              text: 'SAGA',
+              link: '/practice/saga'
             },
             {
               text: 'TCC',
               link: '/practice/tcc'
-            },
-            {
-              text: 'SAGA',
-              link: '/practice/saga'
             },
             {
               text: 'XA',
@@ -57,6 +62,10 @@ module.exports = {
             {
               text: '其他',
               link: '/practice/other'
+            },
+            {
+              text: '选择合适的模式',
+              link: '/practice/choice'
             }
           ]
         },
