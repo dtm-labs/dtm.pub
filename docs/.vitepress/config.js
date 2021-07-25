@@ -24,35 +24,39 @@ module.exports = {
             {
               text: '开始',
               link: '/guide/start'
-            },
-            {
-              text: '架构',
-              link: '/guide/arch'
             }
           ]
         },
         {
-          text: '事务模式',
+          text: '实践',
           children: [
             {
+              text: '架构',
+              link: '/practice/arch'
+            },
+            {
+              text: '项目组织',
+              link: '/practice/org'
+            },
+            {
               text: 'TCC',
-              link: '/trans/tcc'
+              link: '/practice/tcc'
             },
             {
               text: 'SAGA',
-              link: '/trans/saga'
+              link: '/practice/saga'
             },
             {
               text: 'XA',
-              link: '/trans/xa'
+              link: '/practice/xa'
             },
             {
               text: '事务消息',
-              link: '/trans/msg'
+              link: '/practice/msg'
             },
             {
               text: '其他',
-              link: '/trans/other'
+              link: '/practice/other'
             }
           ]
         },
