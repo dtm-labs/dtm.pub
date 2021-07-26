@@ -92,6 +92,10 @@ module.exports = {
             {
               text: '其他框架',
               link: '/other/opensource'
+            },
+            {
+              text: '谁在用',
+              link: '/other/using'
             }
           ]
         },
