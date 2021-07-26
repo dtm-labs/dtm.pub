@@ -14,6 +14,10 @@ module.exports = {
           text: '基础',
           children: [
             {
+              text: '分布式事务理论',
+              link: '/guide/theory'
+            },
+            {
               text: '安装',
               link: '/guide/install'
             },
@@ -88,10 +92,6 @@ module.exports = {
             {
               text: '其他框架',
               link: '/other/opensource'
-            },
-            {
-              text: '分布式事务',
-              link: '/other/distributed'
             }
           ]
         },

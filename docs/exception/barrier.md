@@ -1,5 +1,7 @@
 # 子事务屏障
 
+## 功能
+
 我们在dtm中，首创了子事务屏障技术，使用该技术，能够达到这个效果，看示意图：
 
 ![barrier](../imgs/barrier.jpg)
@@ -8,7 +10,7 @@
 子事务屏障提供了方法ThroughBarrierCall，方法的原型为：
 
 
-```
+``` go
 func ThroughBarrierCall(db *sql.DB, transInfo *TransInfo, busiCall BusiFunc)
 ```
 
@@ -16,7 +18,7 @@ func ThroughBarrierCall(db *sql.DB, transInfo *TransInfo, busiCall BusiFunc)
 
 子事务屏障会管理TCC、SAGA、事务消息等，也可以扩展到其他领域
 
-## 子事务屏障原理
+## 原理
 
 子事务屏障技术的原理是，在本地数据库，建立分支事务状态表sub_trans_barrier，唯一键为全局事务id-子事务id-子事务分支名称（try|confirm|cancel）
 
@@ -35,8 +37,14 @@ func ThroughBarrierCall(db *sql.DB, transInfo *TransInfo, busiCall BusiFunc)
 
 对于SAGA、事务消息，也是类似的机制。
 
-## 子事务屏障小结
+## 小结
 
-子事务屏障技术，为DTM首创，它的意义在于设计简单易实现的算法，提供了简单易用的接口，在这两项的帮助下，开发人员彻底的从网络异常的处理中解放出来。原先需要投入一位架构师处理这类异常，借助dtm的子事务屏障，只需要一个高级开发工程师就可以完成
+子事务屏障技术，为DTM首创，它的意义在于
+
+- 算法简单易实现
+- 系统统一的解决方案，易维护
+- 提供了简单易用的接口，易使用
+
+在这子事务屏障技术的帮助下，开发人员彻底的从网络异常的处理中解放出来。原先需要投入一位架构师处理这类异常，借助dtm的子事务屏障，只需要一个高级开发工程师就可以完成
 
 该技术目前需要搭配DTM事务管理器，目前SDK已经提供给go语言的开发者。其他语言的sdk正在规划中。对于其他的分布式事务框架，只要提供了合适的分布式事务信息，也能够按照上述原理，快速实现该技术。
