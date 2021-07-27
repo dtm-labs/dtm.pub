@@ -22,7 +22,7 @@
 
 ![msg_normal](../imgs/msg_normal.jpg)
 
-我们通过dtm来完成一个普通的事务消息分布式事务[examples/main_msg]()：
+我们通过dtm来完成一个普通的事务消息分布式事务[examples/main_msg](https://github.com/yedf/dtm/blob/main/examples/main_msg.go)：
 
 ``` go
 	logrus.Printf("a busi transaction begin")
