@@ -5,6 +5,10 @@ module.exports = {
   head: [['link', { rel: 'icon', type: 'image/jpeg', href: '/dtm.jpg' }]],
   themeConfig: {
     logo: '/dtm.jpg',
+    nav: [
+      { text: 'Github', link: 'https://github.com/yedf/dtm' },
+      { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
+    ],
     sidebar: {
       '/config/': 'auto',
       '/plugins': 'auto',
