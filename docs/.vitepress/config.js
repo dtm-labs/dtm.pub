@@ -2,7 +2,10 @@ module.exports = {
   title: 'DTM教程',
   description: 'GO语言分布式事务管理服务',
   lang: 'zh-CN',
-  head: [['link', { rel: 'icon', type: 'image/jpeg', href: '/dtm.jpg' }]],
+  head: [
+    ['link', { rel: 'icon', type: 'image/jpeg', href: '/dtm.jpg' }],
+    ['script', { defer: true, type: 'text/javascript', src: 'https://s9.cnzz.com/z_stat.php?id=1280154965&web_id=1280154965' }]
+  ],
   themeConfig: {
     logo: '/dtm.jpg',
     nav: [
