@@ -8,6 +8,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs",
+    "docs:pub": "vitepress build docs && scp -r docs/.vitepress/dist ubuntu@s.dtm.pub:/data/dtm-docs/",
     "prepare": "husky install"
   },
   "devDependencies": {
