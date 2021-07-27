@@ -21,7 +21,19 @@ DTM是首款golang分布式事务管理框架，与其他框架不同的是，DT
 
 受邀参加中国数据库大会分享[多语言环境下分布式事务实践](http://dtcc.it168.com/yicheng.html#b9)
 
-<a class="button" href="../other/opensource">与seata对比</a>
+<a style="
+    background-color:#4fc08d;
+    font-size: 0.9em;
+    color: #fff;
+    margin: 0.2em 0;
+    width: 200px;
+    text-align: center;
+    padding: 12px 24px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 2em;
+    font-weight: 600;
+" href="../other/opensource">与seata对比</a>
 
 ## 起步
 
