@@ -21,6 +21,12 @@ DTM是首款golang分布式事务管理框架，与其他框架不同的是，DT
 
 受邀参加中国数据库大会分享[多语言环境下分布式事务实践](http://dtcc.it168.com/yicheng.html#b9)
 
+## 谁在使用dtm
+
+[Ivydad 常青藤爸爸](https://ivydad.com)
+
+[Eglass 视咖镜小二](https://epeijing.cn)
+
 <a style="
     background-color:#4fc08d;
     font-size: 0.9em;
@@ -59,7 +65,7 @@ DTM是首款golang分布式事务管理框架，与其他框架不同的是，DT
 	saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
 		// 添加一个TransOut的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransOutCompensate"
 		Add(qsBusi+"/TransOut", qsBusi+"/TransOutCompensate", req).
-		// 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransInCompensate"
+		// 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransIn"， 逆向操作为url: qsBusi+"/TransInCompensate"
 		Add(qsBusi+"/TransIn", qsBusi+"/TransInCompensate", req)
 	// 提交saga事务，dtm会完成所有的子事务/回滚所有的子事务
 	err := saga.Submit()
@@ -68,18 +74,30 @@ DTM是首款golang分布式事务管理框架，与其他框架不同的是，DT
 该分布式事务中，模拟了一个跨行转账分布式事务中的场景，全局事务包含TransOut（转出子事务）和TransIn（转入子事务），每个子事务都包含正向操作和逆向补偿，定义如下：
 
 ``` go
+func qsAdjustBalance(uid int, amount int) (interface{}, error) {
+	err := dbGet().Transaction(func(tx *gorm.DB) error {
+		return tx.Model(&UserAccount{}).Where("user_id = ?", uid).Update("balance", gorm.Expr("balance + ?", amount)).Error
+	})
+	if err != nil {
+		return nil, err
+	}
+	return M{"dtm_result": "SUCCESS"}, nil
+}
+
+func qsAddRoute(app *gin.Engine) {
 	app.POST(qsBusiAPI+"/TransIn", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return M{"dtm_result": "SUCCESS"}, nil
+		return qsAdjustBalance(2, 30)
 	}))
 	app.POST(qsBusiAPI+"/TransInCompensate", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return M{"dtm_result": "SUCCESS"}, nil
+		return qsAdjustBalance(2, -30)
 	}))
 	app.POST(qsBusiAPI+"/TransOut", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return M{"dtm_result": "SUCCESS"}, nil
+		return qsAdjustBalance(1, -30)
 	}))
 	app.POST(qsBusiAPI+"/TransOutCompensate", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return M{"dtm_result": "SUCCESS"}, nil
+		return qsAdjustBalance(1, 30)
 	}))
+}
 ```
 
 整个事务最终成功完成，时序图如下：
