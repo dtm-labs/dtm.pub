@@ -37,55 +37,47 @@ xa commit '4fPqCNTYeSG'
 func XaSetup(app *gin.Engine) {
 	app.POST(BusiAPI+"/TransInXa", common.WrapHandler(xaTransIn))
 	app.POST(BusiAPI+"/TransOutXa", common.WrapHandler(xaTransOut))
-	config.Mysql["database"] = "dtm_busi"
 	var err error
-	XaClient, err = dtmcli.NewXaClient(DtmServer, config.Mysql, app, Busi+"/xa")
+	XaClient, err = dtmcli.NewXaClient(DtmServer, config.DB, Busi+"/xa", func(path string, xa *dtmcli.XaClient) {
+		app.POST(path, common.WrapHandler(func(c *gin.Context) (interface{}, error) {
+			return xa.HandleCallback(c.Query("gid"), c.Query("branch_id"), c.Query("action"))
+		}))
+	})
 	e2p(err)
 }
 
 // XaFireRequest 注册全局XA事务，调用XA的分支
 func XaFireRequest() string {
 	gid := dtmcli.MustGenGid(DtmServer)
-	err := XaClient.XaGlobalTransaction(gid, func(xa *dtmcli.Xa) (rerr error) {
-		defer common.P2E(&rerr)
-		req := &TransReq{Amount: 30}
-		resp, err := xa.CallBranch(req, Busi+"/TransOutXa")
-		common.CheckRestySuccess(resp, err)
-		resp, err = xa.CallBranch(req, Busi+"/TransInXa")
-		common.CheckRestySuccess(resp, err)
-		return nil
+	res, err := XaClient.XaGlobalTransaction(gid, func(xa *dtmcli.Xa) (interface{}, error) {
+		resp, err := xa.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOutXa")
+		if dtmcli.IsFailure(resp, err) {
+			return resp, err
+		}
+		return xa.CallBranch(&TransReq{Amount: 30}, Busi+"/TransInXa")
 	})
-	e2p(err)
+	dtmcli.PanicIfFailure(res, err)
 	return gid
 }
 
 func xaTransIn(c *gin.Context) (interface{}, error) {
-	err := XaClient.XaLocalTransaction(c, func(db *common.DB, xa *dtmcli.Xa) (rerr error) {
-		req := reqFrom(c)
-		if req.TransInResult != "SUCCESS" {
-			return fmt.Errorf("tranIn FAILURE")
+	return XaClient.XaLocalTransaction(c, func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+		if reqFrom(c).TransInResult == "FAILURE" {
+			return M{"dtm_result": "FAILURE"}, nil
 		}
-		dbr := db.Exec("update user_account set balance=balance+? where user_id=?", req.Amount, 2)
-		return dbr.Error
+		_, err := common.SdbExec(db, "update dtm_busi.user_account set balance=balance+? where user_id=?", reqFrom(c).Amount, 2)
+		return M{"dtm_result": "SUCCESS"}, err
 	})
-	if err != nil && strings.Contains(err.Error(), "FAILURE") {
-		return M{"dtm_result": "FAILURE"}, nil
-	}
-	e2p(err)
-	return M{"dtm_result": "SUCCESS"}, nil
 }
 
 func xaTransOut(c *gin.Context) (interface{}, error) {
-	err := XaClient.XaLocalTransaction(c, func(db *common.DB, xa *dtmcli.Xa) (rerr error) {
-		req := reqFrom(c)
-		if req.TransOutResult != "SUCCESS" {
-			return fmt.Errorf("tranOut failed")
+	return XaClient.XaLocalTransaction(c, func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+		if reqFrom(c).TransOutResult == "FAILURE" {
+			return M{"dtm_result": "FAILURE"}, nil
 		}
-		dbr := db.Exec("update user_account set balance=balance-? where user_id=?", req.Amount, 1)
-		return dbr.Error
+		_, err := common.SdbExec(db, "update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
+		return M{"dtm_result": "SUCCESS"}, err
 	})
-	e2p(err)
-	return M{"dtm_result": "SUCCESS"}, nil
 }
 ```
 

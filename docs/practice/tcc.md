@@ -17,12 +17,12 @@ TCC分为3个阶段
 我们来完成一个最简单的TCC：
 
 ``` go
-err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (rerr error) {
-  res1, rerr := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
-  e2p(rerr)
-  res2, rerr := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")
-  logrus.Printf("tcc returns: %s, %s", res1.String(), res2.String())
-  return
+ret, err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (interface{}, error) {
+  resp, err := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
+  if dtmcli.IsFailure(resp, err) {
+    return resp, err
+  }
+  return tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")
 })
 ```
 
@@ -33,7 +33,7 @@ err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (rerr e
 // dtm dtm服务器地址
 // gid 全局事务id
 // tccFunc tcc事务函数，里面会定义全局事务的分支
-func TccGlobalTransaction(dtm string, gid string, tccFunc TccGlobalFunc) (rerr error)
+func TccGlobalTransaction(dtm string, gid string, tccFunc TccGlobalFunc) (ret interface{}, rerr error)
 ```
 
 开启成功之后，会调用第三个参数传递的函数tccFunc。我们在这个函数的内部调用了CallBranch来定义了两个子事务TransOut和TransIn。
@@ -65,28 +65,24 @@ res2, rerr := tcc.CallBranch(&TransReq{Amount: 30, TransInResult: "FAILURE"}, Bu
 tcc支持嵌套的子事务，代码如下(摘自[examples/main_tcc](https://github.com/yedf/dtm/blob/main/examples/main_tcc.go))：
 
 ``` go
-err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (rerr error) {
-  res1, rerr := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
-  e2p(rerr)
-  res2, rerr := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransInTccParent", Busi+"/TransInConfirm", Busi+"/TransInRevert")
-  e2p(rerr)
-  logrus.Printf("tcc returns: %s, %s", res1.String(), res2.String())
-  return
+ret, err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (interface{}, error) {
+  resp, err := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
+  if dtmcli.IsFailure(resp, err) {
+    return resp, err
+  }
+  return tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransInTccParent", Busi+"/TransInConfirm", Busi+"/TransInRevert")
 })
 ```
 
 这里的TransInTccParent子事务，里面会再调用TransIn子事务，代码如下：
 
 ``` go
-	app.POST(BusiAPI+"/TransInTccParent", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		tcc, err := dtmcli.TccFromReq(c)
-		e2p(err)
-		req := reqFrom(c)
-		logrus.Printf("TransInTccParent ")
-		_, rerr := tcc.CallBranch(&TransReq{Amount: req.Amount}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")
-		e2p(rerr)
-		return M{"dtm_result": "SUCCESS"}, nil
-	}))
+app.POST(BusiAPI+"/TransInTccParent", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
+  tcc, err := dtmcli.TccFromReq(c)
+  e2p(err)
+  logrus.Printf("TransInTccParent ")
+  return tcc.CallBranch(&TransReq{Amount: reqFrom(c).Amount}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")
+}))
 ```
 
 子事务嵌套时，从传入的请求中构建tcc对象，然后就能够正常使用tcc对象，进行相关的事务。
