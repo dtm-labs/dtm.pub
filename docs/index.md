@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /dtm.jpg
+heroImage: /dtm.svg
 actionText: 开始
 actionLink: /guide/start
 

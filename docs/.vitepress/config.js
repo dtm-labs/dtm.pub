@@ -3,11 +3,11 @@ module.exports = {
   description: 'GO语言分布式事务管理服务',
   lang: 'zh-CN',
   head: [
-    ['link', { rel: 'icon', type: 'image/jpeg', href: '/dtm.jpg' }],
+    ['link', { rel: 'icon', type: 'image/svg', href: '/dtm.svg' }],
     ['script', { defer: true, type: 'text/javascript', src: 'https://s9.cnzz.com/z_stat.php?id=1280154965&web_id=1280154965' }]
   ],
   themeConfig: {
-    logo: '/dtm.jpg',
+    logo: '/dtm.svg',
     nav: [
       { text: 'Github', link: 'https://github.com/yedf/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
