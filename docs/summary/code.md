@@ -87,3 +87,9 @@ func BaseAddRoute(app *gin.Engine) {
 客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-node](https://github.com/yedf/dtmcli-node)
 
 示例: [https://github.com/yedf/dtmcli-node-sample](https://github.com/yedf/dtmcli-node-sample)
+
+### dotnet
+
+客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-csharp](https://github.com/yedf/dtmcli-csharp)
+
+示例: [https://github.com/yedf/dtmcli-csharp-sample](https://github.com/yedf/dtmcli-csharp-sample)
