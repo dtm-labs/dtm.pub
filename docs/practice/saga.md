@@ -9,7 +9,7 @@ SAGA最初出现在1987年Hector Garcaa-Molrna & Kenneth Salem发表的论文[SA
 
 ## 简单的SAGA
 
-我们来完成一个最简单的TCC：
+我们来完成一个最简单的SAGA：
 
 ``` go
 req := &gin.H{"amount": 30} // 微服务的载荷
