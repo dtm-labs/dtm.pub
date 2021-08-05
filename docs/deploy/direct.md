@@ -13,9 +13,7 @@ go build app/main.go
 
 ## 配置
 
-您可以设置相关的环境变量(参见[Docker部署](./docker))，也可以在工作目录下，创建conf.yml文件
-```
-```
+您可以设置相关的环境变量(参见[部署基础](./base))，也可以在工作目录下，参考[配置样板文件](https://github.com/yedf/dtm/blob/main/conf.sample.yml)创建conf.yml文件
 
 ## 启动
 

@@ -110,7 +110,7 @@ module.exports = {
             },
             {
               text: '直接部署',
-              link: '/deploy/app'
+              link: '/deploy/direct'
             },
             {
               text: '运维',

@@ -3,10 +3,10 @@
 ## Docker命令
 
 ``` bash
-docker run --name dtm -p 8080:8080 -e DSN='' yedf/dtm:latest
+docker run --name dtm -p 8080:8080 -e DB_HOST='localhost' DB_USER='root' DB_PASSWORD='' yedf/dtm:latest
 ```
 
-这里的DSN为mysql的连接信息
+各个参数，详见前一节中的环境变量
 
 ## docker-compose启动
 docker-compose.yaml:
@@ -16,26 +16,21 @@ services:
   dtm:
     image: yedf/dtm
     environment:
-      - DSN=''
+      - DB_HOST: localhost
+      - DB_USER: root
+      - DB_PASSWORD: ''
+      - DB_PORT: 3306
+      - TRANS_CRON_INTERVAL: 10
     ports:
       - '8080:8080'
 ```
 
-## 支持的环境变量
+## 容器其他命令
 
-### DB_DRIVER
+交互式使用dtm容器
 
-指定数据库类型
+``` docker exec -it dtm sh ```
 
-取值为: mysql 或 postgres
+查看日志
 
-### DB_DSN
-
-指定数据库的用户名密码，跟go语言的数据库驱动相关，mysql和postgres的格式是不同的
-
-- 当DB_DRIVER=="mysql": 格式类似：
-- 当DB_DRIVER=="postgres": 格式类似：
-
-### CRON_JOB_INTERVAL
-
-轮询检查超时需处理的时间间隔，默认为10，表示大约10秒，会检查一次数据库中超时的全局事务
+```docker logs -f dtm ```

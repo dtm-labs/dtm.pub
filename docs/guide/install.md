@@ -50,7 +50,7 @@ cp conf.sample.yml conf.yml # 修改conf.yml
 然后运行下面命令
 
 ``` bash
-docker-compose -f compose.mysql.yml up
+docker-compose -f aux/compose.mysql.yml up
 ```
 
 #### 启动
