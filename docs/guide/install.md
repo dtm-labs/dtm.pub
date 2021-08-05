@@ -22,7 +22,7 @@ docker-compose up
 
 ### 准备工作
 
-首先您需要先[安装go 15+](https://golang.google.cn/)
+首先您需要先[安装go 1.15+](https://golang.google.cn/)
 
 然后运行下面命令
 
