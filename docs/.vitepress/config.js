@@ -75,6 +75,10 @@ module.exports = {
               link: '/practice/other'
             },
             {
+              text: '等待事务结果',
+              link: '/practice/wait'
+            },
+            {
               text: '选择合适的模式',
               link: '/practice/choice'
             }
