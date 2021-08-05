@@ -94,6 +94,31 @@ module.exports = {
           ]
         },
         {
+          text: '部署运维',
+          children: [
+            {
+              text: '基础',
+              link: '/deploy/base'
+            },
+            {
+              text: 'Docker部署',
+              link: '/deploy/docker'
+            },
+            {
+              text: '线上部署',
+              link: '/deploy/online'
+            },
+            {
+              text: '直接部署',
+              link: '/deploy/app'
+            },
+            {
+              text: '运维',
+              link: '/deploy/maintain'
+            }
+          ]
+        },
+        {
           text: '其他',
           children: [
             {

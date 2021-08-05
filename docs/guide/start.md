@@ -28,7 +28,7 @@ DTM是首款golang分布式事务管理框架，与其他框架不同的是，DT
 [Eglass 视咖镜小二](https://epeijing.cn)
 
 <a style="
-    background-color:#4fc08d;
+    background-color:#646cff;
     font-size: 0.9em;
     color: #fff;
     margin: 0.2em 0;
