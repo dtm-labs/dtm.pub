@@ -18,3 +18,7 @@ go build app/main.go
 ## 启动
 
 dtm会监听8080端口
+
+```
+./main dtmsvr
+```
