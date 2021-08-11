@@ -8,7 +8,7 @@ dtm暂不支持apt/yum/brew等方式直接安装，您需要通过go环境，编
 
 您需要有go 1.15以上的环境，通过下面命令编译出二进制文件
 ```
-go build app/main.go
+go build -o dtm app/main.go
 ```
 
 ## 配置
@@ -20,5 +20,5 @@ go build app/main.go
 dtm会监听8080端口
 
 ```
-./main dtmsvr
+./dtm dtmsvr
 ```
