@@ -6,7 +6,7 @@ actionLink: /guide/start
 
 features:
   - title: 💡 极易接入
-    details: 支持HTTP，提供非常简单的接口，极大降低上手分布式事务的难度，新手也能快速接入
+    details: 支持HTTP、GRPC，提供非常简单的接口，极大降低上手分布式事务的难度，新手也能快速接入
   - title: ⚡️ 使用简单
     details: 开发者不再担心悬挂、空补偿、幂等各类问题，框架层代为处理
   - title: 🛠️ 多语言支持

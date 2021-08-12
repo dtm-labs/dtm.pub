@@ -32,6 +32,8 @@ xa commit '4fPqCNTYeSG'
 
 由于XA模式，需要用到本地数据库的功能，不能复用之前的通用处理函数，因此整个代码量会比其他几种模式的最简单示例要复杂一些：
 
+### http
+
 ``` go
 // XaSetup 挂载http的api，创建XaClient
 func XaSetup(app *gin.Engine) {
@@ -79,6 +81,53 @@ func xaTransOut(c *gin.Context) (interface{}, error) {
 		return M{"dtm_result": "SUCCESS"}, err
 	})
 }
+```
+
+### grpc
+
+``` go
+	XaGrpcClient = dtmgrpc.NewXaGrpcClient(DtmGrpcServer, config.DB, BusiGrpc+"/examples.Busi/XaNotify")
+
+	gid := dtmgrpc.MustGenGid(DtmGrpcServer)
+	busiData := dtmcli.MustMarshal(&TransReq{Amount: 30})
+	err := XaGrpcClient.XaGlobalTransaction(gid, func(xa *dtmgrpc.XaGrpc) error {
+		_, err := xa.CallBranch(busiData, BusiGrpc+"/examples.Busi/TransOutXa")
+		if err != nil {
+			return err
+		}
+		_, err = xa.CallBranch(busiData, BusiGrpc+"/examples.Busi/TransInXa")
+		return err
+	})
+
+func (s *busiServer) XaNotify(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	err := XaGrpcClient.HandleCallback(in.Info.Gid, in.Info.BranchID, in.Info.BranchType)
+	return &emptypb.Empty{}, dtmgrpc.Result2Error(nil, err)
+}
+
+func (s *busiServer) TransInXa(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, XaGrpcClient.XaLocalTransaction(in, func(db *sql.DB, xa *dtmgrpc.XaGrpc) error {
+		if req.TransInResult == "FAILURE" {
+			return status.New(codes.Aborted, "user return failure").Err()
+		}
+		_, err := dtmcli.SdbExec(db, "update dtm_busi.user_account set balance=balance+? where user_id=?", req.Amount, 2)
+		return err
+	})
+}
+
+func (s *busiServer) TransOutXa(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, XaGrpcClient.XaLocalTransaction(in, func(db *sql.DB, xa *dtmgrpc.XaGrpc) error {
+		if req.TransOutResult == "FAILURE" {
+			return status.New(codes.Aborted, "user return failure").Err()
+		}
+		_, err := dtmcli.SdbExec(db, "update dtm_busi.user_account set balance=balance-? where user_id=?", req.Amount, 1)
+		return err
+	})
+}
+
 ```
 
 上面的代码首先注册了一个全局XA事务，然后添加了两个子事务TransOut、TransIn。子事务全部执行成功之后，提交给dtm。dtm收到提交的xa全局事务后，会调用所有子事务的xa commit，完成整个xa事务。

@@ -16,13 +16,28 @@ TCC分为3个阶段
 
 我们来完成一个最简单的TCC：
 
+### http
 ``` go
-ret, err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (interface{}, error) {
+err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty.Response, error) {
   resp, err := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
-  if dtmcli.IsFailure(resp, err) {
+  if err != nil {
     return resp, err
   }
   return tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")
+})
+```
+
+### grpc
+``` go
+gid := dtmgrpc.MustGenGid(DtmGrpcServer)
+err := dtmgrpc.TccGlobalTransaction(DtmGrpcServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
+  data := dtmcli.MustMarshal(&TransReq{Amount: 30})
+  _, err := tcc.CallBranch(data, BusiGrpc+"/examples.Busi/TransOut", BusiGrpc+"/examples.Busi/TransOutConfirm", BusiGrpc+"/examples.Busi/TransOutRevert")
+  if err != nil {
+    return err
+  }
+  _, err = tcc.CallBranch(data, BusiGrpc+"/examples.Busi/TransIn", BusiGrpc+"/examples.Busi/TransInConfirm", BusiGrpc+"/examples.Busi/TransInRevert")
+  return err
 })
 ```
 
@@ -33,7 +48,7 @@ ret, err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (i
 // dtm dtm服务器地址
 // gid 全局事务id
 // tccFunc tcc事务函数，里面会定义全局事务的分支
-func TccGlobalTransaction(dtm string, gid string, tccFunc TccGlobalFunc) (ret interface{}, rerr error)
+func TccGlobalTransaction(dtm string, gid string, tccFunc TccGlobalFunc) error
 ```
 
 开启成功之后，会调用第三个参数传递的函数tccFunc。我们在这个函数的内部调用了CallBranch来定义了两个子事务TransOut和TransIn。
@@ -62,12 +77,12 @@ res2, rerr := tcc.CallBranch(&TransReq{Amount: 30, TransInResult: "FAILURE"}, Bu
 
 ## 嵌套的TCC
 
-tcc支持嵌套的子事务，代码如下(摘自[examples/main_tcc](https://github.com/yedf/dtm/blob/main/examples/main_tcc.go))：
+tcc支持嵌套的子事务，代码如下(摘自[examples/http_tcc](https://github.com/yedf/dtm/blob/main/examples/http_tcc.go))：
 
 ``` go
-ret, err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (interface{}, error) {
+err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty.Response, error) {
   resp, err := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
-  if dtmcli.IsFailure(resp, err) {
+  if err != nil {
     return resp, err
   }
   return tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransInTccParent", Busi+"/TransInConfirm", Busi+"/TransInRevert")

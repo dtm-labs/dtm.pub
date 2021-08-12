@@ -22,7 +22,10 @@
 
 ![msg_normal](../imgs/msg_normal.jpg)
 
-我们通过dtm来完成一个普通的事务消息分布式事务[examples/main_msg](https://github.com/yedf/dtm/blob/main/examples/main_msg.go)：
+我们通过dtm来完成一个普通的事务消息分布式事务
+
+### http
+[examples/http_msg](https://github.com/yedf/dtm/blob/main/examples/http_msg.go)：
 
 ``` go
 	logrus.Printf("a busi transaction begin")
@@ -34,6 +37,19 @@
 	e2p(err)
 	logrus.Printf("busi trans submit")
 	err = msg.Submit()
+```
+
+### grpc
+
+[examples/grpc_msg](https://github.com/yedf/dtm/blob/main/examples/grpc_msg.go)：
+
+``` go
+	req := dtmcli.MustMarshal(&TransReq{Amount: 30})
+	gid := dtmgrpc.MustGenGid(DtmGrpcServer)
+	msg := dtmgrpc.NewMsgGrpc(DtmGrpcServer, gid).
+		Add(BusiGrpc+"/examples.Busi/TransOut", req).
+		Add(BusiGrpc+"/examples.Busi/TransIn", req)
+	err := msg.Submit()
 ```
 
 上面的代码首先创建了一个事务消息，然后添加了两个子事务TransOut、TransIn，然后在本地事务里内部调用prepare，本地事务提交之后，调用submit。Submit之后，dtm就会调用相关的子事务，保证最终完成。

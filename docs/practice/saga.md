@@ -11,6 +11,8 @@ SAGA最初出现在1987年Hector Garcaa-Molrna & Kenneth Salem发表的论文[SA
 
 我们来完成一个最简单的SAGA：
 
+### http
+
 ``` go
 req := &gin.H{"amount": 30} // 微服务的载荷
 // DtmServer为DTM服务的地址
@@ -20,6 +22,17 @@ saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
   // 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransIn"， 逆向操作为url: qsBusi+"/TransInCompensate"
   Add(qsBusi+"/TransIn", qsBusi+"/TransInCompensate", req)
 // 提交saga事务，dtm会完成所有的子事务/回滚所有的子事务
+err := saga.Submit()
+```
+
+### grpc
+
+``` go
+req := dtmcli.MustMarshal(&TransReq{Amount: 30})
+gid := dtmgrpc.MustGenGid(DtmGrpcServer)
+saga := dtmgrpc.NewSaga(DtmGrpcServer, gid).
+  Add(BusiGrpc+"/examples.Busi/TransOut", BusiGrpc+"/examples.Busi/TransOutRevert", req).
+  Add(BusiGrpc+"/examples.Busi/TransIn", BusiGrpc+"/examples.Busi/TransOutRevert", req)
 err := saga.Submit()
 ```
 

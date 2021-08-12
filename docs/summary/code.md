@@ -6,9 +6,11 @@ dtm项目主要有一下几个目录
 
 - app: 下面只有一个main，是作为dtm的总入口，可以传入不同的参数，以不同的模式运行
 - common: 公共的函数与类库，包括日志、json、数据库、网络等
-- dtmcli: dtm的客户端，包含tcc、saga、xa、msg这几种事务模式，以及子事务屏障barrier
-- dtmsvr: dtm的服务端，包含http的api，各种事务模式的实现
+- dtmcli: dtm的http客户端，包含tcc、saga、xa、msg这几种事务模式，以及子事务屏障barrier
+- dtmgrpc: dtm的grpc客户端，包含tcc、saga、xa、msg这几种事务模式，以及子事务屏障barrier
+- dtmsvr: dtm的服务端，包含http、grpc的api，各种事务模式的实现
 - examples: 包含各类的例子
+- test: 包含各种测试用例
 
 ## 代码说明
 
@@ -20,7 +22,11 @@ go语言推荐的错误处理方式是error is a value，而不是异常的方�
 
 在dtm中使用的例子，主要是一个转账的分布式事务，假设一个这样的场景：有一个A转账给B，但A和B属于不同银行，存储在不同的数据库里。这个场景就是一个典型的分布式事务场景。我们把这个分布式事务定义为两个子事务，一个是转出TransOut，一个是转入TransIn。
 
-由于我们在后面的例子中，会常常重复调用这两个子事务，因此我们在[examples/main_base.go](https://github.com/yedf/dtm/blob/main/examples/main_base.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
+由于我们在后面的例子中，会常常重复调用这两个子事务，因此我们把这两个子事务的处理，单独抽出来
+
+### http
+
+http协议在[examples/base_http.go](https://github.com/yedf/dtm/blob/main/examples/base_http.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
 
 ``` go
 func handleGeneralBusiness(c *gin.Context, result1 string, result2 string, busi string) (interface{}, error) {
@@ -57,7 +63,67 @@ func BaseAddRoute(app *gin.Engine) {
 }
 ```
 
-这段代码中，后缀为Confirm的，会被Tcc事务模式调用，后缀为Revert会被Tcc的Cancel、SAGA的compensate调用，CanSubmit会被事务消息调用
+### grpc
+
+grpc协议在[examples/base_grpc.go](https://github.com/yedf/dtm/blob/main/examples/base_grpc.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
+
+``` go
+func handleGrpcBusiness(in *dtmgrpc.BusiRequest, result1 string, result2 string, busi string) error {
+	res := dtmcli.OrString(result1, result2, "SUCCESS")
+	dtmcli.Logf("grpc busi %s %s result: %s", busi, in.Info, res)
+	if res == "SUCCESS" {
+		return nil
+	} else if res == "FAILURE" {
+		return status.New(codes.Aborted, "user want to rollback").Err()
+	}
+	return status.New(codes.Internal, fmt.Sprintf("unknow result %s", res)).Err()
+}
+
+func (s *busiServer) CanSubmit(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	res := MainSwitch.CanSubmitResult.Fetch()
+	return &emptypb.Empty{}, dtmgrpc.Result2Error(res, nil)
+}
+
+func (s *busiServer) TransIn(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, handleGrpcBusiness(in, MainSwitch.TransInResult.Fetch(), req.TransInResult, dtmcli.GetFuncName())
+}
+
+func (s *busiServer) TransOut(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, handleGrpcBusiness(in, MainSwitch.TransOutResult.Fetch(), req.TransOutResult, dtmcli.GetFuncName())
+}
+
+func (s *busiServer) TransInRevert(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, handleGrpcBusiness(in, MainSwitch.TransInRevertResult.Fetch(), "", dtmcli.GetFuncName())
+}
+
+func (s *busiServer) TransOutRevert(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, handleGrpcBusiness(in, MainSwitch.TransOutRevertResult.Fetch(), "", dtmcli.GetFuncName())
+}
+
+func (s *busiServer) TransInConfirm(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, handleGrpcBusiness(in, MainSwitch.TransInConfirmResult.Fetch(), "", dtmcli.GetFuncName())
+}
+
+func (s *busiServer) TransOutConfirm(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
+	req := TransReq{}
+	dtmcli.MustUnmarshal(in.BusiData, &req)
+	return &emptypb.Empty{}, handleGrpcBusiness(in, MainSwitch.TransOutConfirmResult.Fetch(), "", dtmcli.GetFuncName())
+}
+
+```
+### 例子小结
+
+上述代码中，后缀为Confirm的，会被Tcc事务模式调用，后缀为Revert会被Tcc的Cancel、SAGA的compensate调用，CanSubmit会被事务消息调用
 
 另外MainSwitch用于辅助测试，用于模拟各种故障
 
