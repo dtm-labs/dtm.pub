@@ -32,7 +32,7 @@ dtm的Tcc事务模式，支持子事务嵌套，流程图如下：
 
 ### HTTP
 
-下面对各种情况进行分类说明，定义各类情况的返回值。接口类似微信/支付宝订单成功回调的接口，如果接口返回的结果中，包含SUCCESS，则表示成功；其他则表示出错，需要进行重试。
+下面对各种情况进行分类说明，定义各类情况的返回值。接口类似微信/支付宝订单成功回调的接口，如果接口返回的结果中，包含SUCCESS，则表示成功；如果接口返回的结果中，包含FAILURE，则表示失败; 其他则表示出错，需要进行重试。
 
 上面的架构图中，主要有以下几类接口：
 
@@ -61,6 +61,44 @@ dtm框架通过resp.String()是否包含SUCCESS/FAILURE来判断成功和失败�
 - Aborted: 表示失败需要回滚，对应上述http协议中的{ dtm_result: "FAILURE" }，
 - OK: 表示调用成功，对应上述http协议中的{ dtm_result: "SUCCESS" },可以进行下一步
 - 其他错误吗：状态未知，可重试
+
+AP调用TM的接口，主要为全局事务注册、提交，子事务注册等：
+- 无返回值，仅判断error 为nil、为Aborted、其他
+
+``` go
+type DtmServer interface {
+  ...
+  Submit(context.Context, *DtmRequest) (*emptypb.Empty, error)
+}
+```
+
+TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
+- 无返回值，仅判断error 为nil、为Aborted、其他
+- 调用参数为dtmgrpc.BusiRequest，里面包含BusiData，AP传递给TM的数据，会透明传给RM
+``` go
+type BusiRequest struct {
+	Info     *BranchInfo
+	Dtm      string
+	BusiData []byte
+}
+
+
+type BusiClient interface {
+  ...
+  TransIn(ctx context.Context, in *dtmgrpc.BusiRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+```
+
+AP调用RM的接口，跟业务相关，主要是被TCC、XA两种模式调用。返回的结果
+- 有返回值，返回值为固定的 dtmgrpc.BusiReply，应用程序需要用到数据，则需要自己Unmarshal里面的BusiData
+``` go
+type BusiReply struct {
+	BusiData []byte
+}
+
+type BusiClient interface {
+  ...
+  TransInTcc(ctx context.Context, in *dtmgrpc.BusiRequest, opts ...grpc.CallOption) (*dtmgrpc.BusiReply, error)
+```
 
 ## 重试策略
 
