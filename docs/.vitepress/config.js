@@ -19,29 +19,28 @@ module.exports = {
 
     nav: [
       { text: '指引', link: '/guide/start' },
-      { text: '插件', link: '/plugins/a/a1' },
-      { text: '示例', link: '/examples/' },
+      { text: '博客', link: '/blogs/classic-dtrans' },
+      // { text: '示例', link: '/examples/' },
       { text: 'Github', link: 'https://github.com/yedf/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
     ],
     sidebar: {
-      '/plugins/': [
+      '/blogs/': [
         {
-          text: '插件A',
-          children: [
-            {
-              text: 'A1',
-              link: '/plugins/a/a1'
-            },
-            {
-              text: 'A2',
-              link: '/plugins/a/a2'
-            },
-          ],
+          text: '分布式事务最经典的七种解决方案',
+          link: '/blogs/classic-dtrans',
         },
         {
-          text: '插件B',
-          link: '/plugins/b',
+          text: '如何选择最适合你的分布式事务方案',
+          link: '/blogs/choose-dtrans',
+        },
+        {
+          text: '用Go轻松完成一个SAGA分布式事务',
+          link: '/blogs/go-saga',
+        },
+        {
+          text: '用Go轻松完成一个TCC分布式事务',
+          link: '/blogs/go-tcc',
         },
       ],
       '/examples/': 'auto',
