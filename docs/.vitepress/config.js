@@ -8,13 +8,43 @@ module.exports = {
   ],
   themeConfig: {
     logo: '/dtm.svg',
+
+    // algolia: {
+    //   apiKey: '<YOUR_CUSTOM_APP_ID>',
+    //   indexName: 'dtm',
+    //   searchParameters: {
+    //     facetFilters: ['tags:cn']
+    //   }
+    // },
+
     nav: [
+      { text: '指引', link: '/guide/start' },
+      { text: '插件', link: '/plugins/a/a1' },
+      { text: '示例', link: '/examples/' },
       { text: 'Github', link: 'https://github.com/yedf/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
     ],
     sidebar: {
-      '/config/': 'auto',
-      '/plugins': 'auto',
+      '/plugins/': [
+        {
+          text: '插件A',
+          children: [
+            {
+              text: 'A1',
+              link: '/plugins/a/a1'
+            },
+            {
+              text: 'A2',
+              link: '/plugins/a/a2'
+            },
+          ],
+        },
+        {
+          text: '插件B',
+          link: '/plugins/b',
+        },
+      ],
+      '/examples/': 'auto',
       // catch-all fallback
       '/': [
         {
@@ -136,6 +166,14 @@ module.exports = {
           ]
         },
       ]
+    }
+  },
+  markdown: {
+    anchor: {
+      renderPermalink: require('./render-perma-link')
+    },
+    config: (md) => {
+      md.use(require('./markdown-it-custom-anchor'))
     }
   }
 }
