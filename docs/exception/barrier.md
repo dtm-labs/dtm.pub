@@ -11,10 +11,10 @@
 
 
 ``` go
-func ThroughBarrierCall(db *sql.DB, transInfo *TransInfo, busiCall BusiFunc)
+func (bb *BranchBarrier) Call(db *sql.DB, busiCall BusiFunc) error
 ```
 
-业务开发人员，在busiCall里面编写自己的相关逻辑，调用ThroughBarrierCall。ThroughBarrierCall保证，在空回滚、悬挂等场景下，busiCall不会被调用；在业务被重复调用时，有幂等控制，保证只被提交一次。
+业务开发人员，在busiCall里面编写自己的相关逻辑，调用BranchBarrier.Call。BranchBarrier.Call保证，在空回滚、悬挂等场景下，busiCall不会被调用；在业务被重复调用时，有幂等控制，保证只被提交一次。
 
 子事务屏障会管理TCC、SAGA、事务消息等，也可以扩展到其他领域
 
@@ -36,6 +36,34 @@ func ThroughBarrierCall(db *sql.DB, transInfo *TransInfo, busiCall BusiFunc)
 - 防悬挂控制--Try在Cancel之后执行，那么插入的gid-branchid-try不成功，就不执行，保证了防悬挂控制
 
 对于SAGA、事务消息，也是类似的机制。
+
+## 结合常见的orm库
+
+barrier提供了sql标准接口，但大家的应用通常都会引入更高级的orm库，而不是裸用sql接口，因此需要进行转化，下面给出常见几个orm库的转化示例
+
+### gorm
+
+使用示例代码如下：
+
+``` go
+	sdb, err := gdb.DB() // gdb is a *gorm.DB
+	if err != nil {
+		return nil, err
+	}
+	barrier := MustBarrierFromGin(c)
+	return dtmcli.ResultSuccess, barrier.Call(sdb, func(sdb *sql.Tx) error {
+		tx := SQLTx2Gorm(sdb, gdb)
+		return tx.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", req.Amount, 1).Error
+	})
+
+// SQLTx2Gorm 从SqlTx构建一个gorm.DB
+func SQLTx2Gorm(stx *sql.Tx, db *gorm.DB) *gorm.DB {
+	tx := db.Session(&gorm.Session{Context: db.Statement.Context})
+	tx.Statement.ConnPool = stx
+	return tx
+}
+
+```
 
 ## 小结
 
