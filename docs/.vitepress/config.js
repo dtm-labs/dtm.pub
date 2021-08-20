@@ -75,6 +75,14 @@ module.exports = {
               link: '/summary/arch'
             },
             {
+              text: '接口协议',
+              link: '/summary/protocol'
+            },
+            {
+              text: '数据库接口',
+              link: '/summary/db'
+            },
+            {
               text: '代码概况',
               link: '/summary/code'
             },
