@@ -38,7 +38,7 @@ xa示例：
   })
 ```
 
-## goqu
+## GOQU
 
 barrier示例：
 ``` go
@@ -65,3 +65,37 @@ xa示例
   })
 ```
 
+## XORM
+
+请注意，2021-08-21刚给xorm提了pr，暴露了sql.Tx，虽然已合并，但是还未发布版本，因此需要安装最新版本
+
+``` bash
+go get -u xorm.io/xorm@7cd6a74c9f
+```
+
+barrier示例：
+
+``` go
+	x, _ := xorm.NewEngineWithDB("mysql", "dtm", core.FromDB(sdbGet()))
+	se := x.NewSession()
+	defer se.Close()
+	err := se.Begin()
+	if err != nil {
+		return nil, err
+	}
+	return dtmcli.ResultSuccess, barrier.Call(se.Tx().Tx, func(db dtmcli.DB) error {
+		_, err := se.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", -req.Amount, 2)
+		return err
+	})
+```
+
+xa示例
+
+``` go
+  return XaClient.XaLocalTransaction(c.Request.URL.Query(), func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+    xdb, _ := xorm.NewEngineWithDB("mysql", "dtm", core.FromDB(db))
+    _, err := xdb.Exec("update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
+    return dtmcli.ResultSuccess, err
+  })
+
+```
