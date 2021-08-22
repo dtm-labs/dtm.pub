@@ -130,15 +130,21 @@ func (s *busiServer) TransOutConfirm(ctx context.Context, in *dtmgrpc.BusiReques
 ## 各语言客户端
 
 ### go
-客户端sdk: [https://github.com/yedf/dtm](https://github.com/yedf/dtm)
+客户端sdk: [https://github.com/yedf/dtmcli](https://github.com/yedf/dtmcli)
 
 示例: [https://github.com/yedf/dtmcli-go-sample](https://github.com/yedf/dtmcli-go-sample)
 
 ### python
 
-客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-py](https://github.com/yedf/dtmcli-py)
+客户端sdk（当前支持TCC、SAGA、子事务屏障）: [https://github.com/yedf/dtmcli-py](https://github.com/yedf/dtmcli-py)
 
 示例: [https://github.com/yedf/dtmcli-py-sample](https://github.com/yedf/dtmcli-py-sample)
+
+### Java
+
+客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-java](https://github.com/yedf/dtmcli-java)
+
+示例: [https://github.com/yedf/dtmcli-java-sample](https://github.com/yedf/dtmcli-java-sample)
 
 ### php
 
