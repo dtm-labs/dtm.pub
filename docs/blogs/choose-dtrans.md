@@ -48,13 +48,13 @@ Saga 和可靠消息，把事务进度保存在数据库或消息系统中，任
 
 ## 实践
 
-上面介绍完各种业务类型，以及适合的事务方案，通常情况下，您需要选择合适的开源项目来实施技术方案。在分布式事务领域，应用比较广泛的有 [DTM](https://github.com/yedf/dtm)、[Seata](https://github.com/seata/seata)、[RocketMQ](https://github.com/apache/RocketMQ)
+上面介绍完各种业务类型，以及适合的事务方案，通常情况下，您需要选择合适的开源项目来实施技术方案。在分布式事务领域，应用比较广泛的有 [DTM](https://github.com/yedf/dtm)、[Seata](https://github.com/seata/seata)、[RocketMQ](https://github.com/apache/rocketmq)
 
 其中 Seata 用 Java 开发，支持 Java 语言的接入，支持 TCC、saga、XA、AT(类似 XA，性能更高，但有脏回滚)。
 
 RocketMQ 用 Java 开发，支持各类语言的接入，仅支持可靠消息、事务消息模式。
 
-这里重点介绍 DTM，它用 GO 开发，基于 HTTP 协议，支持多种语言接入，支持 TCC、saga、XA、可靠消息、事务消息模式。
+这里重点介绍 DTM，它用 Go 开发，基于 HTTP 协议，支持多种语言接入，支持 TCC、saga、XA、可靠消息、事务消息模式。
 
 ### 可靠消息例子
 
