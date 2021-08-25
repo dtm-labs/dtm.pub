@@ -1,0 +1,34 @@
+name: Deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          version: 12.x
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build
+        run: yarn docs:build
+
+      - name: scp
+        env:
+          host: 'ubuntu@dtm.pub'
+          dest: '/data/dtm-docs/'
+        run: |
+          echo "${{secrets.DEPLOY_KEY}}" > deploy_key
+          chmod 600 ./deploy_key
+          cd docs/.vitepress
+          tar -cvzf dist.tar.gz dist
+          scp -i ../../deploy_key -o StrictHostKeyChecking=no dist.tar.gz ${{env.host}}:${{env.dest}}
+          ssh -i ../../deploy_key -o StrictHostKeyChecking=no ${{env.host}} 'cd ${{env.dest}} && tar -zvxf dist.tar.gz'
