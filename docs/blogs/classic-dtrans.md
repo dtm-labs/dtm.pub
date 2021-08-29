@@ -137,7 +137,7 @@ TCC特点如下：
 
 正常发送的流程图如下：
 
-![image.png](../imgs/msg_trans.jpg)
+![image.png](../imgs/msg_trans.png)
 
 补偿流程：
 
