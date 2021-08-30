@@ -108,6 +108,7 @@ func qsAddRoute(app *gin.Engine) {
 
 ``` go
 	app.POST(qsBusiAPI+"/TransIn", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
+		qsAdjustBalance(2, 30)
 		return M{"dtm_result": "FAILURE"}, nil
 	}))
 ```

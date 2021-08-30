@@ -10,19 +10,20 @@
 
 上面的架构图中，主要有以下几类接口：
 
-AP调用TM的接口，主要为全局事务注册、提交，子事务注册等：
+#### AP调用TM的接口，主要为全局事务注册、提交，子事务注册等：
   - 成功: { dtm_result: "SUCCESS" }
   - 失败: { dtm_result: "FAILURE" }，表示这个请求状态不对，例如已经走fail的全局事务不允许再注册分支
   - 其他表示状态不确定，可重试
 
-TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
-  - 成功: { dtm_result: "SUCCESS" }，表示这个接口调用成功，正常进行下一步操作
-  - 失败: { dtm_result: "FAILURE" }，表示这个接口调用失败，全局事务需要进行回滚。例如saga中的正向操作如果返回FAILURE，则整个saga事务失败回滚
+#### TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
+  - 成功: { dtm_result: "SUCCESS" }
+  - 失败: { dtm_result: "FAILURE" }，表示这个接口业务失败，全局事务需要进行回滚。例如saga中的正向操作如果返回FAILURE，则整个saga事务失败回滚
   - 其他结果则重试，一直重试，直到返回上述的两个结果之一
 
-AP调用RM的接口，跟业务相关，主要是被TCC、XA两种模式调用。考虑到许多微服务的治理，都有失败重试的机制，因此建议接口设计如下
-  - 成功: { dtm_result: "SUCCESS" }，表示这个接口调用成功，正常进行下一步操作。返回的结果可以额外包含其他业务数据。
-  - 失败: { dtm_result: "FAILURE" }，表示这个接口调用失败，全局事务需要进行回滚。例如tcc中的Try动作如果返回FAILURE，则整个tcc全局事务回滚
+#### AP调用RM的接口，跟业务相关，主要是被TCC、XA两种模式调用。
+考虑到许多微服务的治理，都有失败重试的机制，因此建议接口设计（由于是AP和RM之间的接口，dtm不做强制要求）如下：
+  - 成功: { dtm_result: "SUCCESS" }。返回的结果可以额外包含其他业务数据。
+  - 失败: { dtm_result: "FAILURE" }，表示这个接口业务失败，全局事务需要进行回滚。例如tcc中的Try动作如果返回FAILURE，则整个tcc全局事务回滚
   - 其他返回值，应当允许重试，重试如果还是失败，需要允许全局事务回滚。主要是因为TCC、XA事务的下一步操作不保存在数据库，而是在AP里，它需要及时响应用户，无法长时间等待故障恢复。
 
 ::: tip 接口数据注意点
@@ -31,13 +32,13 @@ dtm框架通过resp.String()是否包含SUCCESS/FAILURE来判断成功和失败�
 
 ### GRPC
 
-由于GRPC为强类型协议，并且定义好了各个错误状态码，并且能够定义不同的错误码，采用不同的重试策略，因此GRPC的协议如下：
-- Aborted: 表示失败需要回滚，对应上述http协议中的{ dtm_result: "FAILURE" }，
-- OK: 表示调用成功，对应上述http协议中的{ dtm_result: "SUCCESS" },可以进行下一步
+#### 由于GRPC为强类型协议，并且定义好了各个错误状态码，并且能够定义不同的错误码，采用不同的重试策略，因此GRPC的协议如下：
+- 成功: OK。对应上述http协议中的{ dtm_result: "SUCCESS" }
+- 失败: Aborted。对应上述http协议中的{ dtm_result: "FAILURE" }，
 - 其他错误吗：状态未知，可重试
 
-AP调用TM的接口，主要为全局事务注册、提交，子事务注册等：
-- 无返回值，仅判断error 为nil、为Aborted、其他
+#### AP调用TM的接口，主要为全局事务注册、提交，子事务注册等：
+- 无返回值，仅判断error 为nil、Aborted、其他。如果error==Aborted，表示这个请求状态不对，例如已经走fail的全局事务不允许再注册分支
 
 ``` go
 type DtmServer interface {
@@ -46,9 +47,10 @@ type DtmServer interface {
 }
 ```
 
-TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
+#### TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
 - 无返回值，仅判断error 为nil、为Aborted、其他
-- 调用参数为dtmgrpc.BusiRequest，里面包含BusiData，AP传递给TM的数据，会透明传给RM
+- 调用参数为dtmgrpc.BusiRequest，里面包含BusiData，TM收到这个数据后，进行保存，后续会透明传给RM
+-
 ``` go
 type BusiRequest struct {
 	Info     *BranchInfo
@@ -65,7 +67,7 @@ type BusiClient interface {
   TransIn(ctx context.Context, in *dtmgrpc.BusiRequest, opts ...grpc.CallOption) (*emptypb.BusiReply, error)
 ```
 
-AP调用RM的接口，跟业务相关，主要是被TCC、XA两种模式调用。返回的结果
+#### AP调用RM的接口，跟业务相关，主要是被TCC、XA两种模式调用。返回的结果
 - 有返回值，返回值为固定的 dtmgrpc.BusiReply，应用程序需要用到数据，则需要自己Unmarshal里面的BusiData
 ``` go
 type BusiClient interface {
