@@ -118,3 +118,36 @@ xa示例
   })
 
 ```
+
+### Go-zero
+
+需要go-zero >= v1.2.0
+
+barrier示例：
+
+``` go
+  // 假设conn为go-zero里面的 sqlx.SqlConn
+  db, err := conn.RawDB()
+  if err != nil {
+    return err
+  }
+  tx, err := db.Begin()
+  if err != nil {
+    return err
+  }
+	return dtmcli.ResultSuccess, barrier.Call(tx, func(db dtmcli.DB) error {
+		_, err := tx.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", -req.Amount, 2)
+		return err
+	})
+```
+
+xa示例
+
+``` go
+  return XaClient.XaLocalTransaction(c.Request.URL.Query(), func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+    conn := NewSqlConnFromDB(db)
+    _, err := conn.Exec("update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
+    return dtmcli.ResultSuccess, err
+  })
+
+```
