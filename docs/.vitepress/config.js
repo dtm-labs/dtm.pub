@@ -146,6 +146,10 @@ module.exports = {
               link: '/deploy/docker'
             },
             {
+              text: '云上服务',
+              link: '/deploy/cloud'
+            },
+            {
               text: '线上部署',
               link: '/deploy/online'
             },

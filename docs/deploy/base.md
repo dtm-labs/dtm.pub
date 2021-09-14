@@ -9,6 +9,7 @@ dtm分为AP、RM、TM三个角色，其中AP、RM，是业务微服务，会集�
 
 1. 创建相关的数据库表
 2. 通过环境变量配置启动dtm容器（推荐）
+  - 您在测试接入期间，可以使用云上服务（未来大家真实需求量大，将会提供在线服务）
   - 您也可以选择不用环境变量，而采用文件配置（非推荐方式）
   - 您可以选择编译出dtm直接部署（非推荐方式）
 
@@ -17,7 +18,7 @@ dtm分为AP、RM、TM三个角色，其中AP、RM，是业务微服务，会集�
 ### RM数据表
 RM因为涉及本地资源管理，因此使用DTM提供的子事务屏障技术则需要在本地数据库中创建子事务屏障相关的表，建表语句详见：[子事务屏障表SQL](https://github.com/yedf/dtm/tree/main/dtmcli/barrier.mysql.sql)
 
-## DTM数据表
+### DTM数据表
 DTM作为TM角色，将全局事务信息保存在数据库中，需要在相应数据库中创建相关表，建表语句详见[DTM全局事务表SQL](https://github.com/yedf/dtm/blob/main/dtmsvr/dtmsvr.mysql.sql)
 
 ## DTM配置
