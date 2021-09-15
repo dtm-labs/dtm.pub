@@ -19,6 +19,7 @@ module.exports = {
 
     nav: [
       { text: '指引', link: '/guide/start' },
+      { text: 'English', link: 'https://en.dtm.pub' },
       { text: '博客', link: '/blogs/classic-dtrans' },
       // { text: '示例', link: '/examples/' },
       { text: 'Github', link: 'https://github.com/yedf/dtm' },
