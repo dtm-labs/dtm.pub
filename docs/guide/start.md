@@ -1,31 +1,32 @@
 # 介绍
 
-## DTM是什么
+## 可以做什么
 
-DTM是首款golang分布式事务管理框架，与其他框架不同的是，DTM提供了极简单的HTTP、GRPC接入方式，支持多语言，并且在框架层处理了各类子事务乱序难题。
-
-您可以在[为什么选DTM](./why)中了解更多DTM的设计初衷。
-
-## 亮点
-
-* 极易接入
-  - 支持HTTP、GRPC，提供非常简单的接口，极大降低上手分布式事务的难度，新手也能快速接入
-* 使用简单
-  - 开发者不再担心悬挂、空补偿、幂等各类问题，框架层代为处理
-* 跨语言
-  - 可适合多语言栈的公司使用。方便go、python、php、nodejs、ruby各类语言使用。
-* 易部署、易扩展
-  - 仅依赖mysql，部署简单，易集群化，易水平扩展
-* 多种分布式事务协议支持
-  - TCC、SAGA、XA、事务消息
+* 一站式解决分布式事务需求
+  - 支持TCC、SAGA、XA、事务消息、可靠消息
+* 支持跨语言栈事务
+  - 支持多语言栈混合的分布式事务。支持Go、Python、PHP、Nodejs、Java、c# 各类语言SDK。
+* 自动处理子事务乱序
+  - 首创子事务屏障技术，框架层自动处理悬挂、空补偿、幂等网络异常问题
+* 支持单服务多数据源访问
+  - 通过子事务屏障技术，保证单服务多数据源访问的一致性，也能保证本地长事务拆分多个子事务后的一致性
+* 开箱即用，提供云上服务
+  - 支持通用的HTTP、gRPC协议接入，云原生友好。支持Mysql接入。提供测试版本的云上服务，方便新用户测试接入
 
 受邀参加中国数据库大会分享[多语言环境下分布式事务实践](http://dtcc.it168.com/yicheng.html#b9)
+
+您可以在[为什么选DTM](./why)中了解更多DTM的设计初衷。
 
 ## 谁在使用dtm
 
 [Ivydad 常青藤爸爸](https://ivydad.com)
 
 [Eglass 视咖镜小二](https://epeijing.cn)
+
+[极欧科技](http://jiou.me)
+
+[金数智联]()
+
 
 <a style="
     background-color:#646cff;
@@ -39,7 +40,7 @@ DTM是首款golang分布式事务管理框架，与其他框架不同的是，DT
     vertical-align: middle;
     border-radius: 2em;
     font-weight: 600;
-" href="../other/opensource">与seata对比</a>
+" href="../other/opensource">与Seata对比</a>
 
 ## 起步
 

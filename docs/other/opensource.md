@@ -1,8 +1,10 @@
 # 其他框架
 
-目前开源的分布式事务框架，暂未看到非Java语言有成熟的框架。而Java语言的较多，其中以seata应用最为广泛。
+## 与其他框架对比
 
-下面是dtm和Seata的主要特性对比：
+目前开源的分布式事务框架，暂未看到非Java语言有成熟的框架。而Java语言的较多，其中以Seata应用最为广泛。
+
+下面是DTM和SEATA的主要特性对比：
 
 |  特性| DTM | SEATA |备注|
 |:-----:|:----:|:----:|:----:|
@@ -12,9 +14,8 @@
 | XA事务|<span style="color:green">✓</span>|<span style="color:green">✓</span>||
 |AT事务|<span style="color:red">✗</span>|<span style="color:green">✓</span>|AT与XA类似，性能更好，但有脏回滚|
 | SAGA事务 |<span style="color:orange">简单模式</span> |<span style="color:green">状态机复杂模式</span> |dtm的状态机模式在规划中|
-|事务消息|<span style="color:green">✓</span>|<span style="color:red">✗</span>|dtm提供类似rocketmq的事务消息|
-|通信协议|HTTP、GRPC|dubbo等协议，无HTTP||
+|事务消息|<span style="color:green">✓</span>|<span style="color:red">✗</span>|dtm提供类似Rocketmq的事务消息|
+|通信协议|HTTP、gRPC|dubbo等协议，无HTTP||
 |star数量|<img src="https://img.shields.io/github/stars/yedf/dtm.svg?style=social" alt="github stars"/>|<img src="https://img.shields.io/github/stars/seata/seata.svg?style=social" alt="github stars"/>|dtm从20210604发布0.1，发展快|
 
 从上面对比的特性来看，如果您的语言栈包含了Java之外的语言，那么dtm是您的首选。如果您的语言栈是Java，您也可以选择接入dtm，使用子事务屏障技术，简化您的业务编写。
-
