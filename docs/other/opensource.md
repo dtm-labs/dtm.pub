@@ -15,6 +15,7 @@
 |AT事务|<span style="color:red">✗</span>|<span style="color:green">✓</span>|AT与XA类似，性能更好，但有脏回滚|
 | SAGA事务 |<span style="color:orange">简单模式</span> |<span style="color:green">状态机复杂模式</span> |dtm的状态机模式在规划中|
 |事务消息|<span style="color:green">✓</span>|<span style="color:red">✗</span>|dtm提供类似Rocketmq的事务消息|
+|单服务多数据源|<span style="color:green">✓</span>|<span style="color:red">✗</span>||
 |通信协议|HTTP、gRPC|dubbo等协议，无HTTP||
 |star数量|<img src="https://img.shields.io/github/stars/yedf/dtm.svg?style=social" alt="github stars"/>|<img src="https://img.shields.io/github/stars/seata/seata.svg?style=social" alt="github stars"/>|dtm从20210604发布0.1，发展快|
 
