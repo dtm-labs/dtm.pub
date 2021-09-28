@@ -11,6 +11,22 @@ select * from dtm.trans_global where status not in ('succeed', 'failed') and
   create_time between date_add(now(), interval -3600 second) and date_add(now(), interval -120 second)
 ```
 
+项目在v1.1.0版本后支持Prometheus监控，为Prometheus提供的输出端口为`8889`，配置在文件`dtmsvr/dtmsvr.go`中。
+该监视接口提供网络接口(HTTP/gRPC)的可用性和响应时间以及执行事务和分支的状态。
+
+具体的metrics为
+
+- `dtm_server_process_total`
+- `dtm_server_response_duration`
+- `dtm_transaction_process_total`
+- `dtm_branch_process_total`
+
+例如，如果对`confirm/cancel`类型的分支的失败情况进行监控，一个可行的PromQL触发条件为
+
+```
+sum(dtm_branch_process_total{branchtype=~"confirm|cancel",status="fail"}) by (gid, branchid) > 3
+```
+
 ## 触发全局事务立即重试
 
 dtm会轮询数据库中超时时间在近一小时内的未完成的全局事务，不在这个范围内的，dtm不检查。如果您想要手动触发立即重试，您可以手动把相应事务的next_cron_time修改为当前时间，就能触发重试。
