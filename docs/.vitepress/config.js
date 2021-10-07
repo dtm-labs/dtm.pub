@@ -168,6 +168,10 @@ module.exports = {
           text: '其他',
           children: [
             {
+              text: '性能测试报告',
+              link: '/other/performance'
+            },
+            {
               text: '其他框架',
               link: '/other/opensource'
             },
