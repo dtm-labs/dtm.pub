@@ -18,9 +18,10 @@ sysbench oltp_write_only.lua --time=60 --mysql-host=127.0.0.1 --mysql-port=3306 
 sysbench oltp_write_only.lua --time=60 --mysql-host=127.0.0.1 --mysql-port=3306 --mysql-user=root --mysql-password= --mysql-db=sbtest --table-size=1000000 --tables=10 --threads=10 --events=999999999 --report-interval=10 run
 
 go run app/main.go bench > /dev/nul # 启动dtm的bench服务，日志较多，重定向到nul设备
-bench/run.sh # 新启动命令行，运行dtm相关的各项测试
-
+bench/run-dtm.sh # 新启动命令行，运行dtm相关的各项测试
 ```
+
+PS：如果您需要动手进行测试，建议您购买香港或国外的主机，这样相关的github、docker访问会快很多，能够快速搭建好环境。我在国内购买的主机，访问github和docker，非常慢，有时连接不上，无法顺畅进行测试。
 
 ## 测试指标
 
