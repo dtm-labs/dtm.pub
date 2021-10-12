@@ -28,3 +28,23 @@
 .DocSearch {
   --docsearch-primary-color: var(--c-brand) !important;
 }
+
+.container {
+  padding-bottom: 20px !important;
+}
+
+.footer {
+  margin: 0 auto;
+  width: 200px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.footer a {
+  text-decoration: none;
+}
+
+.footer span {
+  font-size: 14px;
+  color: #999;
+}
