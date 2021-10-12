@@ -15,5 +15,5 @@ features:
     details: 通过子事务屏障技术，保证单服务多数据源访问的一致性，也能保证本地长事务拆分多个子事务后的一致性
   - title: 🔩 开箱即用，云上服务
     details: 支持通用的HTTP、gRPC协议接入，云原生友好。支持Mysql接入。提供测试版本的云上服务，方便新用户测试接入
-footer: BSD-2 Licensed
+footer: ''
 ---
