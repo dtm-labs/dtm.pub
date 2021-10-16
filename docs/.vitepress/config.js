@@ -85,6 +85,10 @@ module.exports = {
             },
             {
               text: '代码概况',
+              link: '/summary/files'
+            },
+            {
+              text: 'SDK',
               link: '/summary/code'
             },
           ]
@@ -132,6 +136,19 @@ module.exports = {
             {
               text: '子事务屏障',
               link: '/exception/barrier'
+            }
+          ]
+        },
+        {
+          text: '特性',
+          children: [
+            {
+              text: 'TCC子事务嵌套',
+              link: '/deploy/base'
+            },
+            {
+              text: '支持的数据库',
+              link: '/deploy/docker'
             }
           ]
         },
