@@ -144,11 +144,11 @@ module.exports = {
           children: [
             {
               text: 'TCC子事务嵌套',
-              link: '/deploy/base'
+              link: '/character/tcc-nested'
             },
             {
               text: '支持的数据库',
-              link: '/deploy/docker'
+              link: '/character/supported-db'
             }
           ]
         },
