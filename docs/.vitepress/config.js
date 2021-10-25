@@ -182,6 +182,15 @@ module.exports = {
           ]
         },
         {
+          text: 'API参考',
+          children: [
+            {
+              text: 'HTTP',
+              link: '/ref/http'
+            },
+          ]
+        },
+        {
           text: '其他',
           children: [
             {
