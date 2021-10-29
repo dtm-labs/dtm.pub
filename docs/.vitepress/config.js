@@ -65,36 +65,15 @@ module.exports = {
             {
               text: '开始',
               link: '/guide/start'
-            }
-          ]
-        },
-        {
-          text: '概况',
-          children: [
+            },
             {
               text: '架构',
               link: '/summary/arch'
             },
-            {
-              text: '接口协议',
-              link: '/summary/protocol'
-            },
-            {
-              text: '数据库接口',
-              link: '/summary/db'
-            },
-            {
-              text: '代码概况',
-              link: '/summary/files'
-            },
-            {
-              text: 'SDK',
-              link: '/summary/code'
-            },
           ]
         },
         {
-          text: '实践',
+          text: '事务原理',
           children: [
             {
               text: 'SAGA',
@@ -117,10 +96,6 @@ module.exports = {
               link: '/practice/other'
             },
             {
-              text: '等待事务结果',
-              link: '/practice/wait'
-            },
-            {
               text: '选择合适的模式',
               link: '/practice/choice'
             }
@@ -140,6 +115,35 @@ module.exports = {
           ]
         },
         {
+          text: '接入指南',
+          children: [
+            {
+              text: '接口协议',
+              link: '/summary/protocol'
+            },
+            {
+              text: '数据库接口',
+              link: '/summary/db'
+            },
+            {
+              text: 'DTM源码概况',
+              link: '/summary/files'
+            },
+            {
+              text: 'SDK',
+              link: '/summary/code'
+            },
+            {
+              text: '事务选项',
+              link: '/ref/options'
+            },
+            {
+              text: 'API参考 HTTP',
+              link: '/ref/http'
+            },
+          ]
+        },
+        {
           text: '特性',
           children: [
             {
@@ -149,7 +153,11 @@ module.exports = {
             {
               text: '支持的数据库',
               link: '/character/supported-db'
-            }
+            },
+            {
+              text: '高可用',
+              link: '/character/highly-available'
+            },
           ]
         },
         {
@@ -179,15 +187,6 @@ module.exports = {
               text: '运维',
               link: '/deploy/maintain'
             }
-          ]
-        },
-        {
-          text: 'API参考',
-          children: [
-            {
-              text: 'HTTP',
-              link: '/ref/http'
-            },
           ]
         },
         {

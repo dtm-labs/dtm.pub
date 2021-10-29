@@ -62,9 +62,33 @@ err := saga.Submit()
 
 为了避免程序bug导致补偿操作一直无法成功，建议开发者对全局事务表进行监控，发现重试超过3次的事务，发出报警，由运维人员找开发手动处理，参见[dtm的运维](../deploy/maintain)
 
-## 高级SAGA
+## 并发SAGA
 
-论文里面的SAGA内容较多，包括两种恢复策略，包括分支事务并发执行，我们这里的讨论，仅包括最简单的SAGA。
+论文里面的SAGA提到了分支事务并发执行模式，这种模式，能够缩短SAGA事务的总执行时间，DTM对此也进行了支持：
 
-对于SAGA的高级用法，例如分支事务并发执行，后续dtm会开发支持
+并发SAGA通过dtmlic.NewConcurrentSaga创建，当saga提交后，多个事务分支之间是并发执行。DTM也支持指定事务分支之间的依赖关系，可以指定特定任务A执行完成之后才能够执行任务B。
+
+
+### http
+
+``` go
+  req := &TransReq{Amount: 30}
+  csaga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
+    Add(Busi+"/TransOut", Busi+"/TransOutRevert", req).
+    Add(Busi+"/TransOut", Busi+"/TransOutRevert", req).
+    Add(Busi+"/TransIn", Busi+"/TransInRevert", req).
+    Add(Busi+"/TransIn", Busi+"/TransInRevert", req).
+    EnableConcurrent(). // 打开并发开关
+    AddStepOrder(2, []int{0, 1}). // 这里指定 step 2 需要在 step 0, step 1之后执行
+    AddStepOrder(3, []int{0, 1}) // 这里指定 step 3 需要在 step 0, step 1之后执行
+  err := csaga.Submit()
+```
+
+详细例子代码参考[example/http_saga.go](https://github.com/yedf/dtm/blob/main/examples/http_saga.go)
+
+### 失败回滚
+
+并发SAGA如果出现回滚，那么所有回滚的补偿分支会全部并发执行，不再考虑前面的任务依赖。
+
+由于并发SAGA的正向分支和补偿分支都是并发执行的，因此更容易出现空补偿和悬挂情况，需要参考DTM的子事务屏障环节妥善处理
 

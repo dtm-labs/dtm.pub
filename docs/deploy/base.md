@@ -53,8 +53,13 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 #### DB_PORT
 指定数据库的port，默认为3306
 
-#### CRON_JOB_INTERVAL
-轮询检查超时需处理的时间间隔，默认为10，表示大约10秒，会检查一次数据库中超时的全局事务
+#### TIMEOUT_TO_FAIL
+指定XA，TCC失败的超时时间，以及事务消息模式中，反查的超时时间。
+
+这个时间可以被各个事务单独的TimeoutToFail设置。其中saga事务，只使用事务中的TimeoutToFail，不使用系统中的设置，主要原因为SAGA事务的时间跨度可能很长
+
+#### RETRY_INTERVAL
+重试间隔，当某个事务分支返回错误，那么dtm会间隔这个时间进行重试。dtm的重试使用退避算法，详情见[重试](../ref/options)
 
 ## yml文件配置(非推荐方式)
 为了方便直接部署和调试，DTM也支持yml配置文件，参考[yml样板配置文件](https://github.com/yedf/dtm/blob/main/conf.sample.yml)

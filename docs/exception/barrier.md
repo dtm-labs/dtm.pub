@@ -39,31 +39,7 @@ func (bb *BranchBarrier) Call(db *sql.DB, busiCall BusiFunc) error
 
 ## 结合常见的orm库
 
-barrier提供了sql标准接口，但大家的应用通常都会引入更高级的orm库，而不是裸用sql接口，因此需要进行转化，下面给出常见几个orm库的转化示例
-
-### gorm
-
-使用示例代码如下：
-
-``` go
-	sdb, err := gdb.DB() // gdb is a *gorm.DB
-	if err != nil {
-		return nil, err
-	}
-	barrier := MustBarrierFromGin(c)
-	return dtmcli.ResultSuccess, barrier.Call(sdb, func(sdb *sql.Tx) error {
-		tx := SQLTx2Gorm(sdb, gdb)
-		return tx.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", req.Amount, 1).Error
-	})
-
-// SQLTx2Gorm 从SqlTx构建一个gorm.DB
-func SQLTx2Gorm(stx *sql.Tx, db *gorm.DB) *gorm.DB {
-	tx := db.Session(&gorm.Session{Context: db.Statement.Context})
-	tx.Statement.ConnPool = stx
-	return tx
-}
-
-```
+barrier提供了sql标准接口，但大家的应用通常都会引入更高级的orm库，而不是裸用sql接口，因此需要进行转化. 相关的对接参考[对接ORM](../summary/db)
 
 ## 小结
 
