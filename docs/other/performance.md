@@ -12,6 +12,7 @@
 
 ``` bash
 # 在dtm目录下
+git checkout v1.3.1
 docker-compose -f helper/compose.mysql.yml up -d # 启动Mysql
 
 # 运行sysbench对mysql进行测试
