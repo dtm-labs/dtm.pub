@@ -66,7 +66,7 @@ err := saga.Submit()
 
 论文里面的SAGA提到了分支事务并发执行模式，这种模式，能够缩短SAGA事务的总执行时间，DTM对此也进行了支持：
 
-并发SAGA通过dtmlic.NewConcurrentSaga创建，当saga提交后，多个事务分支之间是并发执行。DTM也支持指定事务分支之间的依赖关系，可以指定特定任务A执行完成之后才能够执行任务B。
+并发SAGA通过EnableConcurrent()打开，当saga提交后，多个事务分支之间是并发执行。DTM也支持指定事务分支之间的依赖关系，可以指定特定任务A执行完成之后才能够执行任务B。
 
 
 ### http
