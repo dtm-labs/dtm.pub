@@ -79,8 +79,8 @@ err := saga.Submit()
     Add(Busi+"/TransIn", Busi+"/TransInRevert", req).
     Add(Busi+"/TransIn", Busi+"/TransInRevert", req).
     EnableConcurrent(). // 打开并发开关
-    AddStepOrder(2, []int{0, 1}). // 这里指定 step 2 需要在 step 0, step 1之后执行
-    AddStepOrder(3, []int{0, 1}) // 这里指定 step 3 需要在 step 0, step 1之后执行
+    AddBranchOrder(2, []int{0, 1}). // 这里指定 branch 2 需要在 branch 0, branch 1之后执行
+    AddBranchOrder(3, []int{0, 1}) // 这里指定 branch 3 需要在 branch 0, branch 1之后执行
   err := csaga.Submit()
 ```
 
