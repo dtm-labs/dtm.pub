@@ -35,7 +35,10 @@ module.exports = {
           text: '分享视频',
           link: '/resource/videos',
         },
-      ],
+        {
+          text: '更多的分享',
+          link: '/resource/other',
+        },],
       '/examples/': 'auto',
       // catch-all fallback
       '/': [
