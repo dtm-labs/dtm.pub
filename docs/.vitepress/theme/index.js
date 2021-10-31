@@ -1,11 +1,13 @@
 import Theme from 'vitepress/theme'
 import { h } from 'vue'
+import Search from './Search.vue'
 import './custom.css'
 
 export default {
   ...Theme,
   Layout() {
     return h(Theme.Layout, null, {
+      'navbar-search': () => h(Search),
       'page-bottom': () =>
         h('div', { class: 'footer' }, [
           h(
