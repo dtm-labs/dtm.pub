@@ -128,6 +128,6 @@ func qsAddRoute(app *gin.Engine) {
 
 请加 yedf2008 好友或者扫码加好友，验证回复 dtm 按照指引进群
 
-![yedf2008](http://service.ivydad.com/cover/dubbingb6b5e2c0-2d2a-cd59-f7c5-c6b90aceb6f1.jpeg)
+![yedf2008](https://service.ivydad.com/cover/dubbingb6b5e2c0-2d2a-cd59-f7c5-c6b90aceb6f1.jpeg)
 
 如果您觉得[dtm](https://github.com/yedf/dtm)不错，或者对您有帮助，请赏颗星吧！
