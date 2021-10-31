@@ -3,7 +3,7 @@ import { ref } from 'vue'
 const inputVal = ref('')
 const search = () => {
   console.log(inputVal.value)
-  window.open(`https://www.google.com/search?q=site:dtm.pub/t%${inputVal.value}`)
+  window.open(`https://www.google.com/search?q=site:dtm.pub ${inputVal.value}`)
 }
 </script>
 
