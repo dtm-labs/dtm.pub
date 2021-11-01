@@ -12,7 +12,7 @@
 |异常处理| <span style="color:green">[子事务屏障自动处理](https://dtm.pub/exception/barrier.html)</span>|<span style="color:orange">手动处理</span> |dtm解决了幂等、悬挂、空补偿|
 | TCC事务| <span style="color:green">✓</span>|<span style="color:green">✓</span>||
 | XA事务|<span style="color:green">✓</span>|<span style="color:green">✓</span>||
-|AT事务|<span style="color:orange">建议使用XA</span>|<span style="color:green">✓</span>|AT与XA类似，性能更好，但有脏回滚|
+|AT事务|<span style="color:orange">建议使用XA</span>|<span style="color:green">✓</span>|AT与XA类似，性能稍好，但有脏读脏回滚|
 | SAGA事务 |<span style="color:green">支持并发</span> |<span style="color:green">状态机模式</span> ||
 |事务消息|<span style="color:green">✓</span>|<span style="color:red">✗</span>|dtm提供类似rocketmq的事务消息|
 |单服务多数据源|<span style="color:green">✓</span>|<span style="color:red">✗</span>||
