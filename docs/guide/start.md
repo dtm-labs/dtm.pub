@@ -60,14 +60,14 @@
 
 安装[docker 20.04+](https://docs.docker.com/get-docker/)之后
 
-`docker-compose helper/compose.mysql.yml`
+`docker-compose -f helper/compose.mysql.yml`
 
 > 您也可以配置使用现有的mysql，需要高级权限，允许dtm创建数据库
 >
 > `cp conf.sample.yml conf.yml # 修改conf.yml`
 
 ### 启动并运行saga示例
-`go run app/main.go saga`
+`go run app/main.go qs`
 
 ### 使用
 ``` GO
