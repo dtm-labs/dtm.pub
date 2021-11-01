@@ -42,7 +42,7 @@
     font-weight: 600;
 " href="../other/opensource">与Seata对比</a>
 
-## 起步
+## 快速开始
 
 ::: tip 具备的基础知识
 本教程假设您已具备分布式事务相关的基础知识，如果您对这方面并不熟悉，可以阅读[分布式事务理论](../guide/theory)
@@ -50,26 +50,39 @@
 本教程也假设您有一定的编程基础，能够大致明白GO语言的代码，如果您对这方面并不熟悉，可以访问[golang](https://golang.google.cn/)
 :::
 
-- [安装](./install)，使用go语言推荐的方式
+如果您不是Go语言，不熟悉Go环境，您可以转到[各语言SDK](../summary/code)，找到对应语言的QuickStart
 
-尝试DTM的最简单的方法是使用QuickStart例子，该例子的主要文件在[dtm/example/quick_start.go](https://github.com/yedf/dtm/blob/main/examples/quick_start.go)。
+### 获取代码
 
-您可以在dtm目录下，通过下面命令运行这个例子
+`git clone https://github.com/yedf/dtm && cd dtm`
 
-`go run app/main.go quick_start`
+### dtm依赖于mysql
 
-在这个例子中，创建了一个saga分布式事务，然后提交给dtm，核心代码如下：
+安装[docker 20.04+](https://docs.docker.com/get-docker/)之后
 
-``` go
-	req := &gin.H{"amount": 30} // 微服务的载荷
-	// DtmServer为DTM服务的地址
-	saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
-		// 添加一个TransOut的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransOutCompensate"
-		Add(qsBusi+"/TransOut", qsBusi+"/TransOutCompensate", req).
-		// 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransIn"， 逆向操作为url: qsBusi+"/TransInCompensate"
-		Add(qsBusi+"/TransIn", qsBusi+"/TransInCompensate", req)
-	// 提交saga事务，dtm会完成所有的子事务/回滚所有的子事务
-	err := saga.Submit()
+`docker-compose helper/compose.mysql.yml`
+
+> 您也可以配置使用现有的mysql，需要高级权限，允许dtm创建数据库
+>
+> `cp conf.sample.yml conf.yml # 修改conf.yml`
+
+### 启动并运行saga示例
+`go run app/main.go saga`
+
+### 使用
+``` GO
+  // 具体业务微服务地址
+  const qsBusi = "http://localhost:8081/api/busi_saga"
+  req := &gin.H{"amount": 30} // 微服务的载荷
+  // DtmServer为DTM服务的地址，是一个url
+  DtmServer := "http://localhost:8080/api/dtmsvr"
+  saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
+    // 添加一个TransOut的子事务，正向操作为url: qsBusi+"/TransOut"， 补偿操作为url: qsBusi+"/TransOutCompensate"
+    Add(qsBusi+"/TransOut", qsBusi+"/TransOutCompensate", req).
+    // 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransIn"， 补偿操作为url: qsBusi+"/TransInCompensate"
+    Add(qsBusi+"/TransIn", qsBusi+"/TransInCompensate", req)
+  // 提交saga事务，dtm会完成所有的子事务/回滚所有的子事务
+  err := saga.Submit()
 ```
 
 该分布式事务中，模拟了一个跨行转账分布式事务中的场景，全局事务包含TransOut（转出子事务）和TransIn（转入子事务），每个子事务都包含正向操作和逆向补偿，定义如下：

@@ -50,10 +50,6 @@ module.exports = {
               link: '/guide/theory'
             },
             {
-              text: '安装',
-              link: '/guide/install'
-            },
-            {
               text: 'Why',
               link: '/guide/why'
             },
@@ -166,10 +162,10 @@ module.exports = {
               text: 'Docker部署',
               link: '/deploy/docker'
             },
-            {
-              text: '云上服务',
-              link: '/deploy/cloud'
-            },
+            // {
+            //   text: '云上服务',
+            //   link: '/deploy/cloud'
+            // },
             {
               text: '线上部署',
               link: '/deploy/online'
