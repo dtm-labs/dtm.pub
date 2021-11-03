@@ -286,7 +286,7 @@ curl 'localhost:8080/api/dtmsvr/all?last_id='
 - retry_interval: 重试间隔
 - timeout_to_fail: 超时失败时间
 
-这些事务选项可以再prepare/submit请求中，发送个TM，请求示例
+这些事务选项可以在prepare/submit请求中，发送给TM，请求示例
 
 ``` bash
 curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
