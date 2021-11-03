@@ -279,6 +279,33 @@ curl 'localhost:8080/api/dtmsvr/all?last_id='
 }
 ```
 
+## 事务选项
+
+事务支持以下选项，具体含义参加[事务选项文档](./options)：
+- wait_result: 等待事务结果
+- retry_interval: 重试间隔
+- timeout_to_fail: 超时失败时间
+
+这些事务选项可以再prepare/submit请求中，发送个TM，请求示例
+
+``` bash
+curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "gid": "xxx",
+    "trans_type": "tcc",
+    "wait_result": true,
+    "retry_interval": 15,
+    "timeout_to_fail": 60
+}'
+```
+
+响应示例
+``` JSON
+{
+    "dtm_result":"SUCCESS"
+}
+```
 
 
 
