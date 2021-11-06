@@ -87,6 +87,10 @@ module.exports = {
               link: '/practice/other'
             },
             {
+              text: '不允许失败',
+              link: '/practice/must-succeed'
+            },
+            {
               text: '选择合适的模式',
               link: '/practice/choice'
             }
