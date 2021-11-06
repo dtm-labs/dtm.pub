@@ -20,19 +20,19 @@ func (bb *BranchBarrier) Call(db *sql.DB, busiCall BusiFunc) error
 
 ## 原理
 
-子事务屏障技术的原理是，在本地数据库，建立分支事务状态表sub_trans_barrier，唯一键为全局事务id-子事务id-子事务分支名称（try|confirm|cancel）
+子事务屏障技术的原理是，在本地数据库，建立分支操作状态表sub_trans_barrier，唯一键为全局事务id-分支id-分支操作（try|confirm|cancel）
 
 - 开启事务
-- 如果是Try分支，则那么insert ignore插入gid-branchid-try，如果成功插入，则调用屏障内逻辑
-- 如果是Confirm分支，那么insert ignore插入gid-branchid-confirm，如果成功插入，则调用屏障内逻辑
-- 如果是Cancel分支，那么insert ignore插入gid-branchid-try，再插入gid-branchid-cancel，如果try未插入并且cancel插入成功，则调用屏障内逻辑
+- 如果是Try操作，则那么insert ignore插入gid-branchid-try，如果成功插入，则调用屏障内逻辑
+- 如果是Confirm操作，那么insert ignore插入gid-branchid-confirm，如果成功插入，则调用屏障内逻辑
+- 如果是Cancel操作，那么insert ignore插入gid-branchid-try，再插入gid-branchid-cancel，如果try未插入并且cancel插入成功，则调用屏障内逻辑
 - 屏障内逻辑返回成功，提交事务，返回成功
 - 屏障内逻辑返回错误，回滚事务，返回错误
 
 在此机制下，解决了网络异常相关的问题
 
 - 空补偿控制--如果Try没有执行，直接执行了Cancel，那么Cancel插入gid-branchid-try会成功，不走屏障内的逻辑，保证了空补偿控制
-- 幂等控制--任何一个分支都无法重复插入唯一键，保证了不会重复执行
+- 幂等控制--任何一个操作都无法重复插入唯一键，保证了不会重复执行
 - 防悬挂控制--Try在Cancel之后执行，那么插入的gid-branchid-try不成功，就不执行，保证了防悬挂控制
 
 对于SAGA、事务消息，也是类似的机制。

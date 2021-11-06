@@ -19,7 +19,7 @@
   - 失败: { dtm_result: "FAILURE" }，表示这个请求状态不对，例如已经走fail的全局事务不允许再注册分支
   - 其他表示状态不确定，可重试
 
-#### TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
+#### TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支操作
   - 成功: { dtm_result: "SUCCESS" }
   - 失败: { dtm_result: "FAILURE" }，表示这个接口业务失败，全局事务需要进行回滚。例如saga中的正向操作如果返回FAILURE，则整个saga事务失败回滚
   - 进行中: { dtm_result: "ONGOING" }，表示这个接口正常进行中，后续按照固定间隔重试
@@ -56,7 +56,7 @@ type DtmServer interface {
 }
 ```
 
-#### TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支
+#### TM调用RM的接口，主要为二阶段的提交、回滚，以及saga的各分支操作
 - nil：成功
 - Aborted && Message=="FAILURE"：表示失败，需要回滚事务
 - Aborted && Message=="ONGOING"：表示进行中，后续采用固定间隔重试

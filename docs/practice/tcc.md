@@ -59,17 +59,17 @@ func TccGlobalTransaction(dtm string, gid string, tccFunc TccGlobalFunc) error
 
 ``` go
 // CallBranch call a tcc branch
-// 函数首先注册子事务的所有分支，成功后调用try分支，返回try分支的调用结果
+// 函数首先注册子事务的所有分支操作，成功后调用try，返回try的调用结果
 func (t *Tcc) CallBranch(body interface{}, tryURL string, confirmURL string, cancelURL string) (*resty.Response, error)
 ```
 
-当tccFunc正常返回时，TccGlobalTransaction会提交全局事务，然后返回给调用者。dtm收到提交请求，则会调用所有注册子事务的二阶段Confirm分支。TccGlobalTransaction返回时，一阶段的Try已经全部完成，但是二阶段的Confirm通常还未完成。
+当tccFunc正常返回时，TccGlobalTransaction会提交全局事务，然后返回给调用者。dtm收到提交请求，则会调用所有注册事务分支的二阶段Confirm。TccGlobalTransaction返回时，一阶段的Try已经全部完成，但是二阶段的Confirm通常还未完成。
 
 ### 失败回滚
 
-如果tccFunc返回错误，TccGlobalTransaction会终止全局事务，然后返回给调用者。dtm收到终止请求，则会调用所有注册子事务的二阶段Cancel分支。
+如果tccFunc返回错误，TccGlobalTransaction会终止全局事务，然后返回给调用者。dtm收到终止请求，则会调用所有注册子事务的二阶段Cancel。
 
-我们将上述的第二个分支调用，传递参数，让他失败
+我们将上述的第二个Try调用，传递参数，让他失败
 
 ``` go
 res2, rerr := tcc.CallBranch(&TransReq{Amount: 30, TransInResult: "FAILURE"}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")

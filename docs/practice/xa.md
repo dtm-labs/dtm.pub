@@ -48,7 +48,7 @@ func XaSetup(app *gin.Engine) {
 	e2p(err)
 }
 
-// XaFireRequest 注册全局XA事务，调用XA的分支
+// XaFireRequest 生成一个Xa请求
 func XaFireRequest() string {
 	gid := dtmcli.MustGenGid(DtmServer)
 	res, err := XaClient.XaGlobalTransaction(gid, func(xa *dtmcli.Xa) (interface{}, error) {

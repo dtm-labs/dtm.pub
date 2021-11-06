@@ -12,7 +12,7 @@ select * from dtm.trans_global where status not in ('succeed', 'failed') and
 ```
 
 项目在v1.1.0版本后支持Prometheus监控，为Prometheus提供的输出端口为`8889`，配置在文件`dtmsvr/dtmsvr.go`中。
-该监视接口提供网络接口(HTTP/gRPC)的可用性和响应时间以及执行事务和分支的状态。
+该监视接口提供网络接口(HTTP/gRPC)的可用性和响应时间以及执行事务和分支操作结果的统计。
 
 具体的metrics为
 
@@ -21,7 +21,7 @@ select * from dtm.trans_global where status not in ('succeed', 'failed') and
 - `dtm_transaction_process_total`
 - `dtm_branch_process_total`
 
-例如，如果对`confirm/cancel`类型的分支的失败情况进行监控，一个可行的PromQL触发条件为
+例如，如果对`confirm/cancel`分支操作的失败情况进行监控，一个可行的PromQL触发条件为
 
 ```
 sum(dtm_branch_process_total{branchtype=~"confirm|cancel",status="fail"}) by (gid, branchid) > 3

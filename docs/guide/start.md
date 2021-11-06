@@ -131,7 +131,7 @@ func qsAddRoute(app *gin.Engine) {
 
 ![saga_rollback](../imgs/saga_rollback.jpg)
 
-在转入操作失败的情况下，TransIn和TransOut的补偿分支被执行，保证了最终的余额和转账前是一样的。
+在转入操作失败的情况下，TransIn和TransOut的补偿操作被执行，保证了最终的余额和转账前是一样的。
 
 ## 准备好了吗？
 

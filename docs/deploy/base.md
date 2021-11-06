@@ -45,8 +45,8 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 ### DB_DRIVER
 指定数据库类型，取值为:
 
-- mysql dtm对mysql提供了良好支持
-- postgres dtm服务端支持postgres，但是dtmcli以及示例，目前为了简单，并没有写成兼容postgres的方式。感兴趣的童鞋可以找到postgres分支，做相关的实践
+- mysql
+- postgres
 
 不指定时，默认为mysql
 
@@ -59,7 +59,7 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 这个时间可以被各个事务单独的TimeoutToFail设置。其中saga事务，只使用事务中的TimeoutToFail，不使用系统中的设置，主要原因为SAGA事务的时间跨度可能很长
 
 #### RETRY_INTERVAL
-重试间隔，当某个事务分支返回错误，那么dtm会间隔这个时间进行重试。dtm的重试使用退避算法，详情见[重试](../ref/options)
+重试间隔，当某个事务分支操作返回错误，那么dtm会间隔这个时间进行重试。dtm的重试使用退避算法，详情见[重试](../ref/options)
 
 ## yml文件配置(非推荐方式)
 为了方便直接部署和调试，DTM也支持yml配置文件，参考[yml样板配置文件](https://github.com/yedf/dtm/blob/main/conf.sample.yml)
