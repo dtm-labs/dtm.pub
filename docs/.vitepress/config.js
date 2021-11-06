@@ -136,6 +136,10 @@ module.exports = {
               text: 'API参考 HTTP',
               link: '/ref/http'
             },
+            {
+              text: '接入示例',
+              link: '/ref/sample'
+            },
           ]
         },
         {

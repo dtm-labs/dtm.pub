@@ -77,6 +77,34 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
 }
 ```
 
+MSG 的prepare请求还会携带分支信息
+####  MSG的prepare示例
+请求示例
+``` bash
+curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "gid":"TestMsgTimeoutSuccess",
+    "trans_type":"msg",
+    "steps":[
+        {
+            "action":"http://localhost:8081/api/busi/TransOut"
+        },
+        {
+            "action":"http://localhost:8081/api/busi/TransIn"
+        }
+    ],
+    "payloads":[
+        "{\"amount\":30,\"transInResult\":\"SUCCESS\",\"transOutResult\":\"SUCCESS\"}",
+        "{\"amount\":30,\"transInResult\":\"SUCCESS\",\"transOutResult\":\"SUCCESS\"}"
+    ],
+    "query_prepared":"http://localhost:8081/api/busi/CanSubmit"
+}'
+```
+- steps 指定整个事务会分成多个步骤，每个步骤的正向操作url为action
+- payloads 表示每个步骤中进行http请求时的body
+- query_prepared 指定事务消息超时后进行查询的url
+
 ### submit 提交事务
 
 此接口用于提交全局事务
@@ -101,6 +129,60 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
     "dtm_result":"SUCCESS"
 }
 ```
+
+其中MSG和SAGA的submit还会携带分支信息
+
+#### MSG的submit示例
+请求示例
+``` bash
+curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "gid":"TestMsgNormal",
+    "trans_type":"msg",
+    "steps":[
+        {
+            "action":"http://localhost:8081/api/busi/TransOut"
+        },
+        {
+            "action":"http://localhost:8081/api/busi/TransIn"
+        }
+    ],
+    "payloads":[
+        "{\"amount\":30,\"transInResult\":\"SUCCESS\",\"transOutResult\":\"SUCCESS\"}",
+        "{\"amount\":30,\"transInResult\":\"SUCCESS\",\"transOutResult\":\"SUCCESS\"}"
+    ]
+}'
+```
+详细字段含义见上述MSG的prepare示例
+
+#### SAGA的submit示例
+请求示例
+``` bash
+curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "gid":"TestSagaNormal",
+    "trans_type":"saga",
+    "steps":[
+        {
+            "action":"http://localhost:8081/api/busi/TransOut",
+            "compensate":"http://localhost:8081/api/busi/TransOutRevert"
+        },
+        {
+            "action":"http://localhost:8081/api/busi/TransIn",
+            "compensate":"http://localhost:8081/api/busi/TransInRevert"
+        }
+    ],
+    "payloads":[
+        "{\"amount\":30,\"transInResult\":\"SUCCESS\",\"transOutResult\":\"SUCCESS\"}",
+        "{\"amount\":30,\"transInResult\":\"SUCCESS\",\"transOutResult\":\"SUCCESS\"}"
+    ]
+}'
+```
+
+- steps 指定整个事务会分成多个步骤，每个步骤的正向操作url为action，补偿操作url为compensate
+- payloads 每个步骤http请求的body
 
 ### abort 回滚事务
 
@@ -172,8 +254,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/registerTccBranch' \
     "confirm":"http://localhost:8081/api/busi/TransOutConfirm",
     "data":"{\"amount\":30,\"transInResult\":\"\",\"transOutResult\":\"\"}",
     "gid":"c0a8038b_4nxEEGy7W5h",
-    "trans_type":"tcc",
-    "try":"http://localhost:8081/api/busi/TransOut"
+    "trans_type":"tcc"
 }'
 ```
 
@@ -312,4 +393,4 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
 [MSG]: ../practice/msg "MSG"
 [TCC]: ../practice/tcc "TCC"
 [XA]: ../practice/xa "XA"
-[XA]: ../practice/saga "SAGA"
+[SAGA]: ../practice/saga "SAGA"
