@@ -209,17 +209,17 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/abort' \
 }
 ```
 
-### registerXaBranch 注册xa分支
+### registerBranch 注册xa分支
 
-此接口用于xa事务模式中，注册一个xa事务分支
+此接口用于TCC, XA事务模式中，注册事务分支
 
 | 接口名称 | 请求方法 | 请求格式 | 适用事务 |
 |:----:|:-----:|:----:|:-----:|
-| registerXaBranch | POST | JSON | [XA][] |
+| registerBranch | POST | JSON | [XA][] [TCC][] |
 
-请求示例
+#### 注册XA分支请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/registerXaBranch' \
+curl --location --request POST 'localhost:8080/api/dtmsvr/registerBranch' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "branch_id":"0101",
@@ -228,23 +228,10 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/registerXaBranch' \
     "url":"http://localhost:8081/api/busi/xa"
 }'
 ```
+- url: xa事务模式最后进行commit/rollback的服务地址
 
-响应示例
-``` JSON
-{
-    "dtm_result":"SUCCESS"
-}
-```
+#### 注册TCC分支请求示例
 
-### registerTccBranch 注册tcc分支
-
-此接口用于tcc事务模式中，注册一个tcc事务分支
-
-| 接口名称 | 请求方法 | 请求格式 | 适用事务 |
-|:----:|:-----:|:----:|:-----:|
-| registerXaBranch | POST | JSON | [TCC][] |
-
-请求示例
 ``` bash
 curl --location --request POST 'localhost:8080/api/dtmsvr/registerTccBranch' \
 --header 'Content-Type: application/json' \
@@ -257,6 +244,10 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/registerTccBranch' \
     "trans_type":"tcc"
 }'
 ```
+
+- cancel：指定cancel操作的url
+- confirm：指定confirm操作的url
+- data：调用cancel/confirm时需要传递的body
 
 响应示例
 ``` JSON
