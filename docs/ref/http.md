@@ -209,7 +209,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/abort' \
 }
 ```
 
-### registerBranch 注册xa分支
+### registerBranch
 
 此接口用于TCC, XA事务模式中，注册事务分支
 
