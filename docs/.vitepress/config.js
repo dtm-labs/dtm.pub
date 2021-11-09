@@ -28,6 +28,10 @@ module.exports = {
     sidebar: {
       '/resource/': [
         {
+          text: '分享视频',
+          link: '/resource/videos',
+        },
+        {
           text: '博客 理论部分',
           link: '/resource/blogs-theory',
         },
@@ -50,10 +54,6 @@ module.exports = {
         {
           text: '博客PHP',
           link: '/resource/blogs-php',
-        },
-        {
-          text: '分享视频',
-          link: '/resource/videos',
         },
       ],
       '/examples/': 'auto',
