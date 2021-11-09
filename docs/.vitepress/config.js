@@ -20,7 +20,7 @@ module.exports = {
     nav: [
       { text: '指引', link: '/guide/start' },
       { text: 'English', link: 'https://en.dtm.pub' },
-      { text: '资料', link: '/resource/blogs' },
+      { text: '资料', link: '/resource/blogs-theory' },
       // { text: '示例', link: '/examples/' },
       { text: 'Github', link: 'https://github.com/yedf/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
@@ -28,17 +28,34 @@ module.exports = {
     sidebar: {
       '/resource/': [
         {
-          text: '博客',
-          link: '/resource/blogs',
+          text: '博客 理论部分',
+          link: '/resource/blogs-theory',
+        },
+        {
+          text: '博客Go',
+          link: '/resource/blogs-go',
+        },
+        {
+          text: '博客Python',
+          link: '/resource/blogs-py',
+        },
+        {
+          text: '博客Java',
+          link: '/resource/blogs-java',
+        },
+        {
+          text: '博客Donet',
+          link: '/resource/blogs-donet',
+        },
+        {
+          text: '博客PHP',
+          link: '/resource/blogs-php',
         },
         {
           text: '分享视频',
           link: '/resource/videos',
         },
-        {
-          text: '更多的分享',
-          link: '/resource/other',
-        },],
+      ],
       '/examples/': 'auto',
       // catch-all fallback
       '/': [

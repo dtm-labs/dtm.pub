@@ -14,6 +14,8 @@ grpc sdk: [https://github.com/yedf/dtmgrpc](https://github.com/yedf/dtmgrpc)
 
 示例: [https://github.com/yedf/dtmgrpc-go-sample](https://github.com/yedf/dtmgrpc-go-sample)
 
+[相关博客](../resource/blogs-go)
+
 ### dotnet
 
 客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-csharp](https://github.com/yedf/dtmcli-csharp)
@@ -22,11 +24,16 @@ grpc sdk: [https://github.com/yedf/dtmgrpc](https://github.com/yedf/dtmgrpc)
 
 感谢 [geffzhang](https://github.com/geffzhang)的帮助，C的sdk和示例，全部由[geffzhang](https://github.com/geffzhang)独立贡献
 
+[相关博客](../resource/blogs-donet)
+
 ### python
 
 客户端sdk（当前支持TCC、SAGA、子事务屏障）: [https://github.com/yedf/dtmcli-py](https://github.com/yedf/dtmcli-py)
 
 示例: [https://github.com/yedf/dtmcli-py-sample](https://github.com/yedf/dtmcli-py-sample)
+
+[相关博客](../resource/blogs-py)
+
 
 ### Java
 
@@ -36,6 +43,8 @@ grpc sdk: [https://github.com/yedf/dtmgrpc](https://github.com/yedf/dtmgrpc)
 
 感谢 [viticis](https://github.com/viticis)的帮助，Java的sdk和示例，全部由[viticis](https://github.com/viticis)独立贡献
 
+[相关博客](../resource/blogs-java)
+
 ### php
 
 客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-php](https://github.com/yedf/dtmcli-php)
@@ -44,11 +53,15 @@ grpc sdk: [https://github.com/yedf/dtmgrpc](https://github.com/yedf/dtmgrpc)
 
 感谢 [onlyshow](https://github.com/onlyshow) 的帮助，php的sdk和示例，全部由[onlyshow](https://github.com/onlyshow)独立完成
 
+[相关博客](../resource/blogs-php)
+
 ### node
 
 客户端sdk（当前只支持TCC）: [https://github.com/yedf/dtmcli-node](https://github.com/yedf/dtmcli-node)
 
 示例: [https://github.com/yedf/dtmcli-node-sample](https://github.com/yedf/dtmcli-node-sample)
+
+[相关博客](../resource/blogs-node)
 
 ### 其他
 
