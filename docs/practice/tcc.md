@@ -27,7 +27,7 @@ err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty
 })
 ```
 
-详细例子代码参考[examples/grpc_tcc.go](https://github.com/yedf/dtm/blob/main/examples/http_tcc.go)：
+详细例子代码参考[examples/http_tcc.go](https://github.com/yedf/dtm/blob/main/examples/http_tcc.go)：
 
 ### grpc
 ``` go
