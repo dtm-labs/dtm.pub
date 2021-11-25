@@ -20,7 +20,7 @@ module.exports = {
     nav: [
       { text: '指引', link: '/guide/start' },
       { text: 'English', link: 'https://en.dtm.pub' },
-      { text: '资料', link: '/resource/blogs-theory' },
+      { text: '博客与分享', link: '/resource/blogs-theory' },
       // { text: '示例', link: '/examples/' },
       { text: 'Github', link: 'https://github.com/yedf/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
@@ -34,6 +34,10 @@ module.exports = {
         {
           text: '博客 理论部分',
           link: '/resource/blogs-theory',
+        },
+        {
+          text: '博客 深入系列',
+          link: '/resource/blogs-deep',
         },
         {
           text: '博客Go',
