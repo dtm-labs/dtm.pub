@@ -68,3 +68,16 @@ busiServer, err := c.BuildTarget()
 ```
 
 整个开发接入的过程很少，前面的注释已经很清晰，就不再赘述了
+
+
+## 注意事项
+
+1、在去找*.pb.go的文件中的grpc访问的方法路径时候，一定要找invoke的路径
+
+正确
+
+![pb_url_right](../imgs/pb_url_right.png)
+
+错误
+
+![pb_url_wrong](../imgs/pb_url_wrong.png)
