@@ -182,6 +182,10 @@ module.exports = {
               text: 'go-zero',
               link: '/protocol/gozero'
             },
+            {
+              text: '微服务对接',
+              link: '/protocol/support'
+            },
           ]
         },
 
