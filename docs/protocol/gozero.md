@@ -37,7 +37,7 @@ cd gozero/app && go run main.go
 那就是事务正常完成了
 
 ## 开发接入
-参考[dtmdriver-clients](https://github.com/yedf/dtmdriver-clients/gozero/app/main.go)的代码
+参考[dtmdriver-clients](https://github.com/yedf/dtmdriver-clients/blob/main/gozero/app/main.go)的代码
 
 ``` go
 // 下面这行导入gozero的dtm驱动
