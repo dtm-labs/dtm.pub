@@ -17,7 +17,9 @@ go build -o dtm app/main.go
 
 ## 启动
 
-dtm会监听8080端口
+dtm会监听
+- HTTP: 36789
+- gRPC: 36790
 
 ```
 ./dtm dtmsvr

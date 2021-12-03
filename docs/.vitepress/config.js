@@ -164,6 +164,28 @@ module.exports = {
           ]
         },
         {
+          text: '支持的协议',
+          children: [
+            {
+              text: '概述',
+              link: '/protocol/intro'
+            },
+            {
+              text: 'HTTP',
+              link: '/protocol/http'
+            },
+            {
+              text: 'gRPC',
+              link: '/protocol/grpc'
+            },
+            {
+              text: 'go-zero',
+              link: '/protocol/gozero'
+            },
+          ]
+        },
+
+        {
           text: '特性',
           children: [
             {

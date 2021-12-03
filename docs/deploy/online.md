@@ -54,7 +54,7 @@ spec:
             failureThreshold: 30
             httpGet:
               path: /api/ping
-              port: 8080
+              port: 36789
               scheme: HTTP
             initialDelaySeconds: 150
             periodSeconds: 2
@@ -64,7 +64,7 @@ spec:
             failureThreshold: 5
             httpGet:
               path: /api/ping
-              port: 8080
+              port: 36789
               scheme: HTTP
             initialDelaySeconds: 150
             periodSeconds: 3
@@ -72,7 +72,7 @@ spec:
             timeoutSeconds: 2
           name: dtm
           ports:
-            - containerPort: 8080
+            - containerPort: 36789
           resources:
             requests:
               cpu: 200m
@@ -88,7 +88,7 @@ metadata:
 spec:
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 36789
       name: dtm-svc-port
   selector:
     app: dtm

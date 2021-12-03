@@ -33,7 +33,7 @@ DTM 可以通过HTTP协议交互。因为事务本身具有特殊性，它和普
 
 请求示例
 ``` bash
-curl 'localhost:8080/api/dtmsvr/newGid'
+curl 'localhost:36789/api/dtmsvr/newGid'
 ```
 
 响应示例
@@ -54,7 +54,7 @@ curl 'localhost:8080/api/dtmsvr/newGid'
 
 请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid": "xxx",
@@ -81,7 +81,7 @@ MSG 的prepare请求还会携带分支信息
 ####  MSG的prepare示例
 请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid":"TestMsgTimeoutSuccess",
@@ -115,7 +115,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
 
 请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid": "xxx",
@@ -135,7 +135,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
 #### MSG的submit示例
 请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid":"TestMsgNormal",
@@ -159,7 +159,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
 #### SAGA的submit示例
 请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid":"TestSagaNormal",
@@ -194,7 +194,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/submit' \
 
 请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/abort' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/abort' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid": "xxx",
@@ -219,7 +219,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/abort' \
 
 #### 注册XA分支请求示例
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/registerBranch' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/registerBranch' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "branch_id":"0101",
@@ -233,7 +233,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/registerBranch' \
 #### 注册TCC分支请求示例
 
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/registerTccBranch' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/registerTccBranch' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "branch_id":"01",
@@ -266,7 +266,7 @@ curl --location --request POST 'localhost:8080/api/dtmsvr/registerTccBranch' \
 
 请求示例
 ``` bash
-curl 'localhost:8080/api/dtmsvr/query?gid=xxx'
+curl 'localhost:36789/api/dtmsvr/query?gid=xxx'
 ```
 
 成功响应示例
@@ -313,7 +313,7 @@ curl 'localhost:8080/api/dtmsvr/query?gid=xxx'
 
 请求示例
 ``` bash
-curl 'localhost:8080/api/dtmsvr/all?last_id='
+curl 'localhost:36789/api/dtmsvr/all?last_id='
 ```
 
 参数last_id: 上一次请求返回数据的最小id。
@@ -361,7 +361,7 @@ curl 'localhost:8080/api/dtmsvr/all?last_id='
 这些事务选项可以在prepare/submit请求中，发送给TM，请求示例
 
 ``` bash
-curl --location --request POST 'localhost:8080/api/dtmsvr/prepare' \
+curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "gid": "xxx",
