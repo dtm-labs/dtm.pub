@@ -98,6 +98,11 @@ grpc的调用，可以类比于HTTP的POST，其中：
 
 `Add(busiServer+"/trans.TransSvc/TransOut", &busi.BusiReq{Amount: 30, UserId: 1})`
 
+## 更加完整的例子
+热心的社区同学Mikael帮忙写了一个内容更加丰富的例子，结合实际应用和子事务屏障，完整的演示了一个线上实际运行的分布式事务，有兴趣的同学可以参考：
+
+[https://github.com/Mikaelemmmm/gozerodtm](https://github.com/Mikaelemmmm/gozerodtm)
+
 ## 其他方式接入
 go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接入方式
 
