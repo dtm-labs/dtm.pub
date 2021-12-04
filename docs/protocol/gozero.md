@@ -13,8 +13,13 @@ MicroService:
 ```
 - 启动etcd
 ```
-# 前提，已安装etcd
+# 前提：已安装etcd
 etcd
+```
+- 启动dtm
+```
+# 前提：配置好dtm的数据库
+go run app/main.go dev
 ```
 - 运行一个go-zero的服务
 ```
