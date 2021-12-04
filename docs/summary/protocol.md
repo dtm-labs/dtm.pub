@@ -62,29 +62,8 @@ type DtmServer interface {
 - Aborted && Message=="ONGOING"：表示进行中，后续采用固定间隔重试
 - 其他错误：表示出错，采用退避算法重试
 
-``` go
-type BusiRequest struct {
-	Info     *BranchInfo
-	Dtm      string
-	BusiData []byte
-}
-
-type BusiReply struct {
-	BusiData []byte
-}
-
-type BusiClient interface {
-  ...
-  TransIn(ctx context.Context, in *dtmgrpc.BusiRequest, opts ...grpc.CallOption) (*emptypb.BusiReply, error)
-```
-
 #### AP调用RM的接口，跟业务相关，主要是被TCC、XA两种模式调用。返回的结果
-- 有返回值，返回值为固定的 dtmgrpc.BusiReply，应用程序需要用到数据，则需要自己Unmarshal里面的BusiData
-``` go
-type BusiClient interface {
-  ...
-  TransInTcc(ctx context.Context, in *dtmgrpc.BusiRequest, opts ...grpc.CallOption) (*dtmgrpc.BusiReply, error)
-```
+- 这部分接口用户完全自定义，dtm并不关心。建议用户采用“TM调用RM的接口”相同的设计，保持统一
 
 ## 重试策略
 
