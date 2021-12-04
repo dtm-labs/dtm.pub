@@ -75,14 +75,27 @@ busiServer, err := c.BuildTarget()
 整个开发接入的过程很少，前面的注释已经很清晰，就不再赘述了
 
 
-## 注意事项
-
-1、在去找*.pb.go的文件中的grpc访问的方法路径时候，一定要找invoke的路径
-
-正确
+### 注意事项
+在去找*.pb.go的文件中的grpc访问的方法路径时候，一定要找invoke的路径
 
 ![pb_url_right](../imgs/pb_url_right.png)
 
-错误
-
 ![pb_url_wrong](../imgs/pb_url_wrong.png)
+
+## 深入理解动态调用
+在go-zero使用dtm的分布式事务时，许多的调用是从dtm服务器发起的，例如TCC的Confirm/Cancel，SAGA/MSG的所有调用。
+
+dtm无需知道组成分布式事务的相关业务api的强类型，它是动态的调用这些api。
+
+grpc的调用，可以类比于HTTP的POST，其中：
+
+- c.BuildTarget() 产生的target类似于URL中的Host
+- "/trans.TransSvc/TransOut" 相当于URL中的Path
+- &busi.BusiReq{Amount: 30, UserId: 1} 相当于Post中Body
+- pb.Response 相当于HTTP请求的响应
+
+通过下面这部分代码，dtm就拿到了完整信息，就能够发起完整的调用了
+
+`Add(busiServer+"/trans.TransSvc/TransOut", &busi.BusiReq{Amount: 30, UserId: 1})`
+
+
