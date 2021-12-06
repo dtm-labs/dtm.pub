@@ -7,6 +7,9 @@
 下面仅包含部分使用者
 
 <div style='vertical-align: middle'>
-    <img alt='镜小二' height='40'  src='https://img.epeijing.cn/official-website/assets/logo.png'  />
-    <img alt='常青藤爸爸' height='40'  src='https://www.ivydad.com/_nuxt/img/header-logo.2645ad5.png'  />
+    <img alt='腾讯' height='80'  src='../imgs-company/tencent.jpeg'  />
+    <img alt='常青藤爸爸' height='80'  src='../imgs-company/ivydad.png'  />
+    <img alt='镜小二' height='80'  src='../imgs-company/eglass.png'  />
+    <img alt='极欧科技' height='80'  src='../imgs-company/jiou.png'  />
+    <img alt='金数智联' height='80'  src='../imgs-company/gdci.png'  />
 </div>

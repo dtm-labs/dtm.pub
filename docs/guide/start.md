@@ -19,6 +19,8 @@
 
 ## 谁在使用dtm
 
+[Tencent 腾讯](https://www.tencent.com)
+
 [Ivydad 常青藤爸爸](https://ivydad.com)
 
 [Eglass 视咖镜小二](https://epeijing.cn)
