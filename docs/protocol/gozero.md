@@ -48,7 +48,8 @@ cd gozero/app && go run main.go
 // 下面这行导入gozero的dtm驱动
 import _ "github.com/yedf/dtmdriver-gozero"
 
-// 使用dtm的客户端dtmgrpc之前，需要执行下面这行调用，告知dtmgrpc使用gozero的驱动来如何处理gozero的url
+// 使用dtm的客户端dtmgrpc之前，需要执行下面这行调用
+// 告知dtmgrpc使用gozero的驱动来如何处理gozero的url
 err := dtmgrpc.UseDriver("dtm-driver-gozero")
 // check err
 
@@ -65,7 +66,8 @@ busiServer, err := c.BuildTarget()
 	msg := dtmgrpc.NewMsgGrpc(dtmServer, gid).
     // 事务的第一步为调用trans.TransSvcClient.TransOut
     // 可以从trans.pb.go中找到上述方法对应的Method名称为"/trans.TransSvc/TransOut"
-    // dtm需要从dtm服务器调用该方法，所以不走强类型，而是走动态的url: busiServer+"/trans.TransSvc/TransOut"
+    // dtm需要从dtm服务器调用该方法，所以不走强类型
+    // 而是走动态的url: busiServer+"/trans.TransSvc/TransOut"
 		Add(busiServer+"/trans.TransSvc/TransOut", &busi.BusiReq{Amount: 30, UserId: 1}).
 		Add(busiServer+"/trans.TransSvc/TransIn", &busi.BusiReq{Amount: 30, UserId: 2})
 	err := msg.Submit()
