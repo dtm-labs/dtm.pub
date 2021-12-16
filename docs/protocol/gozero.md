@@ -1,4 +1,6 @@
 # go-zero支持
+dtm与go-zero进行了深度合作，打造了go-zero原生支持分布式事务的解决方案，提供了极简的用户体验。感谢go-zero作者[kevwan](https://github.com/kevwan)的大力支持
+
 dtm从v1.6.0开始原生支持go-zero微服务框架，go-zero的版本需要v1.2.4以上
 
 ## 运行一个已有的示例
@@ -119,6 +121,5 @@ go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接
 在K8S中，将服务注册到K8S中，是有deployment.yaml完成的，应用内部，不需要进行注册
 
 ## 小结
-dtm与go-zero进行了深度合作，打造了go-zero原生支持分布式事务的解决方案，提供了极简的用户体验。
 
 欢迎使用[dtm](https://github.com/yedf/dtm)，并star支持我们，一起共建golang的微服务生态
