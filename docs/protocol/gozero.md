@@ -117,3 +117,8 @@ go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接
 对于K8S这种方式，您只需要在上面dtm的etcd配置基础上，将Target设置为空字符串即可。
 
 在K8S中，将服务注册到K8S中，是有deployment.yaml完成的，应用内部，不需要进行注册
+
+## 小结
+dtm与go-zero进行了深度合作，打造了go-zero原生支持分布式事务的解决方案，提供了极简的用户体验。
+
+欢迎使用[dtm](https://github.com/yedf/dtm)，并star支持我们，一起共建golang的微服务生态
