@@ -27,32 +27,29 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 ## 环境变量(推荐方式)
 为了友好支持容器化和云原生，DTM支持环境变量进行配置
 
-### 必须的配置项
-必须的配置项有三个DB_HOST, DB_USER, DB_PASSWORD
+### 重要配置项
+最重要配置项为dtm的存储，列出如下
 
-#### DB_HOST
-指定数据库的host
+#### DRIVER_STORE_DRIVER
+指定您采用的存储引擎，取值为：mysql|postgres|redis|boltdb(默认)
 
-#### DB_USER
-指定数据库的用户名
+#### DRIVER_STORE_HOST
+如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的主机名
 
-#### DB_PASSWORD
-指定数据库的密码
+#### DRIVER_STORE_PORT
+如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的端口号
 
-### 可选的配置项
-可选的配置项都有默认值
+#### DRIVER_STORE_USER
+如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的用户名
 
-### DB_DRIVER
-指定数据库类型，取值为:
+#### DRIVER_STORE_PASSWORD
+如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的用户密码
 
-- mysql
-- postgres
 
-不指定时，默认为mysql
+### 其他配置项
 
-#### DB_PORT
-指定数据库的port，默认为3306
-
+#### CRON_TRANS_INTERVAL
+指定每个获取超时事务协程，每次获取空任务后的睡眠时间
 #### TIMEOUT_TO_FAIL
 指定XA，TCC失败的超时时间，以及事务消息模式中，反查的超时时间。
 
@@ -60,6 +57,9 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 
 #### RETRY_INTERVAL
 重试间隔，当某个事务分支操作返回错误，那么dtm会间隔这个时间进行重试。dtm的重试使用退避算法，详情见[重试](../ref/options)
+
+### 更多配置项
+更多的配置项，可以参考[yml样板配置文件](https://github.com/yedf/dtm/blob/main/conf.sample.yml)中的注释
 
 ## yml文件配置(非推荐方式)
 为了方便直接部署和调试，DTM也支持yml配置文件，参考[yml样板配置文件](https://github.com/yedf/dtm/blob/main/conf.sample.yml)

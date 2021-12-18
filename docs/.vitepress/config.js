@@ -108,25 +108,16 @@ module.exports = {
               link: '/practice/other'
             },
             {
+              text: '异常与子事务屏障',
+              link: '/exception/barrier'
+            },
+            {
               text: '不允许失败',
               link: '/practice/must-succeed'
             },
             {
               text: '选择合适的模式',
               link: '/practice/choice'
-            }
-          ]
-        },
-        {
-          text: '异常处理',
-          children: [
-            {
-              text: '异常',
-              link: '/exception/exception'
-            },
-            {
-              text: '子事务屏障',
-              link: '/exception/barrier'
             }
           ]
         },
@@ -197,7 +188,7 @@ module.exports = {
               link: '/character/tcc-nested'
             },
             {
-              text: '支持的数据库',
+              text: '支持的事务与存储',
               link: '/character/supported-db'
             },
             {
