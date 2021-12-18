@@ -230,6 +230,10 @@ module.exports = {
           text: '其他',
           children: [
             {
+              text: 'DTM开发测试指南',
+              link: '/other/develop'
+            },
+            {
               text: '性能测试报告',
               link: '/other/performance'
             },
