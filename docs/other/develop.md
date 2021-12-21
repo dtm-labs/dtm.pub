@@ -27,6 +27,15 @@ dtm没有测试人员，他的稳定性主要是靠自动化的测试保证的�
 
 `go test ./...`
 
+如果您的修改，涉及存储引擎部分，那么您需要设定环境变量，覆盖特定引擎下的测试用例
+
+```
+go test ./... # 默认情况下，使用redis引擎
+TEST_STORE=redis go test ./... # 测试redis引擎
+TEST_STORE=boltdb go test ./... # 测试boltdb引擎
+TEST_STORE=mysql go test ./... # 测试mysql引擎
+TEST_STORE=postgres go test ./... # 测试postgres引擎
+```
 
 ## 发起PR
 您的修改完成后，按照流程发起PR，并关注您的PR能够通过dtm的所有集成测试
