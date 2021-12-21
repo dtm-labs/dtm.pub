@@ -6,10 +6,12 @@ dtm中的子事务屏障，需要与数据库交互，xa事务模式，也需要
 
 ### barrier需要的接口
 
-因为barrier需要在事务内部操作barrier相关的表，所以它的接口需要传入一个tx参数，参数类型为接口dtmcli.Tx。实际使用中，原生的 *sql.Tx 符合该接口，获取 *sql.Tx 直接传给dtmcli的相关接口即可
+因为barrier需要在事务内部操作barrier相关的表，所以它的接口需要传入一个 *sql.Tx或 *sql.DB
 
 ``` go
-func (bb *BranchBarrier) Call(tx Tx, busiCall BusiFunc) error
+func (bb *BranchBarrier) Call(tx *sql.Tx, busiCall BusiFunc) error
+func (bb *BranchBarrier) CallWithDB(db *sql.DB, busiCall BusiFunc) error
+
 ```
 
 ### Xa需要的接口
@@ -33,7 +35,7 @@ barrier示例：
   barrier := MustBarrierFromGin(c)
   // gdb is a *gorm.DB
   tx := gdb.Begin()
-	return dtmcli.ResultSuccess, barrier.Call(tx.Statement.ConnPool.(*sql.Tx), func(db dtmcli.DB) error {
+	return dtmcli.ResultSuccess, barrier.Call(tx.Statement.ConnPool.(*sql.Tx), func(tx1 *sql.Tx) error {
 		return tx.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", -req.Amount, 2).Error
 	})
 ```
@@ -66,7 +68,7 @@ barrier示例：
   gdb := dialect.DB(sdb)
   // gdb is a goqu dialect.DB, the following code shows how to obtain tx
 	tx, err := gdb.Begin()
-	return dtmcli.ResultSuccess, barrier.Call(tx, func(db dtmcli.DB) error {
+	return dtmcli.ResultSuccess, barrier.Call(tx, func(tx1 *sql.Tx) error {
 		_, err := tx.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", -req.Amount, 2)
 		return err
 	})
@@ -102,7 +104,7 @@ barrier示例：
 		return nil, err
 	}
   // se is a xorm session, the following code shows how to obtain tx
-	return dtmcli.ResultSuccess, barrier.Call(se.Tx().Tx, func(db dtmcli.DB) error {
+	return dtmcli.ResultSuccess, barrier.Call(se.Tx().Tx, func(tx1 *sql.Tx) error {
 		_, err := se.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", -req.Amount, 2)
 		return err
 	})
@@ -131,11 +133,7 @@ barrier示例：
   if err != nil {
     return err
   }
-  tx, err := db.Begin()
-  if err != nil {
-    return err
-  }
-	return dtmcli.ResultSuccess, barrier.Call(tx, func(db dtmcli.DB) error {
+	return dtmcli.ResultSuccess, barrier.CallWithDB(db, func(tx *sql.Tx) error {
 		_, err := tx.Exec("update dtm_busi.user_account set balance = balance + ? where user_id = ?", -req.Amount, 2)
 		return err
 	})
@@ -151,3 +149,6 @@ xa示例
   })
 
 ```
+
+### ent
+可以支持，代码示例待补充
