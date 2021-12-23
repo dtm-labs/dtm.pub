@@ -48,12 +48,7 @@ cd gozero/app && go run main.go
 
 ``` go
 // 下面这行导入gozero的dtm驱动
-import _ "github.com/yedf/dtmdriver-gozero"
-
-// 使用dtm的客户端dtmgrpc之前，需要执行下面这行调用
-// 告知dtmgrpc使用gozero的驱动来如何处理gozero的url
-err := dtmgrpc.UseDriver("dtm-driver-gozero")
-// check err
+import _ "github.com/yedf/driver-gozero"
 
 // dtm已经通过前面的配置，注册到下面这个地址，因此在dtmgrpc中使用该地址
 var dtmServer = "etcd://localhost:2379/dtmservice"
