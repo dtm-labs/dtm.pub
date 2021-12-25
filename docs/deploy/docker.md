@@ -3,7 +3,7 @@
 ## Docker命令
 
 ``` bash
-docker run --name dtm -p 36789:36789 -p 36790:36790 -e DB_HOST='localhost' DB_USER='root' DB_PASSWORD='' yedf/dtm:latest
+docker run --name dtm -p 36789:36789 -p 36790:36790 -e DB_HOST='localhost' DB_USER='root' DB_PASSWORD='' dtm-labs/dtm:latest
 ```
 
 各个参数，详见前一节中的环境变量
@@ -14,7 +14,7 @@ docker-compose.yaml:
 version: '3'
 services:
   dtm:
-    image: yedf/dtm
+    image: dtm-labs/dtm
     environment:
       - DB_HOST: localhost
       - DB_USER: root

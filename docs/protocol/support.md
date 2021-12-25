@@ -14,7 +14,7 @@ MicroService:
 ```
 - 运行一个使用dtm的APP
 ```
-# yedf/dtmdriver-clients
+# dtm-labs/dtmdriver-clients
 go run protocol1/main.go
 ```
 
@@ -30,7 +30,7 @@ go run protocol1/main.go
 ## 接入步骤
 
 接入步骤如下：
-- 实现yedf/dtmdriver里面的接口
+- 实现dtm-labs/dtmdriver里面的接口
 - 提一个PR给dtm，在dtm导入您实现了dtmdriver的包
 - 配置dtm服务器，使用您的驱动
 - 执行dtmdriver.Use，注册您的驱动，之后就可以使用dtmgrpc
@@ -77,7 +77,7 @@ func init() {
 ### 步骤2：提PR给DTM
 如果您完成了驱动的编写，您可以提PR给dtm，dtm团队将及时给您反馈，评估您的需求。您的PR内容类似于：
 ``` go
-import _ "github.com/yedf/dtmdriver-gozero"
+import _ "github.com/dtm-labs/dtmdriver-gozero"
 ```
 
 ### 步骤3：配置运行dtm

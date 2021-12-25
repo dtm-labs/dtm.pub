@@ -27,7 +27,7 @@ go语言推荐的错误处理方式是error is a value，而不是异常的方�
 
 ### http
 
-http协议在[examples/base_http.go](https://github.com/yedf/dtm/blob/main/examples/base_http.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
+http协议在[examples/base_http.go](https://github.com/dtm-labs/dtm/blob/main/examples/base_http.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
 
 ``` go
 func handleGeneralBusiness(c *gin.Context, result1 string, result2 string, busi string) (interface{}, error) {
@@ -66,7 +66,7 @@ func BaseAddRoute(app *gin.Engine) {
 
 ### grpc
 
-grpc协议在[examples/base_grpc.go](https://github.com/yedf/dtm/blob/main/examples/base_grpc.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
+grpc协议在[examples/base_grpc.go](https://github.com/dtm-labs/dtm/blob/main/examples/base_grpc.go)里面定义TransIn、TransOut相关的各个基本操作，如下：
 
 ``` go
 func handleGrpcBusiness(in *dtmgrpc.BusiRequest, result1 string, result2 string, busi string) error {

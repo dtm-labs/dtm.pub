@@ -1,7 +1,7 @@
 {
   "name": "dtm-doc",
   "version": "0.0.1",
-  "repository": "git@github.com:yedf/yedf.github.io.git",
+  "repository": "git@github.com:dtm-labs/dtm.pub.git",
   "author": "yedf",
   "license": "MIT",
   "scripts": {

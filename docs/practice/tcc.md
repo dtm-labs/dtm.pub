@@ -27,7 +27,7 @@ err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty
 })
 ```
 
-详细例子代码参考[examples/http_tcc.go](https://github.com/yedf/dtm/blob/main/examples/http_tcc.go)：
+详细例子代码参考[examples/http_tcc.go](https://github.com/dtm-labs/dtm/blob/main/examples/http_tcc.go)：
 
 ### grpc
 ``` go
@@ -43,7 +43,7 @@ err := dtmgrpc.TccGlobalTransaction(DtmGrpcServer, gid, func(tcc *dtmgrpc.TccGrp
 })
 ```
 
-详细例子代码参考[examples/grpc_tcc.go](https://github.com/yedf/dtm/blob/main/examples/grpc_tcc.go)：
+详细例子代码参考[examples/grpc_tcc.go](https://github.com/dtm-labs/dtm/blob/main/examples/grpc_tcc.go)：
 
 调用TccGlobalTransaction会开启一个全局的tcc事务。他的声明如下：
 

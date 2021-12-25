@@ -25,7 +25,7 @@ go run app/main.go dev
 ```
 - 运行一个go-zero的服务
 ```
-git clone github.com/yedf/dtmdriver-clients && cd dtmdriver-clients
+git clone github.com/dtm-labs/dtmdriver-clients && cd dtmdriver-clients
 cd gozero/trans && go run trans.go
 ```
 - 发起一个go-zero使用dtm的事务
@@ -44,11 +44,11 @@ cd gozero/app && go run main.go
 那就是事务正常完成了
 
 ## 开发接入
-参考[yedf/dtmdriver-clients](https://github.com/yedf/dtmdriver-clients/blob/main/gozero/app/main.go)的代码
+参考[dtm-labs/dtmdriver-clients](https://github.com/dtm-labs/dtmdriver-clients/blob/main/gozero/app/main.go)的代码
 
 ``` go
 // 下面这行导入gozero的dtm驱动
-import _ "github.com/yedf/driver-gozero"
+import _ "github.com/dtm-labs/driver-gozero"
 
 // dtm已经通过前面的配置，注册到下面这个地址，因此在dtmgrpc中使用该地址
 var dtmServer = "etcd://localhost:2379/dtmservice"
@@ -117,4 +117,4 @@ go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接
 
 ## 小结
 
-欢迎使用[dtm](https://github.com/yedf/dtm)，并star支持我们，一起共建golang的微服务生态
+欢迎使用[dtm](https://github.com/dtm-labs/dtm)，并star支持我们，一起共建golang的微服务生态

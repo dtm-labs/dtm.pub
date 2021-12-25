@@ -83,7 +83,7 @@ func xaTransOut(c *gin.Context) (interface{}, error) {
 }
 ```
 
-详细例子代码参考[examples/http_xa.go](https://github.com/yedf/dtm/blob/main/examples/http_xa.go)：
+详细例子代码参考[examples/http_xa.go](https://github.com/dtm-labs/dtm/blob/main/examples/http_xa.go)：
 
 
 ### grpc
@@ -133,7 +133,7 @@ func (s *busiServer) TransOutXa(ctx context.Context, in *dtmgrpc.BusiRequest) (*
 
 ```
 
-详细例子代码参考[examples/grpc_xa.go](https://github.com/yedf/dtm/blob/main/examples/grpc_xa.go)：
+详细例子代码参考[examples/grpc_xa.go](https://github.com/dtm-labs/dtm/blob/main/examples/grpc_xa.go)：
 
 上面的代码首先注册了一个全局XA事务，然后添加了两个子事务TransOut、TransIn。子事务全部执行成功之后，提交给dtm。dtm收到提交的xa全局事务后，会调用所有子事务的xa commit，完成整个xa事务。
 

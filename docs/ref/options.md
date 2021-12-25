@@ -4,7 +4,7 @@
 
 上面介绍了各种模式，每种模式将事务提交之后，立即返回，不等待事务结束。但某些实际应用的场景，用户需要知道整个事务的结果，dtm对此进行了支持。
 
-可以参考示例[saga wait](https://github.com/yedf/dtm/blob/main/examples/http_saga_wait.go)
+可以参考示例[saga wait](https://github.com/dtm-labs/dtm/blob/main/examples/http_saga_wait.go)
 
 所有的全局事务对象，Saga/Xa/Tcc/Msg，都可以设置WaitResult。
 

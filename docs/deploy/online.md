@@ -48,7 +48,7 @@ spec:
               value: 10
             - name: IS_DOCKER
               value: '1'
-          image: yedf/dtm:latest
+          image: dtm-labs/dtm:latest
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 30

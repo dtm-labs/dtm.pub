@@ -56,7 +56,7 @@
 
 ### 获取代码
 
-`git clone https://github.com/yedf/dtm && cd dtm`
+`git clone https://github.com/dtm-labs/dtm && cd dtm`
 
 ### dtm依赖于mysql
 
@@ -145,4 +145,4 @@ func qsAddRoute(app *gin.Engine) {
 
 ![yedf2008](https://service.ivydad.com/cover/dubbingb6b5e2c0-2d2a-cd59-f7c5-c6b90aceb6f1.jpeg)
 
-如果您觉得[dtm](https://github.com/yedf/dtm)不错，或者对您有帮助，请赏颗星吧！
+如果您觉得[dtm](https://github.com/dtm-labs/dtm)不错，或者对您有帮助，请赏颗星吧！

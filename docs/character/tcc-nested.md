@@ -8,7 +8,7 @@ dtm的Tcc事务模式，支持子事务嵌套，流程图如下：
 
 ### 示例
 
-tcc支持嵌套的子事务，代码如下(摘自[examples/http_tcc](https://github.com/yedf/dtm/blob/main/examples/http_tcc.go))：
+tcc支持嵌套的子事务，代码如下(摘自[examples/http_tcc](https://github.com/dtm-labs/dtm/blob/main/examples/http_tcc.go))：
 
 ``` go
 err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty.Response, error) {

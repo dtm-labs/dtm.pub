@@ -25,7 +25,7 @@ saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
 err := saga.Submit()
 ```
 
-详细例子代码参考[example/http_saga.go](https://github.com/yedf/dtm/blob/main/examples/http_saga.go)
+详细例子代码参考[example/http_saga.go](https://github.com/dtm-labs/dtm/blob/main/examples/http_saga.go)
 
 ### grpc
 
@@ -38,7 +38,7 @@ saga := dtmgrpc.NewSaga(DtmGrpcServer, gid).
 err := saga.Submit()
 ```
 
-详细例子代码参考[example/grpc_saga.go](https://github.com/yedf/dtm/blob/main/examples/grpc_saga.go)
+详细例子代码参考[example/grpc_saga.go](https://github.com/dtm-labs/dtm/blob/main/examples/grpc_saga.go)
 
 上面的代码首先创建了一个SAGA事务，然后添加了两个子事务TransOut、TransIn，每个事务分支包括action和compensate两个操作，分别为Add函数的第一第二个参数。子事务定好之后提交给dtm。dtm收到saga提交的全局事务后，会调用所有子事务的正向操作，如果所有正向操作成功完成，那么事务成功结束。
 
@@ -84,7 +84,7 @@ err := saga.Submit()
   err := csaga.Submit()
 ```
 
-详细例子代码参考[example/http_saga.go](https://github.com/yedf/dtm/blob/main/examples/http_saga.go)
+详细例子代码参考[example/http_saga.go](https://github.com/dtm-labs/dtm/blob/main/examples/http_saga.go)
 
 ### 失败回滚
 
