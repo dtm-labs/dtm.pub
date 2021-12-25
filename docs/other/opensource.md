@@ -14,7 +14,7 @@
 | [XA事务](#xa)|<span style="color:green">✓</span>|<span style="color:green">✓</span>||
 |[AT事务](#at)|<span style="color:green">建议使用XA</span>|<span style="color:green">✓</span>|AT与XA类似，性能稍好，但有脏读脏回滚|
 | [SAGA事务](#saga) |<span style="color:green">支持并发</span> |<span style="color:green">状态机模式</span> ||
-|[二阶段消息](#2phase)|<span style="color:green">✓</span>|<span style="color:red">✗</span>|dtm提供类似rocketmq的二阶段消息|
+|[二阶段消息](#msg)|<span style="color:green">✓</span>|<span style="color:red">✗</span>|dtm提供类似rocketmq的二阶段消息|
 |[单服务多数据源](#multidb)|<span style="color:green">✓</span>|<span style="color:red">✗</span>||
 |[通信协议](#protocol)|HTTP、gRPC|dubbo等协议||
 |[star数量](#star)|<img src="https://img.shields.io/github/stars/dtm-labs/dtm.svg?style=social" alt="github stars"/>|<img src="https://img.shields.io/github/stars/seata/seata.svg?style=social" alt="github stars"/>|dtm从20210604发布0.1，发展快|
