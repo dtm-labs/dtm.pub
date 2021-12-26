@@ -234,8 +234,12 @@ module.exports = {
               link: '/other/develop'
             },
             {
-              text: '性能测试报告',
+              text: 'Mysql存储性能测试',
               link: '/other/performance'
+            },
+            {
+              text: 'Redis存储性能测试',
+              link: '/other/perform-redis'
             },
             {
               text: '其他框架',
