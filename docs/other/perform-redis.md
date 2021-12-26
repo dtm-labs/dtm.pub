@@ -29,7 +29,7 @@ systemctl restart redis-server
 ``` bash
 apt update
 apt install -y git
-git clone https://github.com/dtm-labs/dtm.git && cd dtm && git checkout alpha && cd bench && make
+git clone https://github.com/dtm-labs/dtm.git && cd dtm && git checkout 5907f99 && cd bench && make
 ```
 
 注意以下步骤是两台应用服务器都需要操作
