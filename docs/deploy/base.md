@@ -30,20 +30,20 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 ### 重要配置项
 最重要配置项为dtm的存储，列出如下
 
-#### DRIVER_STORE_DRIVER
+#### STORE_DRIVER
 指定您采用的存储引擎，取值为：mysql|postgres|redis|boltdb(默认)
 
-#### DRIVER_STORE_HOST
-如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的主机名
+#### STORE_HOST
+如果STORE_DRIVER=="mysql"，那么这里指定数据库的主机名
 
-#### DRIVER_STORE_PORT
-如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的端口号
+#### STORE_PORT
+如果STORE_DRIVER=="mysql"，那么这里指定数据库的端口号
 
-#### DRIVER_STORE_USER
-如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的用户名
+#### STORE_USER
+如果STORE_DRIVER=="mysql"，那么这里指定数据库的用户名
 
-#### DRIVER_STORE_PASSWORD
-如果DRIVER_STORE_DRIVER=="mysql"，那么这里指定数据库的用户密码
+#### STORE_PASSWORD
+如果STORE_DRIVER=="mysql"，那么这里指定数据库的用户密码
 
 
 ### 其他配置项
