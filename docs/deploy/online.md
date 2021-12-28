@@ -36,19 +36,19 @@ spec:
     spec:
       containers:
         - env:
-            - name: DB_HOST
+            - name: STORE_DRIVER
+              value: mysql
+            - name: STORE_HOST
               value: your-host
-            - name: DB_PORT
+            - name: STORE_PORT
               value: 3306
-            - name: DB_USER
+            - name: STORE_USER
               value: root
-            - name: DB_PASSWORD
+            - name: STORE_PASSWORD
               value: ''
-            - name: TRANS_CRON_INTERVAL
-              value: 10
             - name: IS_DOCKER
               value: '1'
-          image: dtm-labs/dtm:latest
+          image: yedf/dtm:latest
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 30
