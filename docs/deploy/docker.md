@@ -14,7 +14,7 @@ docker-compose.yaml:
 version: '3'
 services:
   dtm:
-    image: dtm-labs/dtm
+    image: yedf/dtm
     environment:
       - STORE_DRIVER: mysql
       - STORE_HOST: localhost
