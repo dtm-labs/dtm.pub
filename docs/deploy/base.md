@@ -41,16 +41,16 @@ LogLevel => LOG_LEVEL
 指定您采用的存储引擎，取值为：mysql|postgres|redis|boltdb(默认)
 
 #### STORE_HOST
-如果STORE_DRIVER=="mysql"，那么这里指定数据库的主机名
+数据库或redis的主机名
 
 #### STORE_PORT
-如果STORE_DRIVER=="mysql"，那么这里指定数据库的端口号
+数据库或redis的端口号
 
 #### STORE_USER
-如果STORE_DRIVER=="mysql"，那么这里指定数据库的用户名
+数据库或redis的用户名
 
 #### STORE_PASSWORD
-如果STORE_DRIVER=="mysql"，那么这里指定数据库的用户密码
+数据库或redis的用户密码
 
 
 ### 其他配置项
