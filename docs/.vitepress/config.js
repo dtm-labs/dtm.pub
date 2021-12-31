@@ -213,8 +213,8 @@ module.exports = {
             //   link: '/deploy/cloud'
             // },
             {
-              text: '线上部署',
-              link: '/deploy/online'
+              text: 'Kubernetes部署',
+              link: '/deploy/kubernetes'
             },
             {
               text: '直接部署',
