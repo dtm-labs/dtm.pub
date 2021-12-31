@@ -1,19 +1,22 @@
 # 介绍
 
-## 可以做什么
+## 跨语言分布式事务管理器
 
-* 一站式解决分布式事务需求
-  - 支持TCC、SAGA、XA、事务消息、可靠消息
-* 支持跨语言栈事务
-  - 支持多语言栈混合的分布式事务。支持Go、Python、PHP、Nodejs、Java、c# 各类语言SDK。
-* 自动处理子事务乱序
-  - 首创子事务屏障技术，框架层自动处理悬挂、空补偿、幂等网络异常问题
-* 支持单服务多数据源访问
-  - 通过子事务屏障技术，保证单服务多数据源访问的一致性，也能保证本地长事务拆分多个子事务后的一致性
-* 开箱即用，提供云上服务
-  - 支持通用的HTTP、gRPC协议接入，云原生友好。支持Mysql接入。提供测试版本的云上服务，方便新用户测试接入
+DTM是一款golang开发的分布式事务管理器，解决了跨数据库、跨服务、跨语言栈更新数据的一致性问题。
 
-受邀参加中国数据库大会分享[多语言环境下分布式事务实践](http://dtcc.it168.com/yicheng.html#b9)
+通俗一点说，DTM提供跨服务事务能力，一组服务要么全部成功，要么全部回滚，避免只更新了一部分数据产生的业务问题。
+
+## 亮点
+* 极易接入
+  - 零配置启动服务，提供非常简单的HTTP接口，极大降低上手分布式事务的难度，新手也能快速接入
+* 跨语言
+  - 可适合多语言栈的公司使用。方便go、python、php、nodejs、ruby、c# 各类语言使用。
+* 使用简单
+  - 开发者不再担心悬挂、空补偿、幂等各类问题，首创子事务屏障技术代为处理
+* 易部署、易扩展
+  - 依赖mysql|redis，部署简单，易集群化，易水平扩展
+* 多种分布式事务协议支持
+  - TCC、SAGA、XA、二阶段消息，一站式解决所有分布式事务问题
 
 您可以在[为什么选DTM](./why)中了解更多DTM的设计初衷。
 
@@ -26,8 +29,6 @@
 [Eglass 视咖镜小二](https://epeijing.cn)
 
 [极欧科技](http://jiou.me)
-
-[金数智联](./start)
 
 
 <a style="
@@ -54,24 +55,21 @@
 
 如果您不是Go语言，不熟悉Go环境，您可以转到[各语言SDK](../summary/code)，找到对应语言的QuickStart
 
-### 获取代码
+### 运行dtm
 
-`git clone https://github.com/dtm-labs/dtm && cd dtm`
+``` bash
+git clone https://github.com/dtm-labs/dtm && cd dtm
+go run main.go
+```
 
-### dtm依赖于mysql
+### 启动并运行一个saga示例
+下面运行一个类似跨行转账的示例，包括两个事务分支：资金转出（TransOut)、资金转入（TransIn)。DTM保证TransIn和TransOut要么全部成功，要么全部回滚，保证最终金额的正确性。
 
-安装[docker 20.04+](https://docs.docker.com/get-docker/)之后
+`go run qs/main.go`
 
-`docker-compose -f helper/compose.mysql.yml`
+## 接入详解
 
-> 您也可以配置使用现有的mysql，需要高级权限，允许dtm创建数据库
->
-> `cp conf.sample.yml conf.yml # 修改conf.yml`
-
-### 启动并运行saga示例
-`go run app/main.go qs`
-
-### 使用
+### 接入代码
 ``` GO
   // 具体业务微服务地址
   const qsBusi = "http://localhost:8081/api/busi_saga"
@@ -87,44 +85,18 @@
   err := saga.Submit()
 ```
 
-该分布式事务中，模拟了一个跨行转账分布式事务中的场景，全局事务包含TransOut（转出子事务）和TransIn（转入子事务），每个子事务都包含正向操作和逆向补偿，定义如下：
+成功运行后，可以看到TransOut、TransIn依次被调用，完成了整个分布式事务
 
-``` go
-func qsAdjustBalance(uid int, amount int) (interface{}, error) {
-	err := dbGet().Transaction(func(tx *gorm.DB) error {
-		return tx.Model(&UserAccount{}).Where("user_id = ?", uid).Update("balance", gorm.Expr("balance + ?", amount)).Error
-	})
-	if err != nil {
-		return nil, err
-	}
-	return M{"dtm_result": "SUCCESS"}, nil
-}
-
-func qsAddRoute(app *gin.Engine) {
-	app.POST(qsBusiAPI+"/TransIn", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return qsAdjustBalance(2, 30)
-	}))
-	app.POST(qsBusiAPI+"/TransInCompensate", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return qsAdjustBalance(2, -30)
-	}))
-	app.POST(qsBusiAPI+"/TransOut", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return qsAdjustBalance(1, -30)
-	}))
-	app.POST(qsBusiAPI+"/TransOutCompensate", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return qsAdjustBalance(1, 30)
-	}))
-}
-```
-
+### 时序图
 整个事务最终成功完成，时序图如下：
 
 ![saga_normal](../imgs/saga_normal.jpg)
 
+### 失败情况
 在实际的业务中，子事务可能出现失败，例如转入的子账号被冻结导致转账失败。我们对业务代码进行修改，让TransIn的正向操作失败，然后看看结果
 
 ``` go
 	app.POST(qsBusiAPI+"/TransIn", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		qsAdjustBalance(2, 30)
 		return M{"dtm_result": "FAILURE"}, nil
 	}))
 ```
