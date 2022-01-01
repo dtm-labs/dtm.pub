@@ -27,3 +27,10 @@ DTM重试时采用退避算法，如果重试失败，则会加倍重试间隔�
 MSG事务模式因为不回滚，所以忽略超时设置，但是MSG中的事务消息，会在TimeoutToFail之后，进行反查
 
 SAGA事务可能为长事务，超时时间跨度非常大，因此不采用系统设定的值，但是可以单独指定事务的TimeoutToFail
+
+## 自定义header
+
+有一部分的业务中的子事务，需要自定义header。dtm支持全局事务粒度的header定制，即您可以给不同的全局事务指定不同的自定义header，dtm调用您的子事务服务时，将会添加您指定的header
+
+HTTP和gRPC都支持自定义header，详情可以参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)名字中带有Header的例子
+

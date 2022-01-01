@@ -357,6 +357,7 @@ curl 'localhost:36789/api/dtmsvr/all?last_id='
 - wait_result: 等待事务结果
 - retry_interval: 重试间隔
 - timeout_to_fail: 超时失败时间
+- branch_headers: 自定义header
 
 这些事务选项可以在prepare/submit请求中，发送给TM，请求示例
 
@@ -368,6 +369,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
     "trans_type": "tcc",
     "wait_result": true,
     "retry_interval": 15,
+    "branch_headers":{"test_header":"test"},
     "timeout_to_fail": 60
 }'
 ```
