@@ -27,23 +27,23 @@ err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty
 })
 ```
 
-详细例子代码参考[examples/http_tcc.go](https://github.com/dtm-labs/dtm/blob/main/examples/http_tcc.go)：
+详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
 
 ### grpc
 ``` go
 gid := dtmgrpc.MustGenGid(DtmGrpcServer)
 err := dtmgrpc.TccGlobalTransaction(DtmGrpcServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
   data := dtmcli.MustMarshal(&TransReq{Amount: 30})
-  _, err := tcc.CallBranch(data, BusiGrpc+"/examples.Busi/TransOut", BusiGrpc+"/examples.Busi/TransOutConfirm", BusiGrpc+"/examples.Busi/TransOutRevert")
+  _, err := tcc.CallBranch(data, BusiGrpc+"/busi.Busi/TransOut", BusiGrpc+"/busi.Busi/TransOutConfirm", BusiGrpc+"/busi.Busi/TransOutRevert")
   if err != nil {
     return err
   }
-  _, err = tcc.CallBranch(data, BusiGrpc+"/examples.Busi/TransIn", BusiGrpc+"/examples.Busi/TransInConfirm", BusiGrpc+"/examples.Busi/TransInRevert")
+  _, err = tcc.CallBranch(data, BusiGrpc+"/busi.Busi/TransIn", BusiGrpc+"/busi.Busi/TransInConfirm", BusiGrpc+"/busi.Busi/TransInRevert")
   return err
 })
 ```
 
-详细例子代码参考[examples/grpc_tcc.go](https://github.com/dtm-labs/dtm/blob/main/examples/grpc_tcc.go)：
+详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
 
 调用TccGlobalTransaction会开启一个全局的tcc事务。他的声明如下：
 

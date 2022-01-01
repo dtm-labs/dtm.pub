@@ -28,7 +28,7 @@ type XaLocalFunc func(db *sql.DB, xa *Xa) (interface{}, error)
 
 ### GORM
 
-示例在 examples/http_saga_gorm_barrier|http_gorm_xa
+示例在 [dtm-examples](https://github.com/dtm-labs/dtm-examples)
 
 barrier示例：
 ``` go

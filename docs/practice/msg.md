@@ -38,7 +38,7 @@
 	err = msg.Submit()
 ```
 
-详细例子代码参考[examples/http_msg.go](https://github.com/dtm-labs/dtm/blob/main/examples/http_msg.go)：
+详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
 
 ### grpc
 
@@ -46,12 +46,12 @@
 	req := dtmcli.MustMarshal(&TransReq{Amount: 30})
 	gid := dtmgrpc.MustGenGid(DtmGrpcServer)
 	msg := dtmgrpc.NewMsgGrpc(DtmGrpcServer, gid).
-		Add(BusiGrpc+"/examples.Busi/TransOut", req).
-		Add(BusiGrpc+"/examples.Busi/TransIn", req)
+		Add(BusiGrpc+"/busi.Busi/TransOut", req).
+		Add(BusiGrpc+"/busi.Busi/TransIn", req)
 	err := msg.Submit()
 ```
 
-详细例子代码参考[examples/grpc_msg.go](https://github.com/dtm-labs/dtm/blob/main/examples/grpc_msg.go)：
+详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
 
 上面的代码首先创建了一个事务消息，然后添加了两个子事务TransOut、TransIn，然后在本地事务里内部调用prepare，本地事务提交之后，调用submit。Submit之后，dtm就会调用相关的子事务，保证最终完成。
 
