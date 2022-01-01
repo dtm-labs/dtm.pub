@@ -67,10 +67,6 @@ module.exports = {
           text: '基础',
           children: [
             {
-              text: '分布式事务理论',
-              link: '/guide/theory'
-            },
-            {
               text: 'Why',
               link: '/guide/why'
             },
@@ -85,8 +81,12 @@ module.exports = {
           ]
         },
         {
-          text: '事务原理',
+          text: '分布式事务原理',
           children: [
+            {
+              text: '概述',
+              link: '/practice/theory'
+            },
             {
               text: 'SAGA',
               link: '/practice/saga'
