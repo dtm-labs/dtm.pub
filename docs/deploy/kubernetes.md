@@ -1,4 +1,4 @@
-# 线上部署
+# Kubernetes部署
 
 ## dtm副本数
 
@@ -29,8 +29,8 @@ spec:
         - name: dtm
           image: yedf/dtm:1.8
           imagePullPolicy: IfNotPresent
-          command:
-            [ "/app/dtm/dtm", "-c", "/app/dtm/configs/config.yaml" ]
+          args:
+            - "-c=/app/dtm/configs/config.yaml"
           volumeMounts:
             - mountPath: /app/dtm/configs
               name: config
@@ -41,9 +41,6 @@ spec:
             - containerPort: 36790
               protocol: TCP
               name: grpc
-            - containerPort: 8889
-              protocol: TCP
-              name: metrics
           livenessProbe:
             httpGet:
               path: /api/ping
@@ -93,10 +90,6 @@ spec:
     - port: 36789
       targetPort: 36789
       name: http
-      appProtocol: http # Kubernetes v1.20 [stable]，低版本请剔除此行
-    - port: 8889
-      targetPort: 8889
-      name: metrics
       appProtocol: http # Kubernetes v1.20 [stable]，低版本请剔除此行
   selector:
     app: dtm
