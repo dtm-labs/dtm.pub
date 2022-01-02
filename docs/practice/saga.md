@@ -1,20 +1,35 @@
 # SAGA事务模式
 
-SAGA最初出现在1987年Hector Garcaa-Molrna & Kenneth Salem发表的论文[SAGAS](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf)里。其核心思想是将长事务拆分为多个本地短事务，由Saga事务协调器协调，如果正常结束那就正常完成，如果某个步骤失败，则根据相反顺序一次调用补偿操作。
+SAGA事务模式是DTM中最常用的模式，主要是因为SAGA模式简单易用，工作量少，并且能够解决绝大部分业务的需求。
 
-如果我们要进行一个类似于银行跨行转账的业务，转出（TransOut）和转入（TransIn）分别在不同的微服务里，一个成功完成的SAGA事务典型的时序图如下：
+SAGA最初出现在1987年Hector Garcaa-Molrna & Kenneth Salem发表的论文[SAGAS](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf)里。其核心思想是将长事务拆分为多个短事务，由Saga事务协调器协调，如果每个短事务都成功提交文成，那么全局事务就正常完成，如果某个步骤失败，则根据相反顺序一次调用补偿操作。
+
+## 拆分为子事务
+例如我们要进行一个类似于银行跨行转账的业务，将A中的30元转给B，根据Saga事务的原理，我们将整个全局事务，切分为以下服务：
+- 转出（TransOut）服务，这里转出将会进行操作A-30
+- 转出补偿（TransOutCompensate）服务，回滚上面的转出操作，即A+30
+- 转入（TransIn）服务，转入将会进行B+30
+- 转出补偿（TransInCompensate）服务，回滚上面的转入操作，即B-30
+
+整个SAGA事务的逻辑是：
+
+执行转出成功=>执行转入成功=>全局事务完成
+
+如果在中间发生错误，例如转入B发生错误，则会调用已执行分支的补偿操作，即：
+
+执行转出成功=>执行转入失败=>执行转入补偿成功=>执行转出补偿成功=>全局事务回滚完成
+
+下面我们看一个成功完成的SAGA事务典型的时序图：
 
 ![saga_normal](../imgs/saga_normal.jpg)
 
+在这个图中，我们的全局事务发起人，将整个全局事务的编排信息，包括每个步骤的正向操作和反向补偿操作定义好之后，提交给服务器，服务器就会按步骤执行前面SAGA的逻辑。
+## SAGA的接入
 
-## 简单的SAGA
-
-我们来完成一个最简单的SAGA：
-
-### http
+我们看看Go如何接入一个SAGA事务
 
 ``` go
-req := &gin.H{"amount": 30} // 微服务的载荷
+req := &gin.H{"amount": 30} // 微服务的请求Body
 // DtmServer为DTM服务的地址
 saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
   // 添加一个TransOut的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransOutCompensate"
@@ -27,18 +42,7 @@ err := saga.Submit()
 
 详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)
 
-### grpc
-
-``` go
-req := dtmcli.MustMarshal(&TransReq{Amount: 30})
-gid := dtmgrpc.MustGenGid(DtmGrpcServer)
-saga := dtmgrpc.NewSaga(DtmGrpcServer, gid).
-  Add(BusiGrpc+"/busi.Busi/TransOut", BusiGrpc+"/busi.Busi/TransOutRevert", req).
-  Add(BusiGrpc+"/busi.Busi/TransIn", BusiGrpc+"/busi.Busi/TransOutRevert", req)
-err := saga.Submit()
-```
-
-详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)
+我们前面的的例子，是基于HTTP协议SDK进行DTM接入，gRPC协议的接入基本一样，详细例子代码可以在[dtm-examples](https://github.com/dtm-labs/dtm-examples)
 
 上面的代码首先创建了一个SAGA事务，然后添加了两个子事务TransOut、TransIn，每个事务分支包括action和compensate两个操作，分别为Add函数的第一第二个参数。子事务定好之后提交给dtm。dtm收到saga提交的全局事务后，会调用所有子事务的正向操作，如果所有正向操作成功完成，那么事务成功结束。
 

@@ -74,18 +74,18 @@ module.exports = {
               text: '开始',
               link: '/guide/start'
             },
-            {
-              text: '架构',
-              link: '/summary/arch'
-            },
           ]
         },
         {
-          text: '分布式事务原理',
+          text: '原理与实践',
           children: [
             {
-              text: '概述',
+              text: '分布式事务理论',
               link: '/practice/theory'
+            },
+            {
+              text: 'DTM架构',
+              link: '/practice/arch'
             },
             {
               text: 'SAGA',
