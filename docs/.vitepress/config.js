@@ -9,13 +9,12 @@ module.exports = {
   themeConfig: {
     logo: '/dtm.svg',
 
-    // algolia: {
-    //   apiKey: '<YOUR_CUSTOM_APP_ID>',
-    //   indexName: 'dtm',
-    //   searchParameters: {
-    //     facetFilters: ['tags:cn']
-    //   }
-    // },
+    algolia: {
+      apiKey: '0b8d24ec9f74b05becaf479a6ea20b2f',
+      indexName: 'test',
+      appId: 'KAS0X8OWDL',
+    },
+    lastUpdated: 'Last Updated',
 
     nav: [
       { text: '指引', link: '/guide/start' },
