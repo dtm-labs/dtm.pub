@@ -27,15 +27,15 @@ DTM支持环境变量和文件两种配置，如果同时有环境变量和文�
 ## 环境变量(推荐方式)
 为了友好支持容器化和云原生，DTM支持环境变量进行配置
 
-对于每个配置文件里的配置，都可以通过环境变量设置，对应关系如下：
+所有可配置的选项参考: [conf.sample.yml](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)，对于每个配置文件里的配置，都可以通过环境变量设置，对应规则如下：
 
 ```
-Store.Host => STORE_HOST
-LogLevel => LOG_LEVEL
+Store.MaxOpenConns => STORE_MAX_OPEN_CONNS
+MicroService.Driver => MICRO_SERVICE_DRIVER
 ```
 
 ### 重要配置项
-最重要配置项为dtm的存储，列出如下
+最重要和常见的配置项为dtm的存储，列出如下
 
 #### STORE_DRIVER
 指定您采用的存储引擎，取值为：mysql|postgres|redis|boltdb(默认)
@@ -65,10 +65,9 @@ LogLevel => LOG_LEVEL
 #### RETRY_INTERVAL
 重试间隔，当某个事务分支操作返回错误，那么dtm会间隔这个时间进行重试。dtm的重试使用退避算法，详情见[重试](../ref/options)
 
-### 更多配置项
-更多的配置项，可以参考[yml样板配置文件](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)中的注释
-
 ## yml文件配置(非推荐方式)
-为了方便直接部署和调试，DTM也支持yml配置文件，参考[yml样板配置文件](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)
+为了方便直接部署和调试，DTM也支持yml配置文件，详细配置项参考[yml样板配置文件](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)
 
-dtm会依次读取当前路径以及父目录路径上的配置文件，每个目录，都会先查找conf.yml，再查找conf.sample.yml，找到文件即停止
+采用yml配置dtm时，需要通过命令行指定配置文件，采用如下命令：
+
+`dtm -c ./conf.sample.yml`
