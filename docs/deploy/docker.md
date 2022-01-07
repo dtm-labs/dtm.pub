@@ -16,11 +16,11 @@ services:
   dtm:
     image: yedf/dtm
     environment:
-      - STORE_DRIVER: mysql
-      - STORE_HOST: localhost
-      - STORE_USER: root
-      - STORE_PASSWORD: ''
-      - STORE_PORT: 3306
+      STORE_DRIVER: mysql
+      STORE_HOST: localhost
+      STORE_USER: root
+      STORE_PASSWORD: ''
+      STORE_PORT: 3306
     ports:
       - '36789:36789'
       - '36790:36790'
