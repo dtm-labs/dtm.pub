@@ -8,11 +8,15 @@
 
 http sdk: [https://github.com/dtm-labs/dtmcli](https://github.com/dtm-labs/dtmcli)
 
-示例: [https://github.com/dtm-labs/dtmcli-go-sample](https://github.com/dtm-labs/dtmcli-go-sample)
+最简示例: [https://github.com/dtm-labs/dtmcli-go-sample](https://github.com/dtm-labs/dtmcli-go-sample)
 
 grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmgrpc)
 
-示例: [https://github.com/dtm-labs/dtmgrpc-go-sample](https://github.com/dtm-labs/dtmgrpc-go-sample)
+最简示例: [https://github.com/dtm-labs/dtmgrpc-go-sample](https://github.com/dtm-labs/dtmgrpc-go-sample)
+
+关于SDK使用的最全的示例，包括了grpc/http/xa/msg/saga/tcc/barrier 等等，都合并在下面这个项目
+
+[https://github.com/dtm-labs/dtm-examples](https://github.com/dtm-labs/dtm-examples)
 
 [相关博客](../resource/blogs-go)
 
@@ -22,7 +26,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 示例: [https://github.com/dtm-labs/dtmcli-csharp-sample](https://github.com/dtm-labs/dtmcli-csharp-sample)
 
-感谢 [geffzhang](https://github.com/geffzhang)的帮助，C的sdk和示例，全部由[geffzhang](https://github.com/geffzhang)独立贡献
+感谢 [geffzhang](https://github.com/geffzhang)的帮助，C的sdk和示例，主要由[geffzhang](https://github.com/geffzhang)贡献
 
 [相关博客](../resource/blogs-donet)
 
@@ -41,7 +45,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 示例: [https://github.com/dtm-labs/dtmcli-java-sample](https://github.com/dtm-labs/dtmcli-java-sample)
 
-感谢 [viticis](https://github.com/viticis)的帮助，Java的sdk和示例，全部由[viticis](https://github.com/viticis)独立贡献
+感谢 [viticis](https://github.com/viticis) [li-xiao-shuang](https://github.com/li-xiao-shuang)的帮助，Java的sdk和示例，主要由他们贡献
 
 [相关博客](../resource/blogs-java)
 
@@ -51,7 +55,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 示例: [https://github.com/dtm-labs/dtmcli-php-sample](https://github.com/dtm-labs/dtmcli-php-sample)
 
-感谢 [onlyshow](https://github.com/onlyshow) 的帮助，php的sdk和示例，全部由[onlyshow](https://github.com/onlyshow)独立完成
+感谢 [onlyshow](https://github.com/onlyshow) 的帮助，php的sdk和示例，全部由他独立完成
 
 [相关博客](../resource/blogs-php)
 
@@ -65,9 +69,14 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 ### 其他
 
-如果这里没有找到您熟悉的语言，同时您又想运行dtm，看看一个分布式事务什么样，您可以：
+如果这里没有找到您熟悉的语言，同时您又想运行dtm，看看一个分布式事务什么样，您可以参考这里：
 
-- 安装[docker 20.04+](https://docs.docker.com/get-docker/)
-- `docker-compose -f helper/compose.qs.yml up`
+[DTM安装运行](https://dtm.pub/guide/install.html)
 
-上述docker-compose命令，会运行一个简单的quick start例子，这是一个saga事务，您可以对照saga的时序图与日志，更深入的了解dtm
+如果你是通过brew 安装，那么您可以直接运行
+
+```
+dtm-qs
+```
+
+上述dtm-qs命令，会运行一个简单的quick start例子，这是一个saga事务，您可以对照saga的时序图与日志，更深入的了解dtm
