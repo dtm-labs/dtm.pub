@@ -70,7 +70,11 @@ module.exports = {
               link: '/guide/why'
             },
             {
-              text: '开始',
+              text: '安装',
+              link: '/guide/install'
+            },
+            {
+              text: '快速开始',
               link: '/guide/start'
             },
           ]
