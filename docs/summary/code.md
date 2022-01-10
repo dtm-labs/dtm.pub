@@ -71,7 +71,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 如果这里没有找到您熟悉的语言，同时您又想运行dtm，看看一个分布式事务什么样，您可以参考这里：
 
-[DTM安装运行](https://dtm.pub/guide/install.html)
+[DTM安装运行](../guide/install)
 
 如果你是通过brew 安装，那么您可以直接运行
 

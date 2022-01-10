@@ -226,7 +226,11 @@ module.exports = {
             {
               text: '运维',
               link: '/deploy/maintain'
-            }
+            },
+            {
+              text: '升级指南',
+              link: '/deploy/upgrade'
+            },
           ]
         },
         {
