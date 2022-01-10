@@ -95,16 +95,16 @@ module.exports = {
               link: '/practice/saga'
             },
             {
+              text: '二阶消息',
+              link: '/practice/msg'
+            },
+            {
               text: 'TCC',
               link: '/practice/tcc'
             },
             {
               text: 'XA',
               link: '/practice/xa'
-            },
-            {
-              text: '事务消息',
-              link: '/practice/msg'
             },
             {
               text: '其他',
