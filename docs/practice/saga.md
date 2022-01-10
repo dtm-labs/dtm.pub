@@ -77,33 +77,122 @@ err := saga.Submit()
 
 业务上的失败与异常是需要做严格区分的，例如前面的余额不足，是业务上的失败，必须回滚，重试毫无意义。分布式事务中，有很多模式的某些阶段，是不允许失败的，要求最终成功。例如dtm的补偿操作，是不允许失败的，只要还没成功，就会不断进行重试，直到成功。关于这部分的更详细的论述，参见[不允许失败](./must-succeed)
 
-## 并发SAGA
+介绍到这里，您已经具备足够的知识，开发完成一个普通的SAGA任务。下面我们将介绍SAGA更加高级的知识与用法
+## 高级用法
 
-论文里面的SAGA提到了事务分支并发执行模式，这种模式，能够缩短SAGA事务的总执行时间，DTM对此也进行了支持：
+我们以一个真实用户案例，来讲解dtm的saga部分高级功能。
 
-并发SAGA通过EnableConcurrent()打开，当saga提交后，多个事务分支之间是并发执行。DTM也支持指定事务分支之间的依赖关系，可以指定特定任务A执行完成之后才能够执行任务B。
+问题场景：一个用户出行旅游的应用，收到一个用户出行计划，需要预定去三亚的机票，三亚的酒店，返程的机票。
 
+要求：
+1. 两张机票和酒店要么都预定成功，要么都回滚（酒店和航空公司提供了相关的回滚接口）
+2. 预订机票和酒店是并发的，避免串行的情况下，因为某一个预定最后确认时间晚，导致其他的预定错过时间
+3. 预定结果的确认时间可能从1分钟到1天不等
 
-### http
+上述这些要求，正是saga事务模式擅长的领域，我们来看看dtm怎么解决。
+
+首先我们根据要求1，创建一个saga事务，这个saga包含三个分支，分别是，预定去三亚机票，预定酒店，预定返程机票
 
 ``` go
-  req := &TransReq{Amount: 30}
-  csaga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
-    Add(Busi+"/TransOut", Busi+"/TransOutRevert", req).
-    Add(Busi+"/TransOut", Busi+"/TransOutRevert", req).
-    Add(Busi+"/TransIn", Busi+"/TransInRevert", req).
-    Add(Busi+"/TransIn", Busi+"/TransInRevert", req).
-    EnableConcurrent(). // 打开并发开关
-    AddBranchOrder(2, []int{0, 1}). // 这里指定 branch 2 需要在 branch 0, branch 1之后执行
-    AddBranchOrder(3, []int{0, 1}) // 这里指定 branch 3 需要在 branch 0, branch 1之后执行
-  err := csaga.Submit()
+		saga := dtmcli.NewSaga(DtmServer, gid).
+			Add(Busi+"/BookTicket", Busi+"/BookTicketRevert", bookTicketInfo1).
+			Add(Busi+"/BookHotel", Busi+"/BookHotelRevert", bookHotelInfo2).
+			Add(Busi+"/BookTicket", Busi+"/BookTicketRevert", bookTicketBackInfo3)
 ```
 
-详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)
+然后我们根据要求2，让saga并发执行（默认是顺序执行）
 
-### 失败回滚
+``` go
+  saga.EnableConcurrent()
+```
 
-并发SAGA如果出现回滚，那么所有回滚的补偿操作会全部并发执行，不再考虑前面的任务依赖。
+最后我们处理3里面的“预定结果的确认时间”不是即时响应的问题。由于不是即时响应，所以我们不能够让预定操作等待第三方的结果，而是提交预定请求后，就立即返回状态-进行中。我们的分支事务未完成，dtm会重试我们的事务分支，我们把重试间隔指定为1分钟。
 
-由于并发SAGA的正向操作和补偿操作都是并发执行的，因此更容易出现空补偿和悬挂情况，需要参考DTM的子事务屏障环节妥善处理
+``` go
+  saga.RetryInterval = 60
+  saga.Submit()
+// ........
+func bookTicket() string {
+	order := loadOrder()
+	if order == nil { // 尚未下单，进行第三方下单操作
+		order = submitTicketOrder()
+		order.save()
+	}
+	order.Query() // 查询第三方订单状态
+	return order.Status // 成功-SUCCESS 失败-FAILURE 进行中-ONGOING
+}
+```
 
+::: 定时固定间隔重试
+dtm默认情况下，重试策略是指数退避算法，可以避免出现故障时，过多的重试导致负载过高。但是这里订票结果不应当采用指数退避算法重试，否则最终用户不能及时收到通知。因此在bookTicket中，返回结果ONGOING，当dtm收到这个结果时，会采用固定间隔重试，这样能及时通知到用户。
+:::
+## 更多高级场景
+在实际应用中，还遇见过一些业务场景，需要一些额外的技巧进行处理
+
+#### 部分第三方操作无法回滚
+
+例如一个订单中的发货，一旦给出了发货指令，那么涉及线下相关操作，那么很难直接回滚。对于涉及这类情况的saga如何处理呢？
+
+我们把一个事务中的操作分为可回滚的操作，以及不可回滚的操作。那么把可回滚的操作放到前面，把不可回滚的操作放在后面执行，那么就可以解决这类问题
+
+``` go
+		saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
+			Add(Busi+"/CanRollback1", Busi+"/CanRollback1Revert", req).
+			Add(Busi+"/CanRollback2", Busi+"/CanRollback2Revert", req).
+			Add(Busi+"/UnRollback1", "", req).
+			Add(Busi+"/UnRollback2", "", req).
+			EnableConcurrent().
+			AddBranchOrder(2, []int{0, 1}). // 指定step 2，需要在0，1完成后执行
+			AddBranchOrder(3, []int{0, 1}) // 指定step 3，需要在0，1完成后执行
+```
+
+示例中的代码，指定Step 2，3 中的 UnRollback 操作，必须在Step 0，1 完成后执行。
+
+对于不可回滚的操作，DTM的设计建议是，不可回滚的操作在业务上也不允许返回失败。可以这么思考，如果发货的操作返回了失败，那么这个失败的含义是不够清晰的，调用方不知道这个失败是修改了部分数据的失败，还是修改数据前的业务校验失败，因为这个操作不可回滚，所以调用方收到这个失败，是不知道如何正确处理这个错误的。
+
+另外当你的一个全局事务中，如果出现了两个既不可回滚的又可能返回失败的操作，那么到了实际运行中，一个执行成功，一个执行失败，此时执行成功的那个事务无法回滚，那么这个事务的一致性就不可能保证了。
+
+对于发货操作，如果可能在校验数据上可能发生失败，那么将发货操作拆分为发货校验、发货两个服务则会清晰很多，发货校验可回滚，发货不可回滚同时也不会失败。
+
+#### 超时回滚
+
+saga属于长事务，因此持续的时间跨度很大，可能是100ms到1天，因此saga没有默认的超时时间。
+
+dtm支持saga事务单独指定超时时间，到了超时时间，全局事务就会回滚。
+
+``` go
+	saga.TimeoutToFail = 1800
+```
+
+在saga事务中，设置超时时间一定要注意，这类事务里不能够包含无法回滚的事务分支，因为超时回滚时，已执行的无法回滚的分支，数据就是错的。
+
+#### 其他分支的结果作为输入
+
+前面的设计环节讲了为什么dtm没有支持这样的需求，那么如果极少数的实际业务有这样的需求怎么处理？例如B分支需要A分支的执行结果
+
+dtm的建议做法是，在ServiceA再提供一个接口，让B可以获取到相关的数据。这种方案虽然效率稍低，但是易理解已维护，开发工作量也不会太大。
+
+PS：有个小细节请注意，尽量在你的事务外部进行网络请求，避免事务时间跨度变长，导致并发问题。
+
+
+## SAGA 设计原则
+Seata的SAGA采用了状态机实现，而DTM的SAGA没有采用状态机，因此常常有用户会问，为什么DTM没有采用状态机，状态机可以提供更加灵活的事务自定义。
+
+我在DTM设计SAGA高级用法时，充分调研了状态机实现，经过仔细权衡之后，决定不采用状态机实现，主要原因如下：
+
+#### 易用性对比
+可能在阿里内部，需要SAGA提供类似状态机的灵活性，但是在阿里外部，看到使用Seata的Saga事务的用户特别少。我调研了Seata中SAGA的开发资料，想要上手写一个简单的SAGA事务，需要
+1. 了解状态机的原理
+2. 上手状态机的图形界面工具，生成状态机定义Json（一个简单的分布式事务任务，需要大约90多行的Json定义）
+3. 将上述Json配置到Java项目中
+4. 如果遇见问题，需要跟踪调试状态机定义的调用关系，非常复杂
+
+而对比之下，DTM的SAGA事务，则非常简单易用，开发者没有理解成本，通常五六行代码就完成了一个全局事务的编写，因此也成为DTM中，应用最为广泛的事务模式。而对于高级场景，DTM也经过实践的检验，以极简单的选项，例如EnableConcurrent、RetryInterval，解决了复杂的应用场景。目前收集到的用户需求中，暂未看到状态机能解决，而DTM的SAGA不能解决的案例。
+
+#### gRPC友好度
+gRPC 是云原生时代中应用非常广泛的协议。而Seata的状态机，对HTTP的支持度较好，而对gRPC的支持度不友好。一个gRPC服务中返回的结果，如果没有相关的pb定义文件，就无法解析出其中的字段，因此就无法采用状态机做灵活的判断，那么想用状态机的话，就必须固定结果类型，这样对应用的侵入性就比较强，适用范围就比较窄。
+
+DTM则对gRPC的支持更加友好，对结果类型无任何要求，适用范围更加广泛。
+
+## 小结
+这里详细介绍了SAGA的简单用法到高级用法，如果您熟练掌握了DTM中的SAGA事务，那么就可以以解决分布式事务中的绝大部分问题了
