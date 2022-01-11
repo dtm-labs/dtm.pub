@@ -21,7 +21,7 @@ dtm在1.10中，引入了新的表示错误协议，该协议与旧协议不同�
 新版本的DTM服务器和客户端SDK是这么做兼容的：
 - 服务端返回 SUCCESS  http：状态码 200 && 结果包含 SUCCESS；grpc： err == nil
 - 服务端返回 FAILURE  http：状态码 409 && 结果包含 FAILURE；grpc： Code == Aborted && Message == FAILURE
-- SDK与服务端判断 SUCCESS  http：状态码 200； grpc：err == nil
+- SDK与服务端判断 SUCCESS  http：状态码 200 && 结果不包含 FAILURE|ONGOING； grpc：err == nil
 - SDK与服务端判断 FAILURE  http：状态码 409 || 结果包含 FAILURE；grpc： Code == Aborted && Message != ONGOING
 - SDK与服务端判断 ONGOING  http：状态码 425 || 结果包含 ONGOING；grpc： Code == FailedPrecondition || Message == ONGOING
 
