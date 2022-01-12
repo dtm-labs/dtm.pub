@@ -249,7 +249,7 @@ module.exports = {
               link: '/other/perform-redis'
             },
             {
-              text: '其他框架',
+              text: '对比其他框架',
               link: '/other/opensource'
             },
             {
