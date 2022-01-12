@@ -20,7 +20,6 @@ module.exports = {
       { text: '指引', link: '/guide/start' },
       { text: 'English', link: 'https://en.dtm.pub' },
       { text: '博客与分享', link: '/resource/blogs-theory' },
-      // { text: '示例', link: '/examples/' },
       { text: 'Github', link: 'https://github.com/dtm-labs/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
     ],
@@ -59,8 +58,6 @@ module.exports = {
           link: '/resource/blogs-php',
         },
       ],
-      '/examples/': 'auto',
-      // catch-all fallback
       '/': [
         {
           text: '基础',
@@ -112,7 +109,7 @@ module.exports = {
             },
             {
               text: '异常与子事务屏障',
-              link: '/exception/barrier'
+              link: '/practice/barrier'
             },
             {
               text: '不允许失败',
@@ -125,78 +122,35 @@ module.exports = {
           ]
         },
         {
-          text: '接入指南',
+          text: '接入参考',
           children: [
             {
-              text: '接口协议',
-              link: '/summary/protocol'
-            },
-            {
-              text: '数据库接口',
-              link: '/summary/db'
-            },
-            {
-              text: 'DTM源码概况',
-              link: '/summary/files'
-            },
-            {
               text: 'SDK',
-              link: '/summary/code'
+              link: '/ref/sdk'
             },
             {
               text: '事务选项',
               link: '/ref/options'
             },
             {
-              text: 'API参考 HTTP',
+              text: '存储引擎',
+              link: '/ref/store'
+            },
+            {
+              text: '支持的协议',
+              link: '/ref/proto'
+            },
+            {
+              text: 'go-zero对接',
+              link: '/ref/gozero'
+            },
+            {
+              text: 'HTTP 参考',
               link: '/ref/http'
             },
             {
-              text: '接入示例',
-              link: '/ref/sample'
-            },
-          ]
-        },
-        {
-          text: '支持的协议',
-          children: [
-            {
-              text: '概述',
-              link: '/protocol/intro'
-            },
-            {
-              text: 'HTTP',
-              link: '/protocol/http'
-            },
-            {
-              text: 'gRPC',
-              link: '/protocol/grpc'
-            },
-            {
-              text: 'go-zero',
-              link: '/protocol/gozero'
-            },
-            {
-              text: '微服务对接',
-              link: '/protocol/support'
-            },
-          ]
-        },
-
-        {
-          text: '特性',
-          children: [
-            {
-              text: 'TCC子事务嵌套',
-              link: '/character/tcc-nested'
-            },
-            {
-              text: '支持的事务与存储',
-              link: '/character/supported-db'
-            },
-            {
-              text: '高可用',
-              link: '/character/highly-available'
+              text: '项目概况',
+              link: '/ref/projects'
             },
           ]
         },

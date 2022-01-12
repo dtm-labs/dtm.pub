@@ -6,13 +6,13 @@ dtm在1.7中引入新的存储引擎，因此重写了配置相关的代码。�
 ## 1.9.x 升级到 1.10.x
 dtm在1.10中，引入了新的表示错误协议，该协议与旧协议不同，但做了兼容。做法如下：
 
-1.9.x 及更低版本行为 [旧协议参考](../summary/protocol)
+1.9.x 及更低版本行为 [旧协议参考](../nomenu/proto)
 
 - SUCCESS http：状态码 200 && 结果内容含 SUCCESS； grpc: err == nil
 - FAILURE http: 状态码 200 && 结果内容含 FAILURE； grpc: Code == Aborted && Message == FAILURE
 - ONGOING http: 状态码 200 && 结果内容含 ONGOING； grpc: Code == Aborted && Message == ONGOING
 
-变更为（同时会兼容旧的 [新协议参考](../practice/arch))
+变更为（同时会兼容旧的 [新协议参考](../practice/arch#proto))
 
 - SUCCESS http: 状态码 200； grpc： err == nil
 - FAILURE http: 状态码 409 (http.StatusConflict)；grpc Code == Aborted

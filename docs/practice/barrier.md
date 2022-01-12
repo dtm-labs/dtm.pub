@@ -67,7 +67,7 @@ func (bb *BranchBarrier) Call(db *sql.DB, busiCall BusiFunc) error
 
 ## 结合常见的orm库
 
-barrier提供了sql标准接口，但大家的应用通常都会引入更高级的orm库，而不是裸用sql接口，因此需要进行转化. 相关的对接参考[对接ORM](../summary/db)
+barrier提供了sql标准接口，但大家的应用通常都会引入更高级的orm库，而不是裸用sql接口，因此需要进行转化. 相关的对接参考[对接ORM](../ref/sdk#db)
 
 ## 小结
 

@@ -37,7 +37,7 @@ DTM是一款开源的分布式事务管理器，解决跨数据库、跨服务�
 本教程也假设您有一定的编程基础，能够大致明白GO语言代码的意思，如果您在阅读Go代码方面遇见问题，可以访问[golang](https://golang.google.cn/)
 :::
 
-如果您不是Go语言，不熟悉Go环境，您可以转到[各语言SDK](../summary/code)，找到对应语言的QuickStart
+如果您不是Go语言，不熟悉Go环境，您可以转到[SDK](../ref/sdk#go)，找到对应语言的QuickStart
 
 #### 运行dtm
 

@@ -74,12 +74,12 @@ busiServer, err := c.BuildTarget()
 整个开发接入的过程很少，前面的注释已经很清晰，就不再赘述了
 
 
-### 注意事项
+#### 注意事项
 在去找*.pb.go的文件中的grpc访问的方法路径时候，一定要找invoke的路径
 
 ![pb_url_right](../imgs/pb_url_right.png)
 
-![pb_url_wrong](../imgs/pb_url_wrong.png)
+<img src="../imgs/pb_url_wrong.png" height=200/>
 
 ## 深入理解动态调用
 在go-zero使用dtm的分布式事务时，许多的调用是从dtm服务器发起的，例如TCC的Confirm/Cancel，SAGA/MSG的所有调用。
@@ -105,12 +105,12 @@ grpc的调用，可以类比于HTTP的POST，其中：
 ## 其他方式接入
 go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接入方式
 
-### 直连
+#### 直连
 对于直连这种方式，您只需要在上面dtm的etcd配置基础上，将Target设置为空字符串即可。
 
 直连的情况，不需要将dtm注册到注册中心
 
-### K8S
+#### K8S
 对于K8S这种方式，您只需要在上面dtm的etcd配置基础上，将Target设置为空字符串即可。
 
 在K8S中，将服务注册到K8S中，是有deployment.yaml完成的，应用内部，不需要进行注册

@@ -1,7 +1,7 @@
-# HTTP
+# HTTP 参考
 
 ## 概述
-DTM 可以通过HTTP协议交互。因为事务本身具有特殊性，它和普通的api调用只区分成功和失败不同，DTM的结果状态详情，请参考[协议](../summary/protocol)
+DTM 可以通过HTTP协议交互。因为事务本身具有特殊性，它和普通的api调用只区分成功和失败不同，DTM的结果状态详情，请参考[接口协议](../practice/arch#proto)
 
 接口主要分为三类： AP调用TM的接口、AP调用RM的接口、TM调用RM的接口
 
@@ -21,7 +21,7 @@ DTM 可以通过HTTP协议交互。因为事务本身具有特殊性，它和普
 
 每个接口的详细说明如下：
 
-### newGid 获取Gid
+## newGid 获取Gid
 
 此接口用于获取gid。dtm的gid生成采用ip+snowflake。如果发生短时间内ip重用的情况，有极低概率发生gid重复情况。
 
@@ -44,7 +44,7 @@ curl 'localhost:36789/api/dtmsvr/newGid'
 }
 ```
 
-### prepare 准备事务
+## prepare 准备事务
 
 此接口用于准备事务，正常情况下，后续将提交事务。
 
@@ -78,7 +78,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
 ```
 
 MSG 的prepare请求还会携带分支信息
-####  MSG的prepare示例
+##  MSG的prepare示例
 请求示例
 ``` bash
 curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
@@ -105,7 +105,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
 - payloads 表示每个步骤中进行http请求时的body
 - query_prepared 指定事务消息超时后进行查询的url
 
-### submit 提交事务
+## submit 提交事务
 
 此接口用于提交全局事务
 
@@ -132,7 +132,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
 
 其中MSG和SAGA的submit还会携带分支信息
 
-#### MSG的submit示例
+## MSG的submit示例
 请求示例
 ``` bash
 curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
@@ -156,7 +156,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
 ```
 详细字段含义见上述MSG的prepare示例
 
-#### SAGA的submit示例
+## SAGA的submit示例
 请求示例
 ``` bash
 curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
@@ -184,7 +184,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/submit' \
 - steps 指定整个事务会分成多个步骤，每个步骤的正向操作url为action，补偿操作url为compensate
 - payloads 每个步骤http请求的body
 
-### abort 回滚事务
+## abort 回滚事务
 
 此接口用于回滚全局事务
 
@@ -209,7 +209,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/abort' \
 }
 ```
 
-### registerBranch
+## registerBranch
 
 此接口用于TCC, XA事务模式中，注册事务分支
 
@@ -230,7 +230,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/registerBranch' \
 ```
 - url: xa事务模式最后进行commit/rollback的服务地址
 
-#### 注册TCC分支请求示例
+## 注册TCC分支请求示例
 
 ``` bash
 curl --location --request POST 'localhost:36789/api/dtmsvr/registerTccBranch' \
@@ -256,7 +256,7 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/registerTccBranch' \
 }
 ```
 
-### query 查询事务
+## query 查询事务
 
 此接口用于查询指定gid的事务。
 
@@ -303,7 +303,7 @@ curl 'localhost:36789/api/dtmsvr/query?gid=xxx'
 }
 ```
 
-### all 批量查询事务
+## all 批量查询事务
 
 此接口用于批量查询事务。dtm将返回id小于last_id，按照id从大到小排序的100条数据
 

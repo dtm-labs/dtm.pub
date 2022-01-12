@@ -16,7 +16,7 @@ TCC分为3个阶段
 
 我们来完成一个最简单的TCC：
 
-### http
+#### http
 ``` go
 err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty.Response, error) {
   resp, err := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
@@ -29,7 +29,7 @@ err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty
 
 详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
 
-### grpc
+#### grpc
 ``` go
 gid := dtmgrpc.MustGenGid(DtmGrpcServer)
 err := dtmgrpc.TccGlobalTransaction(DtmGrpcServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
@@ -65,7 +65,7 @@ func (t *Tcc) CallBranch(body interface{}, tryURL string, confirmURL string, can
 
 当tccFunc正常返回时，TccGlobalTransaction会提交全局事务，然后返回给调用者。dtm收到提交请求，则会调用所有注册事务分支的二阶段Confirm。TccGlobalTransaction返回时，一阶段的Try已经全部完成，但是二阶段的Confirm通常还未完成。
 
-### 失败回滚
+## 失败回滚
 
 如果tccFunc返回错误，TccGlobalTransaction会终止全局事务，然后返回给调用者。dtm收到终止请求，则会调用所有注册子事务的二阶段Cancel。
 
@@ -79,12 +79,50 @@ res2, rerr := tcc.CallBranch(&TransReq{Amount: 30, TransInResult: "FAILURE"}, Bu
 
 ![tcc_rollback](../imgs/tcc_rollback.jpg)
 
-### Confirm/Cancel操作异常
+## Confirm/Cancel操作异常
 
 假如Confirm/Cancel操作遇见失败会怎么样？按照Tcc模式的协议，Confirm/Cancel操作是不允许失败的，遇见失败的情况，都是由于临时故障或者程序bug。dtm在Confirm/Cancel操作遇见失败时，会不断进行重试，直到成功。
 
 为了避免程序bug导致补偿操作一直无法成功，建议开发者对全局事务表进行监控，发现重试超过3次的事务，发出报警，由运维人员找开发手动处理，参见[dtm的运维](../deploy/maintain)
 
+## 嵌套的TCC
+
+dtm的Tcc事务模式，支持子事务嵌套，流程图如下：
+
+![nested_trans](../imgs/nested_trans.jpg)
+
+在这个流程图中，Order这个微服务，管理了订单相关的数据修改，同时还管理了一个嵌套的子事务，因此他即扮演了RM的角色，也扮演了AP的角色。
+
+#### 示例
+
+tcc支持嵌套的子事务，代码如下(具体源码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples))：
+
+``` go
+err := dtmcli.TccGlobalTransaction(DtmServer, gid, func(tcc *dtmcli.Tcc) (*resty.Response, error) {
+  resp, err := tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOut", Busi+"/TransOutConfirm", Busi+"/TransOutRevert")
+  if err != nil {
+    return resp, err
+  }
+  return tcc.CallBranch(&TransReq{Amount: 30}, Busi+"/TransInTccParent", Busi+"/TransInConfirm", Busi+"/TransInRevert")
+})
+```
+
+这里的TransInTccParent子事务，里面会再调用TransIn子事务，代码如下：
+
+``` go
+app.POST(BusiAPI+"/TransInTccParent", common.WrapHandler2(func(c *gin.Context) interface{} {
+  tcc, err := dtmcli.TccFromReq(c)
+  if err != nil {
+    return err
+  }
+  logrus.Printf("TransInTccParent ")
+  return tcc.CallBranch(&TransReq{Amount: reqFrom(c).Amount}, Busi+"/TransIn", Busi+"/TransInConfirm", Busi+"/TransInRevert")
+}))
+```
+
+子事务嵌套时，从传入的请求中构建tcc对象，然后就能够正常使用tcc对象，进行相关的事务。
+
+更多子事务嵌套的文档细节，例如相关的流程图，待补充
 
 ## 小结
 
