@@ -17,7 +17,7 @@ module.exports = {
     lastUpdated: 'Last Updated',
 
     nav: [
-      { text: '指引', link: '/guide/start' },
+      { text: '教程', link: '/guide/start' },
       { text: 'English', link: 'https://en.dtm.pub' },
       { text: '博客与分享', link: '/resource/blogs-theory' },
       { text: 'Github', link: 'https://github.com/dtm-labs/dtm' },
