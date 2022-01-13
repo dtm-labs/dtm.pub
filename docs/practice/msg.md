@@ -19,7 +19,7 @@ err := msg.PrepareAndSubmit(busi.Busi+"/QueryPreparedB", db, func(tx *sql.Tx) er
 	return busi.SagaAdjustBalance(tx, busi.TransOutUID, -req.Amount, "SUCCESS")
 })
 ```
-::: gRPC
+::: tip gRPC
 gRPC 的接入和 HTTP 基本一样，这里不再赘述，有需要的读者，可以参考[dtm-labs/dtm-examples](https://github.com/dtm-labs/dtm-examples)中的例子
 :::
 
