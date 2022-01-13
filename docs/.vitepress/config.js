@@ -162,21 +162,13 @@ module.exports = {
               link: '/deploy/base'
             },
             {
-              text: 'Docker部署',
-              link: '/deploy/docker'
+              text: '部署',
+              link: '/deploy/deploy'
             },
             // {
             //   text: '云上服务',
             //   link: '/deploy/cloud'
             // },
-            {
-              text: 'Kubernetes部署',
-              link: '/deploy/kubernetes'
-            },
-            {
-              text: '直接部署',
-              link: '/deploy/direct'
-            },
             {
               text: '运维',
               link: '/deploy/maintain'

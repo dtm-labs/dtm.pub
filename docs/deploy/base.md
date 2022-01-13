@@ -1,71 +1,58 @@
 # 基础
 
 ## 概览
-dtm分为AP、RM、TM三个角色，其中AP、RM，是业务微服务，会集成DTM的SDK，随业务部署，不需要单独部署，只有DTM需要单独部署。
 
 本小节说明的是线上部署方式，如果您仅在本地运行，可以参考[安装](../guide/start)
 
-进行线上部署时，一共包括以下几个步骤：
+dtm的整个分布式事务中，各个参与者，分为AP、RM、TM三个角色，详情参见指南中的 dtm 架构。当您需要将一个分布式事务应用上线时，您需要以下几步：
+- 准备 RM 中使用的子事务屏障表，需要在你的业务数据库中创建
+- 准备 DTM 服务器中使用的事务状态存储表
+- 设计你的部署方案：可采用的方案包括，直接二进制部署、docker部署、K8S 部署。这当中可能还跟您接入的微服务有关
+- 设计你的 dtm 多副本方案：线上应用不建议单副本部署。dtm与普通的无状态应用一样，直接多副本即可
+- 配置你的 dtm 服务器
 
-1. 创建相关的数据库表
-2. 通过环境变量配置启动dtm容器（推荐）
-  - 您在测试接入期间，可以使用云上服务（未来大家真实需求量大，将会提供在线服务）
-  - 您也可以选择不用环境变量，而采用文件配置（非推荐方式）
-  - 您可以选择编译出dtm直接部署（非推荐方式）
+## 准备 RM 数据表
+RM 因为涉及本地资源管理，因此使用DTM提供的子事务屏障技术则需要在本地数据库中创建子事务屏障相关的表，建表语句详见：[建表SQL](https://github.com/dtm-labs/dtm/blob/main/sqls/)中的barrier文件
 
-## 准备数据表
+## 准备 DTM 数据表
+DTM 作为TM角色，如果选择数据库作为存储引擎，那么会将全局事务信息保存在数据库中，需要在相应数据库中创建相关表，建表语句详见[建表SQL](https://github.com/dtm-labs/dtm/blob/main/sqls/)中的storage文件
 
-### RM数据表
-RM因为涉及本地资源管理，因此使用DTM提供的子事务屏障技术则需要在本地数据库中创建子事务屏障相关的表，建表语句详见：[子事务屏障表SQL](https://github.com/dtm-labs/dtm/blob/main/sqls/dtmcli.barrier.mysql.sql)
+## 部署方案
+这部分内容较多，详情参见[部署](./deploy)
 
-### DTM数据表
-DTM作为TM角色，将全局事务信息保存在数据库中，需要在相应数据库中创建相关表，建表语句详见[DTM全局事务表SQL](https://github.com/dtm-labs/dtm/blob/main/sqls/dtmsvr.storage.mysql.sql)
+## dtm 多副本方案
+线上应用不建议单副本部署，dtm 也不例外。你需要根据您的部署方案，进行多副本部署
+- 微服务部署，如go-zero、polaris：这类微服务协议，已有多副本方案，参考具体的微服务情况即可
+- 二进制部署、Docker部署时，您可以参考您的其他 RM 应用多副本部署方案，对 dtm 进行多副本部署
+- K8S部署：可以直接指定副本数
+
+dtm 的多副本如何协作，避免问题，可以参考 [dtm架构](../practice/arch)中的高可用部分
 
 ## DTM配置
 DTM支持环境变量和文件两种配置，如果同时有环境变量和文件，那么配置文件的优先级高
 
-## 环境变量(推荐方式)
+#### 环境变量
 为了友好支持容器化和云原生，DTM支持环境变量进行配置
 
-所有可配置的选项参考: [conf.sample.yml](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)，对于每个配置文件里的配置，都可以通过环境变量设置，对应规则如下：
+所有可配置的选项参考: [yml样板配置文件](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)，对于每个配置文件里的配置，都可以通过环境变量设置，对应规则如下：
 
 ```
-Store.MaxOpenConns => STORE_MAX_OPEN_CONNS
-MicroService.Driver => MICRO_SERVICE_DRIVER
+MicroService.EndPoint => MICRO_SERVICE_END_POINT
 ```
 
-### 重要配置项
-最重要和常见的配置项为dtm的存储，列出如下
+一个使用mysql的配置文件样例如下：
+``` yml
+Store:
+  Driver: 'mysql'
+  Host: 'localhost'
+  User: 'root'
+  Password: ''
+  Port: 3306
+```
 
-#### STORE_DRIVER
-指定您采用的存储引擎，取值为：mysql|postgres|redis|boltdb(默认)
+最详细的配置说明参考上述yml样板配置文件里面，每个配置项的注释
 
-#### STORE_HOST
-数据库或redis的主机名
-
-#### STORE_PORT
-数据库或redis的端口号
-
-#### STORE_USER
-数据库或redis的用户名
-
-#### STORE_PASSWORD
-数据库或redis的用户密码
-
-
-### 其他配置项
-
-#### CRON_TRANS_INTERVAL
-指定每个获取超时事务协程，每次获取空任务后的睡眠时间
-#### TIMEOUT_TO_FAIL
-指定XA，TCC失败的超时时间，以及事务消息模式中，反查的超时时间。
-
-这个时间可以被各个事务单独的TimeoutToFail设置。其中saga事务，只使用事务中的TimeoutToFail，不使用系统中的设置，主要原因为SAGA事务的时间跨度可能很长
-
-#### RETRY_INTERVAL
-重试间隔，当某个事务分支操作返回错误，那么dtm会间隔这个时间进行重试。dtm的重试使用退避算法，详情见[重试](../ref/options)
-
-## yml文件配置(非推荐方式)
+#### yml文件配置
 为了方便直接部署和调试，DTM也支持yml配置文件，详细配置项参考[yml样板配置文件](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml)
 
 采用yml配置dtm时，需要通过命令行指定配置文件，采用如下命令：

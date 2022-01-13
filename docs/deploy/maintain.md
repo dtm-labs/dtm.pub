@@ -11,8 +11,7 @@ select * from dtm.trans_global where status not in ('succeed', 'failed') and
   create_time between date_add(now(), interval -3600 second) and date_add(now(), interval -120 second)
 ```
 
-项目在v1.1.0版本后支持Prometheus监控，为Prometheus提供的输出端口为`8889`，配置在文件`dtmsvr/dtmsvr.go`中。
-该监视接口提供网络接口(HTTP/gRPC)的可用性和响应时间以及执行事务和分支操作结果的统计。
+项目在v1.1.0版本后支持Prometheus监控，访问接口为 `http://localhost:36789/api/metrics`。该接口提供网络接口(HTTP/gRPC)的可用性和响应时间以及执行事务和分支操作结果的统计。
 
 具体的metrics为
 
@@ -31,4 +30,4 @@ sum(dtm_branch_process_total{branchtype=~"confirm|cancel",status="fail"}) by (gi
 
 dtm对每个事务的重试是指数退避策略，具体为间隔是每失败一次，间隔加倍，避免过多的重试，导致系统负载异常上升。
 
-如果您经过长时间的的宕机，因指数退避算法导致要很久才会重试。如果您想要手动触发立即重试，您可以手动把相应事务的next_cron_time修改为当前时间，就会在数秒内被定时轮询，事务就会继续往前执行。
+如果您经过长时间的的宕机，因指数退避算法导致要很久才会重试。如果您想要手动触发立即重试，您可以手动把相应事务的next_cron_time(Redis存储引擎的该功能还在开发中)修改为当前时间，就会在数秒内被定时轮询，事务就会继续往前执行。
