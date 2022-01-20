@@ -26,7 +26,7 @@ dtm-qs
 需要docker 20.04版本及以上
 
 ```
-docker run yedf/dtm
+docker run -itd  --name dtm -p 36789:36789 -p 36790:36790  yedf/dtm:latest
 ```
 
 ## 二进制包下载安装
