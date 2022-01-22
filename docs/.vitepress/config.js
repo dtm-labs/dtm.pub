@@ -122,6 +122,15 @@ module.exports = {
           ]
         },
         {
+          text: '典型应用',
+          children: [
+            {
+              text: '秒杀',
+              link: '/app/flash'
+            },
+          ],
+        },
+        {
           text: '接入参考',
           children: [
             {
