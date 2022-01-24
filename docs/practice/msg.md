@@ -15,7 +15,7 @@
 ``` Go
 msg := dtmcli.NewMsg(DtmServer, gid).
 	Add(busi.Busi+"/TransIn", &TransReq{Amount: 30})
-err := msg.PrepareAndSubmit(busi.Busi+"/QueryPreparedB", db, func(tx *sql.Tx) error {
+err := msg.DoAndSubmitDB(busi.Busi+"/QueryPreparedB", db, func(tx *sql.Tx) error {
 	return busi.SagaAdjustBalance(tx, busi.TransOutUID, -req.Amount, "SUCCESS")
 })
 ```
@@ -26,13 +26,13 @@ gRPC 的接入和 HTTP 基本一样，这里不再赘述，有需要的读者，
 这部分代码中
 - 首先生成一个DTM的msg全局事务，传递dtm的服务器地址和全局事务id
 - 给msg添加一个分支业务逻辑，这里的业务逻辑为余额转入操作TransIn，然后带上这个服务需要传递的数据，金额30元
-- 然后调用msg的PrepareAndSubmit，这个函数保证业务成功执行和msg全局事务提交，要么同时成功，要么同时失败
+- 然后调用msg的DoAndSubmitDB，这个函数保证业务成功执行和msg全局事务提交，要么同时成功，要么同时失败
 	1. 第一个参数为回查URL，详细含义稍后说
 	2. 第二个参数为sql.DB，是业务访问的数据库对象
 	3. 第三个参数是业务函数，我们这个例子中的业务是给A扣减30元余额
 
 ## 成功流程
-PrepareAndSubmit是如何保证业务成功执行与msg提交的原子性的呢？请看如下的时序图：
+DoAndSubmitDB是如何保证业务成功执行与msg提交的原子性的呢？请看如下的时序图：
 ![msg_normal](../imgs/msg_normal.jpg)
 
 一般情况下，时序图中的5个步骤会正常完成，整个业务按照预期进行，全局事务完成。这里面有个新的内容需要解释一下，就是msg的提交是按照两个阶段发起的，第一阶段调用Prepare，第二阶段调用Commit，DTM收到Prepare调用后，不会调用分支事务，而是等待后续的Submit。只有收到了Submit，开始分支调用，最终完成全局事务。
