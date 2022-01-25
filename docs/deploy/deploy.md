@@ -86,7 +86,7 @@ spec:
     spec:
       containers:
         - name: dtm
-          image: yedf/dtm
+          image: yedf/dtm:latest
           imagePullPolicy: IfNotPresent
           args:
             - "-c=/app/dtm/configs/config.yaml"
