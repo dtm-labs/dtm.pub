@@ -125,8 +125,20 @@ module.exports = {
           text: '典型应用',
           children: [
             {
+              text: '概述',
+              link: '/app/intro'
+            },
+            {
+              text: '订单系统',
+              link: '/app/order'
+            },
+            {
               text: '秒杀',
               link: '/app/flash'
+            },
+            {
+              text: '缓存一致性',
+              link: '/app/cache'
             },
           ],
         },
