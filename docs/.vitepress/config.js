@@ -22,6 +22,7 @@ module.exports = {
       { text: '博客与分享', link: '/resource/blogs-theory' },
       { text: 'Github', link: 'https://github.com/dtm-labs/dtm' },
       { text: '知乎', link: 'https://www.zhihu.com/people/ye-dongfu' }
+      { text: '文档源码', link: 'https://github.com/dtm-labs/dtm.pub' },
     ],
     sidebar: {
       '/resource/': [
