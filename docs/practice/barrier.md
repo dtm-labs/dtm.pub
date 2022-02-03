@@ -132,6 +132,13 @@ func (bb *BranchBarrier) CallWithDB(db *sql.DB, busiCall BusiFunc) error
 - dtm的子事务屏障是SDK层解决这三个问题，业务完全不需要关心
 - 性能高，对于正常完成的事务（一般失败的事务不超过1%），子事务屏障的额外开销是每个分支操作一个SQL，比其他方案代价更小。
 
+## 支持的存储
+目前子事务屏障已经支持了
+- 数据库：包括 Mysql, Postgres, 以及与Mysql，Postgres兼容的数据库
+- 缓存 Redis：采用 Lua 脚本事务支持
+- Mongo：采用 Mongo 的事务支持
+
+理论上支持事务的各种存储都可以轻松实现子事务屏障，例如 TiKV 等。
 ## 对接orm库
 
 barrier提供了sql标准接口，但大家的应用通常都会引入更高级的orm库，而不是裸用sql接口，因此需要进行转化. 相关的对接参考[对接ORM](../ref/sdk#db)
