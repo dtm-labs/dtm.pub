@@ -9,6 +9,7 @@
 |  特性| DTM | SEATA |备注|
 |:-----:|:----:|:----:|:----:|
 | [支持语言](#lang) |<span style="color:green">Go、Java、python、php、c#...</span>|<span style="color:orange">Java</span>|dtm可轻松接入一门新语言|
+|[存储引擎](#store) |<span style="color:green">支持数据库、Redis、Mongo</span>|<span style="color:orange">数据库</span>||
 |[异常处理](#exception)| <span style="color:green">子事务屏障自动处理</span>|<span style="color:orange">手动处理</span> |dtm解决了幂等、悬挂、空补偿|
 |[TCC事务](#tcc)| <span style="color:green">✓</span>|<span style="color:green">✓</span>||
 | [XA事务](#xa)|<span style="color:green">✓</span>|<span style="color:green">✓</span>||
@@ -33,6 +34,11 @@ dtm在接口设计上，也充分考虑了多语言支持。例如：
 - Saga 未采用状态机，避免在 gRPC 协议下，无法提取自定义的结果
 
 Seata目前主要支持Java，对Java生态的支持较完备，另外采用了注解方式的接口，对Java开发人员较友好。因为它的SDK，相对较重，里面包含了大量的逻辑，想要在一门新语言中，实现SDK，工作量非常大。他在非Java的语言中，看到有seata-go，但目前还不是很成熟。
+
+## 存储引擎 {#store}
+dtm支持使用多个服务使用多种存储引擎组合成一个分布式事务，目前已支持数据库、Redis、Mongo三种，而且dtm可以很快速的支持其他的存储引擎，提供非常灵活的功能，让你的应用可以方便的选择最适合的方案。
+
+Seata目前只看到对数据库的支持，暂未看到对其他存储引擎的支持
 
 ## 异常处理 {#exception}
 异常问题这里主要是指分布式系统中Network Delay和Process Pause造成的乱序，需要应用处理重复请求、悬挂、空补偿。这是一个非常棘手的问题，虽然每个分布式事务框架都给出了业务实现建议，但是业务实现这个非常困难，很容易掉坑，并且难以测试，详情可以参考[子事务屏障自动处理](../practice/barrier.html)
