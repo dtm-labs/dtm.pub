@@ -100,8 +100,12 @@ grpc的调用，可以类比于HTTP的POST，其中：
 ## 更加完整的例子
 热心的社区同学Mikael帮忙写了一个内容更加丰富的例子，结合实际应用和子事务屏障，完整的演示了一个线上实际运行的分布式事务，有兴趣的同学可以参考：
 
-[https://github.com/Mikaelemmmm/gozerodtm](https://github.com/Mikaelemmmm/gozerodtm)
+- [https://github.com/Mikaelemmmm/gozerodtm](https://github.com/Mikaelemmmm/gozerodtm)
+- [https://github.com/nivin-studio/go-zero-mall](https://github.com/nivin-studio/go-zero-mall)
 
+::: tip docker 中部署
+接入过程中，如果你使用了docker部署，那么请参照上述两个完整例子中，关于docker的地址配置，避免因为localhost/127.0.0.1在docker中无法互通导致问题
+:::
 ## 其他方式接入
 go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接入方式
 
