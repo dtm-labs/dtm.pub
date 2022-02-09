@@ -40,7 +40,7 @@ dtm目前实现了常见的四种事务模式，TCC、SAGA、XA、事务消息�
 
 正常发送的流程图如下：
 
-![image.png](/img/bVcXNbU)
+![msg_trans](../imgs/msg_trans.png)
 
 补偿流程：
 
