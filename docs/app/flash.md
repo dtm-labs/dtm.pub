@@ -75,6 +75,9 @@ err := msg.DoAndSubmit(busi.Busi+"/QueryPreparedRedis", func(bb *BranchBarrier) 
 
 参考一下阿里双十一的峰值订单：58.3万笔/秒，那么上述预估的9w/s，几乎足以应对所有的秒杀活动
 
+## 代码示例
+完整的可运行的代码示例，可以参考[dtm-cases/flash](https://github.com/dtm-labs/dtm-cases/tree/main/flash)
+
 ## 秒杀性能测试详情
 测试的环境，两台阿里云主机，类型为：ecs.hfc5.3xlarge 12核 CPU 3.1GHz/3.4GHz PPS 130万
 - 一台机器运行Redis
