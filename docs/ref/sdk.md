@@ -21,8 +21,13 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 [相关博客](../resource/blogs-go)
 
 #### php
+客户端sdk 协程版（支持Hyperf、SAGA、TCC、MSG、子事务屏障）[https://github.com/dtm-php/dtm-client](https://github.com/dtm-php/dtm-client)
 
-客户端sdk（当前只支持TCC）: [https://github.com/dtm-labs/dtmcli-php](https://github.com/dtm-labs/dtmcli-php)
+示例：[https://github.com/dtm-php/dtm-sample](https://github.com/dtm-php/dtm-sample)
+
+上述SDK由PHP界大佬[黄朝晖](https://github.com/huangzhhui)亲自操刀，并获得Swool创始人推荐，代码质量高，社区活跃
+
+普通版客户端sdk（当前只支持TCC）: [https://github.com/dtm-labs/dtmcli-php](https://github.com/dtm-labs/dtmcli-php)
 
 示例: [https://github.com/dtm-labs/dtmcli-php-sample](https://github.com/dtm-labs/dtmcli-php-sample)
 
@@ -32,11 +37,13 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 #### dotnet
 
-客户端sdk（当前只支持TCC）: [https://github.com/dtm-labs/dtmcli-csharp](https://github.com/dtm-labs/dtmcli-csharp)
+客户端sdk http版本（支持TCC、SAGA、MSG、子事务屏障）: [https://github.com/dtm-labs/dtmcli-csharp](https://github.com/dtm-labs/dtmcli-csharp)
 
 示例: [https://github.com/dtm-labs/dtmcli-csharp-sample](https://github.com/dtm-labs/dtmcli-csharp-sample)
 
-感谢 [geffzhang](https://github.com/geffzhang)的帮助，C的sdk和示例，主要由[geffzhang](https://github.com/geffzhang)贡献
+感谢 [catcherwong](https://github.com/catcherwong)、[geffzhang](https://github.com/geffzhang)的帮助，C的sdk和示例，主要由他们贡献
+
+客户端sdk grpc版本：[https://github.com/catcherwong/dtmgrpc-csharp](https://github.com/catcherwong/dtmgrpc-csharp)
 
 [相关博客](../resource/blogs-donet)
 
@@ -51,11 +58,11 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 #### Java
 
-客户端sdk（当前只支持TCC）: [https://github.com/dtm-labs/dtmcli-java](https://github.com/dtm-labs/dtmcli-java)
+客户端sdk（TCC、子事务屏障）: [https://github.com/dtm-labs/dtmcli-java](https://github.com/dtm-labs/dtmcli-java)
 
 示例: [https://github.com/dtm-labs/dtmcli-java-sample](https://github.com/dtm-labs/dtmcli-java-sample)
 
-感谢 [viticis](https://github.com/viticis) [li-xiao-shuang](https://github.com/li-xiao-shuang)的帮助，Java的sdk和示例，主要由他们贡献
+感谢 [li-xiao-shuang](https://github.com/li-xiao-shuang)，[viticis](https://github.com/viticis) 的帮助，Java的sdk和示例，主要由他们贡献
 
 [相关博客](../resource/blogs-java)
 
