@@ -11,7 +11,7 @@ SAGA最初出现在1987年Hector Garcaa-Molrna & Kenneth Salem发表的论文[SA
 - 转出（TransOut）服务，这里转出将会进行操作A-30
 - 转出补偿（TransOutCompensate）服务，回滚上面的转出操作，即A+30
 - 转入（TransIn）服务，转入将会进行B+30
-- 转出补偿（TransInCompensate）服务，回滚上面的转入操作，即B-30
+- 转入补偿（TransInCompensate）服务，回滚上面的转入操作，即B-30
 
 整个SAGA事务的逻辑是：
 
