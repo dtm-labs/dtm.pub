@@ -163,6 +163,10 @@ module.exports = {
               link: '/ref/proto'
             },
             {
+              text: '更多功能特性',
+              link: '/ref/feature'
+            },
+            {
               text: 'go-zero对接',
               link: '/ref/gozero'
             },
