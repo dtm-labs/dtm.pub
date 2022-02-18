@@ -172,3 +172,58 @@ spec:
                   number: 36789 # 此处为 http server，grpc server 的设置，请访问 https://kubernetes.github.io/ingress-nginx/examples/grpc/
   ingressClassName: nginx # 使用了其他的 ingressClassName， 请自行查询
 ```
+
+
+## Helm部署
+
+## 使用
+
+安装 DTM chart:
+
+```bash
+helm install --create-namespace -n dtm-system dtm ./charts
+```
+
+升级 DTM chart:
+
+```bash
+helm upgrade -n dtm-system dtm ./charts
+```
+
+拆卸 DTM chart:
+
+```bash
+helm delete -n dtm-system dtm
+```
+
+## 参数
+
+### Configuration 参数
+
+| Key             | Description                                                                                                    | Value |
+|-----------------|----------------------------------------------------------------------------------------------------------------|-------|
+| `configuration` | DTM 配置. 为 DTM 生成 `config.yaml`, 参考: [sample config](https://github.com/dtm-labs/dtm/blob/main/conf.sample.yml) | `""`  |
+
+
+
+### Autoscaling 参数
+
+| Name                                            | Description        | Value   |
+|-------------------------------------------------|--------------------|---------|
+| `autoscaling.enabled`                           | 为 DTM 启用 pods 弹性伸缩 | `false` |
+| `autoscaling.minReplicas`                       | DTM 副本的最小数量        | `1`     |
+| `autoscaling.maxReplicas`                       | DTM 副本的最大数量        | `10`    |
+| `autoscaling.targetCPUUtilizationPercentage`    | 目标cpu使用率           | `80`    |
+| `autoscaling.targetMemoryUtilizationPercentage` | 目标内存使用率            | `80`    |
+
+### Ingress 参数
+
+| Key                            | Description                                      | Value               |
+|--------------------------------|--------------------------------------------------|---------------------|
+| `ingress.enabled`              | 为 DTM 启用 ingress                                 | `false`             |
+| `ingress.className`            | 为 Ingress 指定一个 Ingress class。 (Kubernetes 1.18+) | `"nginx"`           |
+| `ingress.annotations`          | 配置 TLS 证书的自动签发注解等.                               | `{}`                |
+| `ingress.hosts.host`           | 为 DTM 指定主机名.                                     | `"your-domain.com"` |
+| `ingress.hosts.paths.path`     | 为 DTM 配置匹配路径                                     | `"/"`               |
+| `ingress.hosts.paths.pathType` | Ingress 匹配类型, `Prefix` 或 `Exact`                 | `"Prefix"`          |
+| `ingress.tls`                  | 为 DTM 主机名配置 TLS secret                           | `[]`                |
