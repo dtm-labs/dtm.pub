@@ -30,7 +30,7 @@ dtm会监听
 #### Docker启动
 
 ``` bash
-docker run --name dtm -p 36789:36789 -p 36790:36790 -e STORE_DRIVER='mysql' -e STORE_HOST='localhost' -e STORE_USER='root' -e STORE_PASSWORD='' -e STORE_PORT='3306' yedf/dtm:latest
+docker run --name dtm -p 36789:36789 -p 36790:36790 -e STORE_DRIVER=mysql -e STORE_HOST=localhost -e STORE_USER=root -e STORE_PASSWORD= -e STORE_PORT=3306 yedf/dtm:latest
 ```
 
 各个参数，详见[部署基础](./base)
