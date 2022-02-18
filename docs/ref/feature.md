@@ -38,6 +38,10 @@ app.POST(BusiAPI+"/SagaMultiSourceRevert", dtmutil.WrapHandler2(func(c *gin.Cont
     return SagaAdjustBalance(tx, TransOutUID, +reqFrom(c).Amount, "")
   })
 }))
+
+saga := dtmcli.NewSaga(dtmutil.DefaultHTTPServer, dtmcli.MustGenGid(dtmutil.DefaultHTTPServer)).
+  Add(busi.Busi+"/SagaMultiSource", busi.Busi+"/SagaMultiSourceRevert", req)
+
 ```
 
 上述的代码能够保证，在各种异常情况下，数据源1和数据源2的数据修改，要么同时成功，要么同时回滚。
