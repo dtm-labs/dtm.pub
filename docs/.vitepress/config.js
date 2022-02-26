@@ -113,7 +113,7 @@ module.exports = {
               link: '/practice/barrier'
             },
             {
-              text: '不允许失败',
+              text: '最终成功',
               link: '/practice/must-succeed'
             },
             {

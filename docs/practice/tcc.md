@@ -64,7 +64,7 @@ res2, rerr := tcc.CallBranch(&TransReq{Amount: 30, TransInResult: "FAILURE"}, Bu
 
 ## Confirm/Cancel操作异常
 
-假如Confirm/Cancel操作遇见失败会怎么样？按照Tcc模式的协议，Confirm/Cancel操作是不允许失败的，遇见失败的情况，都是由于临时故障或者程序bug。dtm在Confirm/Cancel操作遇见失败时，会不断进行重试，直到成功。
+假如Confirm/Cancel操作遇见失败会怎么样？按照Tcc模式的协议，Confirm/Cancel操作是要求最终成功的，遇见失败的情况，都是由于临时故障或者程序bug。dtm在Confirm/Cancel操作遇见失败时，会不断进行重试，直到成功。
 
 为了避免程序bug导致补偿操作一直无法成功，建议开发者对全局事务表进行监控，发现重试超过3次的事务，发出报警，由运维人员找开发手动处理，参见[dtm的运维](../deploy/maintain)
 
