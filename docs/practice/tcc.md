@@ -130,3 +130,5 @@ app.POST(BusiAPI+"/TransInTccParent", common.WrapHandler2(func(c *gin.Context) i
 ## 小结
 
 在本节的教程中，我们简单介绍了TCC的理论知识，也通过几个例子，完整给出了编写一个TCC事务的过程，涵盖了正常成功完成，以及失败回滚的情况。另外还演示一个嵌套子事务。
+
+完整的一个TCC事务教程，可以参考 [TCC教程](https://segmentfault.com/a/1190000040331793)
