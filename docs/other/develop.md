@@ -41,6 +41,6 @@ TEST_STORE=postgres go test ./... # 测试postgres引擎
 您的修改完成后，按照流程发起PR，然后关注下面的内容
 
 - 您的PR是否通过了dtm的所有集成测试
-- 如果您新增代码，请关注您的代码[测试覆盖率](https://coveralls.io/github/dtm-labs/dtm)
+- 如果您新增代码，请关注您的代码[测试覆盖率](https://app.codecov.io/gh/dtm-labs/dtm)
 
 对于通过上述两条内容的PR，dtm的人员将会尽快给您反馈，如果无大的问题，将合并您的PR
