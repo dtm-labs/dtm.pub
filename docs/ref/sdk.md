@@ -89,7 +89,7 @@ dtm-qs
 上述dtm-qs命令，会运行一个简单的quick start例子，这是一个saga事务，您可以对照saga的时序图与日志，更深入的了解dtm
 
 ## 支持的数据库
-dtm的SDK中，提供了子事务屏障功能，也提供了XA相关的支持，这部分的支持是与具体的数据库相关的。目前已支持了常见的几种数据库事务，包括Mysql系列、Postgres，未来将考虑接入更多的数据库事务
+dtm的SDK中，提供了子事务屏障功能，也提供了XA相关的支持，这部分的支持是与具体的数据库相关的。目前已支持了常见的几种数据库事务，包括Mysql系列、Postgres，Redis、Mongo。未来将考虑接入更多的数据库事务
 #### Mysql 系列
 
 包括Mysql，MariaDB，TiDB，TDSQL
@@ -105,7 +105,10 @@ dtmcli.SetCurrentDBType("postgres")
 详细例子，可以参考dtm/app/main.go中的代码
 
 #### Redis
-DTM 近期将支持 Redis 事务，这样用户可以在一个分布式事务里，组合使用 Redis 及 Mysql ，可以将扣库存放在 Redis 中，提供准确扣库存的架构，让订单系统可以轻松应对秒杀场景
+DTM 已支持 Redis 事务，这样用户可以在一个分布式事务里，组合使用 Redis 及 Mysql ，可以将扣库存放在 Redis 中，提供准确扣库存的架构，让订单系统可以轻松应对秒杀场景
+
+#### Mongo
+DTM已支持Mongo
 
 ## ORM 对接 {#orm}
 

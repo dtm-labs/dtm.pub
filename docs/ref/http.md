@@ -3,7 +3,7 @@
 ## 概述
 DTM 可以通过HTTP协议交互。因为事务本身具有特殊性，它和普通的api调用只区分成功和失败不同，DTM的结果状态详情，请参考[接口协议](../practice/arch#proto)
 
-接口主要分为三类： AP调用TM的接口、AP调用RM的接口、TM调用RM的接口
+接口主要分为三类： AP调用TM的接口、AP调用RM的接口、TM调用RM的接口。本文主要讲解AP调用TM的接口，其他两类接口参见[dtm 架构](../practice/arch)
 
 ## AP调用TM的接口
 
@@ -11,7 +11,7 @@ DTM 可以通过HTTP协议交互。因为事务本身具有特殊性，它和普
 
 这部分接口如果对事务状态进行变更，则dtm会对事务状态做相关的校验，有可能校验失败，而返回错误。以一个实际的例子说明：
 
-如果调用prepare时，这个事务状态已经是failed，那么dtm将返回错误：
+如果调用prepare时，这个事务状态已经是failed，那么dtm将返回错误码409，错误内容：
 ``` JSON
 {
     "dtm_result":"FAILURE",
@@ -66,14 +66,6 @@ curl --location --request POST 'localhost:36789/api/dtmsvr/prepare' \
 ``` JSON
 {
     "dtm_result":"SUCCESS"
-}
-```
-
-失败响应示例
-``` JSON
-{
-    "dtm_result":"FAILURE",
-    "message":"current status 'failed', cannot prepare"
 }
 ```
 
