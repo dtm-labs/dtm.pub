@@ -77,15 +77,15 @@ module.exports = {
             },
             {
               text: '二阶段消息例子',
-              link: '/guide/msg'
+              link: '/guide/e-msg'
             },
             {
               text: 'SAGA 例子',
-              link: '/guide/saga'
+              link: '/guide/e-saga'
             },
             {
               text: 'TCC 例子',
-              link: '/guide/tcc'
+              link: '/guide/e-tcc'
             },
           ]
         },
