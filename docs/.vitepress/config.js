@@ -75,6 +75,18 @@ module.exports = {
               text: '快速开始',
               link: '/guide/start'
             },
+            {
+              text: '二阶段消息例子',
+              link: '/guide/msg'
+            },
+            {
+              text: 'SAGA 例子',
+              link: '/guide/saga'
+            },
+            {
+              text: 'TCC 例子',
+              link: '/guide/tcc'
+            },
           ]
         },
         {
