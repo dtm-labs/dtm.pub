@@ -5,7 +5,7 @@
 dtm项目需要将数据存储在mysql|redis|postgres，因此需要准备好相关的服务器。
 
 推荐采用docker-compose的方式准备环境，您可以安装docker20.04以上版本，然后在dtm项目路径下，执行
-`docker-compose -f helper/compose.store.yml`
+`docker-compose -f helper/compose.store.yml up -d`
 
 ## 添加测试用例
 这步为可选，虽然这步为可选，但是对于bug或者新功能，强烈建议您添加测试用例，以便未来的每一个修改，都不会重新引入您已解决的问题
