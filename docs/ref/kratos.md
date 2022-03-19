@@ -2,16 +2,16 @@
 
 ## 运行一个已有的示例
 
-我们以etcd作为注册服务中心为例，按照如下步骤运行一个kratos的示例：
+我们以 etcd 作为注册服务中心为例，按照如下步骤运行一个 kratos 的示例：
 
-- 启动etcd
+- 启动 etcd
 
 ```shell
 # 请先确保已经安装 etcd
 etc
 ```
 
-- 配置dtm
+- 配置 dtm
 
 ```yaml
 MicroService:
