@@ -8,7 +8,7 @@
 
 ```shell
 # 请先确保已经安装 etcd
-etc
+etcd
 ```
 
 - 配置 dtm
