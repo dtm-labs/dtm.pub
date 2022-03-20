@@ -176,7 +176,7 @@ spec:
 
 ## Helm部署
 
-## 使用
+### 使用
 
 安装 DTM chart:
 
@@ -196,9 +196,9 @@ helm upgrade -n dtm-system dtm ./charts
 helm delete -n dtm-system dtm
 ```
 
-## 参数
+### 参数
 
-### Configuration 参数
+#### Configuration 参数
 
 | Key             | Description                                                                                                    | Value |
 |-----------------|----------------------------------------------------------------------------------------------------------------|-------|
@@ -206,7 +206,7 @@ helm delete -n dtm-system dtm
 
 
 
-### Autoscaling 参数
+#### Autoscaling 参数
 
 | Name                                            | Description        | Value   |
 |-------------------------------------------------|--------------------|---------|
@@ -216,7 +216,7 @@ helm delete -n dtm-system dtm
 | `autoscaling.targetCPUUtilizationPercentage`    | 目标cpu使用率           | `80`    |
 | `autoscaling.targetMemoryUtilizationPercentage` | 目标内存使用率            | `80`    |
 
-### Ingress 参数
+#### Ingress 参数
 
 | Key                            | Description                                      | Value               |
 |--------------------------------|--------------------------------------------------|---------------------|
