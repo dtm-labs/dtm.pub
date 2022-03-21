@@ -70,7 +70,7 @@ import (
 var dtmServer = "discovery://localhost:2379/dtmservice"
 
 // 业务地址，下面的 busi 换成实际在 server 初始化设置的名字
-var busiServer = "discovery://localhost:2379/busi" 
+var busiServer = "discovery://localhost:2379/busi"
 
 // 使用 dtmgrpc 生成一个 tcc 分布式事务并提交
 gid := dtmgrpc.MustGenGid(dtmServer)
@@ -110,12 +110,6 @@ kratos 的微服务还有非 etcd 的其他方式，下面列出它们的接入�
 对于直连这种方式，您只需要在上面 dtm 的 etcd 配置基础上，将 Target 设置为空字符串即可。
 
 直连的情况，不需要将 dtm 注册到注册中心
-
-#### K8S
-
-对于 K8S 这种方式，您只需要在上面 dtm 的 etcd 配置基础上，将 Target 设置为空字符串即可。
-
-在 K8S 中，将服务注册到 K8S 中，是有 deployment.yaml 完成的，应用内部，不需要进行注册
 
 ## 小结
 
