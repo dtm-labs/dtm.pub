@@ -48,8 +48,8 @@ cd kratos/app && go run main.go
 ```
 INFO msg=config loaded: config.yaml format: yaml
 INFO msg=[gRPC] server listening on: [::]:9000
-2022/03/19 19:38:53 transfer in 30 cents to 1
-2022/03/19 19:38:53 transfer out 30 cents from 1
+2022/03/30 09:35:36 transfer out 30 cents from 1
+2022/03/30 09:35:36 transfer in 30 cents to 2
 ```
 
 那就是事务正常完成了
@@ -58,7 +58,7 @@ INFO msg=[gRPC] server listening on: [::]:9000
 
 ## 开发接入
 
-参考 [dtm-labs/dtmdriver-clients](https://github.com/dtm-labs/dtmdriver-clients/blob/main/gozero/app/main.go) 的代码
+参考 [dtm-labs/dtmdriver-clients](https://github.com/dtm-labs/dtmdriver-clients/blob/main/kratos/app/main.go) 的代码
 
 ```go
 // 下面这些导入 kratos 的 dtm 驱动
@@ -72,17 +72,14 @@ var dtmServer = "discovery://localhost:2379/dtmservice"
 // 业务地址，下面的 busi 换成实际在 server 初始化设置的名字
 var busiServer = "discovery://localhost:2379/busi"
 
-// 使用 dtmgrpc 生成一个 tcc 分布式事务并提交
+// 发起一个msg事务，保证TransOut和TransIn都会完成
 gid := dtmgrpc.MustGenGid(dtmServer)
-err := dtmgrpc.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmgrpc.TccGrpc) err {
-  rep := v1.Response{} // proto 生成的响应结构
-  err1 := tcc.CallBranch(&busi.BusiReq{Amount:30, UserId: 1},
-      busiServer+"/api.trans.v1.Trans/TransIn",
-      busiServer+"/api.trans.v1.Trans/TransInConfirm",
-      busiServer+"/api.trans.v1.Trans/TransInCancel",
-      &rep)
-  return err1
-})
+m := dtmgrpc.NewMsgGrpc(dtmServer, gid).
+  Add(busiServer+"/api.trans.v1.Trans/TransOut", &busi.BusiReq{Amount: 30, UserId: 1}).
+  Add(busiServer+"/api.trans.v1.Trans/TransIn", &busi.BusiReq{Amount: 30, UserId: 2})
+m.WaitResult = true
+err := m.Submit()
+logger.FatalIfError(err)
 ```
 
 ## 深入理解动态调用
@@ -93,7 +90,7 @@ dtm 无需知道组成分布式事务的相关业务 api 的强类型，它是�
 
 grpc 的调用，可以类比于 HTTP 的 POST，其中：
 
-- "/api.trans.v1.Trans/TransIn" 相当于 URL 中的 Path
+- "/api.trans.v1.Trans/TransIn" 相当于 URL 中的 Path。请注意这个Path一定是要从TransIn的Invoke函数实现里面找
 - &busi.BusiReq{Amount: 30, UserId: 1} 相当于 Post 中 Body
 - v1.Response 相当于HTTP请求的响应
 
