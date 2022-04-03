@@ -20,8 +20,8 @@ MicroService:
 ```
 - 启动dtm
 ```
-# 前提：配置好dtm的数据库
-go run app/main.go dev
+# 前提：配置好conf.yml
+go run app/main.go -c conf.yml
 ```
 - 运行一个go-zero的服务
 ```
