@@ -121,6 +121,10 @@ module.exports = {
               link: '/practice/other'
             },
             {
+              text: 'AT vs XA',
+              link: '/practice/at'
+            },
+            {
               text: '异常与子事务屏障',
               link: '/practice/barrier'
             },
