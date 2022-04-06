@@ -31,7 +31,7 @@ xa commit '4fPqCNTYeSG'
 ![xa_normal](../imgs/xa_normal.jpg)
 
 ### HTTP接入
-我们来看看如何用使用HTTP接入一个dtm的XA事务
+我们来看看如何用使用HTTP接入一个基于[dtm-labs/dtm](https://github.com/dtm-labs/dtm)的XA事务
 ``` go
 	gid := dtmcli.MustGenGid(dtmutil.DefaultHTTPServer)
 	err := dtmcli.XaGlobalTransaction(dtmutil.DefaultHTTPServer, gid, func(xa *dtmcli.Xa) (*resty.Response, error) {
