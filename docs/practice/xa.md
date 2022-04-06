@@ -54,7 +54,10 @@ app.POST(BusiAPI+"/TransOutXa", dtmutil.WrapHandler2(func(c *gin.Context) interf
 }))
 ```
 
-详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
+详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：可以通过以下命令运行这个示例：
+```
+go run main.go http_xa
+```
 
 上面的代码首先注册了一个全局XA事务，然后添加了两个子事务TransOut、TransIn。子事务全部执行成功之后，提交给dtm。dtm收到提交的xa全局事务后，会调用所有子事务的xa commit，完成整个xa事务。
 
