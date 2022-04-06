@@ -16,10 +16,10 @@ XA一共分为两阶段：
 第一阶段 准备
 
 ``` sql
-XA start '4fPqCNTYeSG'
+XA start '4fPqCNTYeSG' -- 开启一个 xa 事务
 UPDATE `user_account` SET `balance`=balance + 30,`update_time`='2021-06-09 11:50:42.438' WHERE user_id = '1'
 XA end '4fPqCNTYeSG'
-XA prepare '4fPqCNTYeSG'
+XA prepare '4fPqCNTYeSG' -- 此调用之前，连接断开，那么事务会自动回滚，这个调用之后，需要 xa commit/rollback 才会最终完成事务
 -- 当所有的参与者完成了prepare，就进入第二阶段 提交
 xa commit '4fPqCNTYeSG'
 ```
@@ -30,107 +30,28 @@ xa commit '4fPqCNTYeSG'
 
 ![xa_normal](../imgs/xa_normal.jpg)
 
-由于XA模式，需要用到本地数据库的功能，不能复用之前的通用处理函数，因此整个代码量会比其他几种模式的最简单示例要复杂一些：
-
-### http
-
+### HTTP接入
+我们来看看如何用使用HTTP接入一个dtm的XA事务
 ``` go
-// XaSetup 挂载http的api，创建XaClient
-func XaSetup(app *gin.Engine) {
-	app.POST(BusiAPI+"/TransInXa", common.WrapHandler(xaTransIn))
-	app.POST(BusiAPI+"/TransOutXa", common.WrapHandler(xaTransOut))
-	var err error
-	XaClient, err = dtmcli.NewXaClient(DtmServer, config.DB, Busi+"/xa", func(path string, xa *dtmcli.XaClient) {
-		app.POST(path, common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-			return xa.HandleCallback(c.Query("gid"), c.Query("branch_id"), c.Query("action"))
-		}))
-	})
-	e2p(err)
-}
-
-// XaFireRequest 生成一个Xa请求
-func XaFireRequest() string {
-	gid := dtmcli.MustGenGid(DtmServer)
-	res, err := XaClient.XaGlobalTransaction(gid, func(xa *dtmcli.Xa) (interface{}, error) {
-		resp, err := xa.CallBranch(&TransReq{Amount: 30}, Busi+"/TransOutXa")
-		if dtmcli.IsFailure(resp, err) {
+	gid := dtmcli.MustGenGid(dtmutil.DefaultHTTPServer)
+	err := dtmcli.XaGlobalTransaction(dtmutil.DefaultHTTPServer, gid, func(xa *dtmcli.Xa) (*resty.Response, error) {
+		resp, err := xa.CallBranch(&busi.TransReq{Amount: 30}, busi.Busi+"/TransOutXa")
+		if err != nil {
 			return resp, err
 		}
-		return xa.CallBranch(&TransReq{Amount: 30}, Busi+"/TransInXa")
-	})
-	dtmcli.PanicIfFailure(res, err)
-	return gid
-}
-
-func xaTransIn(c *gin.Context) (interface{}, error) {
-	return XaClient.XaLocalTransaction(c, func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
-		if reqFrom(c).TransInResult == "FAILURE" {
-			return M{"dtm_result": "FAILURE"}, nil
-		}
-		_, err := common.SdbExec(db, "update dtm_busi.user_account set balance=balance+? where user_id=?", reqFrom(c).Amount, 2)
-		return M{"dtm_result": "SUCCESS"}, err
-	})
-}
-
-func xaTransOut(c *gin.Context) (interface{}, error) {
-	return XaClient.XaLocalTransaction(c, func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
-		if reqFrom(c).TransOutResult == "FAILURE" {
-			return M{"dtm_result": "FAILURE"}, nil
-		}
-		_, err := common.SdbExec(db, "update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
-		return M{"dtm_result": "SUCCESS"}, err
-	})
-}
-```
-
-详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
-
-
-### grpc
-
-``` go
-	XaGrpcClient = dtmgrpc.NewXaGrpcClient(DtmGrpcServer, config.DB, BusiGrpc+"/busi.Busi/XaNotify")
-
-	gid := dtmgrpc.MustGenGid(DtmGrpcServer)
-	busiData := dtmcli.MustMarshal(&TransReq{Amount: 30})
-	err := XaGrpcClient.XaGlobalTransaction(gid, func(xa *dtmgrpc.XaGrpc) error {
-		_, err := xa.CallBranch(busiData, BusiGrpc+"/busi.Busi/TransOutXa")
-		if err != nil {
-			return err
-		}
-		_, err = xa.CallBranch(busiData, BusiGrpc+"/busi.Busi/TransInXa")
-		return err
+		return xa.CallBranch(&busi.TransReq{Amount: 30}, busi.Busi+"/TransInXa")
 	})
 
-func (s *busiServer) XaNotify(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
-	err := XaGrpcClient.HandleCallback(in.Info.Gid, in.Info.BranchID, in.Info.BranchType)
-	return &emptypb.Empty{}, dtmgrpc.Result2Error(nil, err)
-}
-
-func (s *busiServer) TransInXa(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
-	req := TransReq{}
-	dtmcli.MustUnmarshal(in.BusiData, &req)
-	return &emptypb.Empty{}, XaGrpcClient.XaLocalTransaction(in, func(db *sql.DB, xa *dtmgrpc.XaGrpc) error {
-		if req.TransInResult == "FAILURE" {
-			return status.New(codes.Aborted, "user return failure").Err()
-		}
-		_, err := dtmcli.SdbExec(db, "update dtm_busi.user_account set balance=balance+? where user_id=?", req.Amount, 2)
-		return err
+app.POST(BusiAPI+"/TransInXa", dtmutil.WrapHandler2(func(c *gin.Context) interface{} {
+	return dtmcli.XaLocalTransaction(c.Request.URL.Query(), BusiConf, func(db *sql.DB, xa *dtmcli.Xa) error {
+		return AdjustBalance(db, TransInUID, reqFrom(c).Amount, reqFrom(c).TransInResult)
 	})
-}
-
-func (s *busiServer) TransOutXa(ctx context.Context, in *dtmgrpc.BusiRequest) (*emptypb.Empty, error) {
-	req := TransReq{}
-	dtmcli.MustUnmarshal(in.BusiData, &req)
-	return &emptypb.Empty{}, XaGrpcClient.XaLocalTransaction(in, func(db *sql.DB, xa *dtmgrpc.XaGrpc) error {
-		if req.TransOutResult == "FAILURE" {
-			return status.New(codes.Aborted, "user return failure").Err()
-		}
-		_, err := dtmcli.SdbExec(db, "update dtm_busi.user_account set balance=balance-? where user_id=?", req.Amount, 1)
-		return err
+}))
+app.POST(BusiAPI+"/TransOutXa", dtmutil.WrapHandler2(func(c *gin.Context) interface{} {
+	return dtmcli.XaLocalTransaction(c.Request.URL.Query(), BusiConf, func(db *sql.DB, xa *dtmcli.Xa) error {
+		return AdjustBalance(db, TransOutUID, reqFrom(c).Amount, reqFrom(c).TransOutResult)
 	})
-}
-
+}))
 ```
 
 详细例子代码参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)：
@@ -144,10 +65,19 @@ func (s *busiServer) TransOutXa(ctx context.Context, in *dtmgrpc.BusiRequest) (*
 我们在上述XaFireRequest的请求负荷中，传递TransInResult=FAILURE，让他失败
 
 ``` go
-req := &examples.TransReq{Amount: 30, TransInResult: "FAILURE"}
+req := &busi.TransReq{Amount: 30, TransInResult: "FAILURE"}
 ```
 
 失败的时序图如下：
 
 ![xa_rollback](../imgs/xa_rollback.jpg)
 
+### 注意点
+- dtm的XA事务接口在 v1.13.0 做了一次变更，大幅简化了XA事务的使用，整体上与TCC的接口保持一致，更易于上手。
+- XA事务的第二阶段处理，即分支的最终提交或回滚，也会发往 API `BusiAPI+"/TransOutXa"`，在这个服务的内部，`dtmcli.XaLocalTransaction`会自动做`xa commit | xa rollback`， 此时请求的body为nil，因此解析body之类的操作，如前面的`reqFrom`需要放在`XaLocalTransaction`内部，否则会解析body出错.
+
+### 小结
+XA事务的特点是：
+- 简单易理解
+- 开发较容易，回滚之类的操作，由底层数据库自动完成
+- 对资源进行了长时间的锁定，并发度低，不适合高并发的业务
