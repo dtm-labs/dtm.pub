@@ -19,7 +19,7 @@ XA一共分为两阶段：
 XA start '4fPqCNTYeSG' -- 开启一个 xa 事务
 UPDATE `user_account` SET `balance`=balance + 30,`update_time`='2021-06-09 11:50:42.438' WHERE user_id = '1'
 XA end '4fPqCNTYeSG'
-XA prepare '4fPqCNTYeSG' -- 此调用之前，连接断开，那么事务会自动回滚，这个调用之后，需要 xa commit/rollback 才会最终完成事务
+XA prepare '4fPqCNTYeSG' -- 此调用之前，连接断开，那么事务会自动回滚
 -- 当所有的参与者完成了prepare，就进入第二阶段 提交
 xa commit '4fPqCNTYeSG'
 ```
