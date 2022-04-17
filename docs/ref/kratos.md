@@ -16,7 +16,7 @@ etcd
 ```yaml
 MicroService:
  Driver: 'dtm-driver-kratos' # name of the driver to handle register/discover
- Target: 'discovery://127.0.0.1:2379/dtmservice' # register dtm server to this url
+ Target: 'etcd://127.0.0.1:2379/dtmservice' # register dtm server to this url
  EndPoint: 'grpc://localhost:36790'
 ```
 
@@ -67,7 +67,7 @@ import (
 )
 
 // dtm 已经经过前面的配置，注册到下面这个地址，因此在 dtmgrpc 中使用该地址
-var dtmServer = "discovery://localhost:2379/dtmservice"
+var dtmServer = "etcd://localhost:2379/dtmservice"
 
 // 业务地址，下面的 busi 换成实际在 server 初始化设置的名字
 var busiServer = "discovery://localhost:2379/busi"
@@ -107,6 +107,30 @@ kratos 的微服务还有非 etcd 的其他方式，下面列出它们的接入�
 对于直连这种方式，您只需要在上面 dtm 的 etcd 配置基础上，将 Target 设置为空字符串即可。
 
 直连的情况，不需要将 dtm 注册到注册中心
+
+#### Consul
+
+对于 Consul 这种方式，需要将对于是 etcd 相关换成 `consul` 即可，如下
+
+```yaml
+#  dtm: conf.yml
+MicroService:
+ Driver: 'dtm-driver-kratos' # name of the driver to handle register/discover
+ Target: 'consul://127.0.0.1:8500/dtmservice' # register dtm server to this url
+ EndPoint: 'grpc://localhost:36790'
+```
+
+```go
+// client:
+// dtm 已经经过前面的配置，注册到下面这个地址，因此在 dtmgrpc 中使用该地址
+var dtmServer = "consul://localhost:8500/dtmservice"
+
+// 业务地址，下面的 busi 换成实际在 server 初始化设置的名字，对于 kratos 应用地址遵循框架即可，不用变动
+var busiServer = "discovery://localhost:8500/busi"
+
+// 实际的调用逻辑
+...
+```
 
 ## 小结
 
