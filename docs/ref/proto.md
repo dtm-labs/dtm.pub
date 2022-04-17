@@ -30,6 +30,11 @@ dtm首先接入了go-zero，这是一个一开源就很火爆的微服务框架�
 
 接入详情参见 [go-zero](./gozero)
 
+#### kratos
+dtm已接入了bilibili开源的kratos，该功能主要由[lei liu](https://github.com/Leizhengzi)完成，非常感谢[lei liu](https://github.com/Leizhengzi)的杰出贡献
+
+接入详情参见 [kratos](./kratos)
+
 #### polaris
 dtm接入了腾讯开源的polaris，以及polaris之上的微服务框架，对接过程中，获得了腾讯同学的大力支持，由腾讯的同学[ychensha](https://github.com/ychensha)提供了PR。
 

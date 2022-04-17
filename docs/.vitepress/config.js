@@ -121,6 +121,10 @@ module.exports = {
               link: '/practice/other'
             },
             {
+              text: 'AT vs XA',
+              link: '/practice/at'
+            },
+            {
               text: '异常与子事务屏障',
               link: '/practice/barrier'
             },
@@ -181,6 +185,10 @@ module.exports = {
             {
               text: 'go-zero对接',
               link: '/ref/gozero'
+            },
+            {
+              text: 'kratos对接',
+              link: '/ref/kratos'
             },
             {
               text: 'HTTP 参考',
