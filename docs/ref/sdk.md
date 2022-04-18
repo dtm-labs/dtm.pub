@@ -149,7 +149,7 @@ barrier示例：
 xa示例：
 
 ``` go
-  return XaClient.XaLocalTransaction(c.Request.URL.Query(), func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+  return dtmcli.XaLocalTransaction(c.Request.URL.Query(), BusiConf, func(db *sql.DB, xa *dtmcli.Xa) error {
     // gorm提供接口，可以从标准的sql.DB对象，构造gorm.DB
     gdb, err := gorm.Open(mysql.New(mysql.Config{
       Conn: db,
@@ -158,8 +158,8 @@ xa示例：
       return nil, err
     }
     dbr := gdb.Exec("update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
-    return dtmcli.ResultSuccess, dbr.Error
-  })
+    return dbr.Error
+	})
 ```
 
 #### GOQU
@@ -183,11 +183,11 @@ barrier示例：
 xa示例
 
 ``` go
-  return XaClient.XaLocalTransaction(c.Request.URL.Query(), func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+  return dtmcli.XaLocalTransaction(c.Request.URL.Query(), BusiConf, func(db *sql.DB, xa *dtmcli.Xa) error {
     dialect := goqu.Dialect("mysql")
     godb := dialect.DB(db)
     _, err := godb.Exec("update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
-    return dtmcli.ResultSuccess, err
+    return err
   })
 ```
 
@@ -219,10 +219,10 @@ barrier示例：
 xa示例
 
 ``` go
-  return XaClient.XaLocalTransaction(c.Request.URL.Query(), func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+  return dtmcli.XaLocalTransaction(c.Request.URL.Query(), BusiConf, func(db *sql.DB, xa *dtmcli.Xa) error {
     xdb, _ := xorm.NewEngineWithDB("mysql", "dtm", core.FromDB(db))
     _, err := xdb.Exec("update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
-    return dtmcli.ResultSuccess, err
+    return err
   })
 
 ```
@@ -248,10 +248,10 @@ barrier示例：
 xa示例
 
 ``` go
-  return XaClient.XaLocalTransaction(c.Request.URL.Query(), func(db *sql.DB, xa *dtmcli.Xa) (interface{}, error) {
+  return dtmcli.XaLocalTransaction(c.Request.URL.Query(), BusiConf, func(db *sql.DB, xa *dtmcli.Xa) error {
     conn := NewSqlConnFromDB(db)
     _, err := conn.Exec("update dtm_busi.user_account set balance=balance-? where user_id=?", reqFrom(c).Amount, 1)
-    return dtmcli.ResultSuccess, err
+    return err
   })
 
 ```
