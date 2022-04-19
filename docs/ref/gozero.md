@@ -109,6 +109,18 @@ grpc的调用，可以类比于HTTP的POST，其中：
 ## 其他方式接入
 go-zero的微服务还有非etcd的其他方式，我们依次说明他们的接入方式
 
+#### consul接入
+dtm也支持go-zero的consul接入，需要版本1.13.2+，配置示例如下：
+
+```
+MicroService:
+  Driver: 'dtm-driver-gozero' # 配置dtm使用go-zero的微服务协议
+  Target: 'consul://localhost:2379/dtmservice' # 把dtm注册到consul的这个地址
+  EndPoint: 'localhost:36790' # dtm的本地地址
+```
+
+完整的示例，可以从[https://github.com/Mikaelemmmm/gozerodtm](https://github.com/Mikaelemmmm/gozerodtm)找到
+
 #### 直连
 对于直连这种方式，您只需要在上面dtm的etcd配置基础上，将Target设置为空字符串即可。
 
