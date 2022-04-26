@@ -25,7 +25,7 @@ go run app/main.go -c conf.yml
 ```
 - 运行一个go-zero的服务
 ```
-git clone github.com/dtm-labs/dtmdriver-clients && cd dtmdriver-clients
+git clone https://github.com/dtm-labs/dtmdriver-clients && cd dtmdriver-clients
 cd gozero/trans && go run trans.go
 ```
 - 发起一个go-zero使用dtm的事务
