@@ -250,10 +250,10 @@ module.exports = {
               text: 'Redis存储性能测试',
               link: '/other/perform-redis'
             },
-            {
-              text: '对比其他框架',
-              link: '/other/opensource'
-            },
+            // {
+            //   text: '对比其他框架',
+            //   link: '/other/opensource'
+            // },
             {
               text: '谁在用',
               link: '/other/using'
