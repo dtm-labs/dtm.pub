@@ -214,6 +214,10 @@ module.exports = {
           text: '部署运维',
           children: [
             {
+              text: '管理后台',
+              link: '/deploy/admin'
+            },
+            {
               text: '基础',
               link: '/deploy/base'
             },

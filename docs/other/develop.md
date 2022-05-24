@@ -44,3 +44,18 @@ TEST_STORE=postgres go test ./... # 测试postgres引擎
 - 如果您新增代码，请关注您的代码[测试覆盖率](https://app.codecov.io/gh/dtm-labs/dtm)
 
 对于通过上述两条内容的PR，dtm的人员将会尽快给您反馈，如果无大的问题，将合并您的PR
+
+## 管理后台
+dtm 从1.14.0开始，添加了管理后台的功能，该管理后台采用的技术栈包括：
+* vue3
+* ant-design-vue
+* typescript
+* pinia
+* vite
+
+如果您修改的是管理后台功能，那么您按照前面的说明，启动了dtm服务器之后，进入admin目录，运行以下命令：
+```
+yarn dev
+```
+
+然后访问`localhost:6789`即可
