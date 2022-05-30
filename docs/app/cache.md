@@ -88,13 +88,13 @@ dtm 里的二阶段消息模式，非常适合这里的修改数据库之后更�
 
 ``` Go
 msg := dtmcli.NewMsg(DtmServer, gid).
-	Add(busi.Busi+"/UpdateRedis", &Req{Key: key1})
+	Add(busi.Busi+"/DeleteRedis", &Req{Key: key1})
 err := msg.DoAndSubmitDB(busi.Busi+"/QueryPrepared", db, func(tx *sql.Tx) error {
   // update db data with key1
 })
 ```
 
-这段代码，DoAndSubmitDB会进行本地数据库操作，进行数据库的数据修改，修改完成后，会提交一个二阶段消息事务，消息事务将会异步调用 UpdateRedis。假如本地事务执行之后，就立刻发生了进程 crash 事件，那么 dtm 会进行回查调用 QueryPrepared ，保证本地事务提交成功的情况下，UpdateRedis 会被最少成功执行一次。
+这段代码，DoAndSubmitDB会进行本地数据库操作，进行数据库的数据修改，修改完成后，会提交一个二阶段消息事务，消息事务将会异步调用 DeleteRedis。假如本地事务执行之后，就立刻发生了进程 crash 事件，那么 dtm 会进行回查调用 QueryPrepared ，保证本地事务提交成功的情况下，DeleteRedis 会被最少成功执行一次。
 
 回查的逻辑非常简单，只需要copy类似下面这样的代码即可：
 ``` Go
