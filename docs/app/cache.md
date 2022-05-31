@@ -7,6 +7,10 @@
 
 在上述场景下，缓冲中的数据最终版本为v1，而数据库的最终版本为v2，可能给应用带来较大问题。​
 
+很多人容易想到通过分布式锁，来解决上述问题，但依旧存在问题，参见下图（来自DDIA作者 Martin Kleppmann 关于redis锁的讨论）
+
+![unsafe-lock](../imgs/unsafe-lock.png)
+
 [dtm-labs](https://github.com/dtm-labs) 致力于解决数据一致性问题，在分析了行业的现有做法后，提出了新解决方案[dtm-labs/dtm](https://github.com/dtm-labs/dtm)+[dtm-labs/rockscache](https://github.com/dtm-labs/rockscache)，彻底解决了上述问题。另外作为一个成熟方案，该方案还可以防缓存穿透，防缓存击穿，防缓存雪崩，同时也可应用于要求数据强一致的场景。
 
 关于管理缓存的现有方案，本文不再赘述，不太了解的同学可以参考下面这两篇文章
