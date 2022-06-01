@@ -11,7 +11,16 @@
 
 ![unsafe-lock](../imgs/unsafe-lock.png)
 
-[dtm-labs](https://github.com/dtm-labs) 致力于解决数据一致性问题，在分析了行业的现有做法后，提出了新解决方案[dtm-labs/dtm](https://github.com/dtm-labs/dtm)+[dtm-labs/rockscache](https://github.com/dtm-labs/rockscache)，彻底解决了上述问题。另外作为一个成熟方案，该方案还可以防缓存穿透，防缓存击穿，防缓存雪崩，同时也可应用于要求数据强一致的场景。
+[dtm-labs](https://github.com/dtm-labs) 致力于解决数据一致性问题，在分析了行业的现有做法后，提出了新解决方案[dtm-labs/dtm](https://github.com/dtm-labs/dtm)+[dtm-labs/rockscache](https://github.com/dtm-labs/rockscache)，彻底解决了上述问题。
+
+该方案具备以下特性：
+- 最终一致：极端情况也能确保缓存的最终一致
+- 强一致：支持给应用提供强一致的访问
+- 高性能：与常见的缓存方案对比，性能无大的差别
+- 防击穿：给出更好的防击穿方案
+- 防穿透
+- 防雪崩
+- 非常易用：仅提供极简的两个函数，对应用无要求
 
 关于管理缓存的现有方案，本文不再赘述，不太了解的同学可以参考下面这两篇文章
 - 这篇通俗易懂些：[聊聊数据库与缓存数据一致性问题](https://juejin.cn/post/6844903941646319623)
