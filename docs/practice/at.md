@@ -8,7 +8,7 @@ AT 这种事务模式是阿里开源的seata主推的事务模式，本文先给
 |[脏读](#dirty-read)|<span style="color:green">无</span>| <span style="color:orange">有</span>|
 |[应用侵入性](#invade)|<span style="color:green">无侵入</span>| <span style="color:green">无侵入</span>|
 |[性能](#performance)|<span style="color:orange">较低</span>| <span style="color:orange">较低</span>|
-|[数据库支持](#db-support)|<span style="color:orange">主流数据库都支持</span>| <span style="color:green">可扩展至非数据库</span>|
+|[数据库支持](#db-support)|<span style="color:green">主流数据库都支持</span>| <span style="color:green">理论上可扩展至NoSQL</span>|
 
 
 ## 原理
@@ -57,7 +57,7 @@ XA 在数据库系统层面实现了行锁，原理与普通事务相同，因�
 ## SQL支持度 {#sql-support}
 AT 模式并未支持所有的SQL，它的原理是在应用层解析SQL，然后根据不同的SQL生成BeforeImage和AfterImage，一方面不同的SQL可能需要采用不同的逻辑来生成这些Image，另一方面不同的数据库语法不同，因此不常见的SQL，AT可能不支持。
 
-XA 是数据库层面支持的，因此对所有的SQL都支持，不会出现问题
+XA 是数据库层面支持的，因此对所有的DML SQL都支持，不会出现问题
 
 ## 脏读 {#dirty-read}
 AT 模式会发生脏读，在 AT 模式下发生如下的执行序列：
@@ -108,9 +108,11 @@ dtm实现的XA事务，为了在极端情况下，也能保证XA事务能够正�
 但AT和XA两种模式，由于数据锁在整个分布式事务期间的存在，降低了并发度，因此性能都低于其他模式。当您的并发度较高时，建议使用其他无全局锁的事务模式
 
 ## 数据库支持 {#db-support}
-AT 目前支持了多个主流数据库，而且从原理上看，也能够扩展到非SQL数据库，例如mongo等。
+AT 目前支持了多个主流数据库，而且从理论上看，也能够扩展到非SQL数据库，但目前暂未看到支持非SQL数据库的扩展。
+- AT与Redis：虽然Redis也支持事务，但Redis的事务支持主要是通过lua脚本来做的，与传统数据库的Begin Transaction/Commit不一样，因此上述生成前后镜像的原理并不适用Redis，因此AT想要支持Redis会非常困难，目前未看到有这样的尝试
+- AT与Mongo：Mongo的事务支持与Mysql类似，但Mongo的操作类型很多，而且在主键规范上面，与SQL数据库有很大不同，想要正确生成前后镜像的工作量庞大，目前未看到有这样的尝试
 
-XA 模式则需要底层数据库支持，目前主流的数据库，Mysql，Postgres，Oracle等都已支持。如果分布式事务涉及mongo呢？这个时候需要考虑其他事务模式
+XA 模式则需要底层数据库支持，目前主流的数据库，Mysql，Postgres，Oracle等都已支持。如果分布式事务涉及mongo呢？这个时候需要考虑其他事务模式，DTM中有关于Redis，Mongo的事务例子
 
 ## 小结
 mysql在版本5.6中，xa相关API存在bug。如果当前连接在xa prepare之后，连接断开，那么这个连接未完成的事务会被自动回滚。这样的bug导致mysql的XA模式是无法保证正确性的，在各种应用crash中，可能导致数据不一致。因此AT在mysql的5.6版本及更低版本使用中，是具有很高应用价值的。
