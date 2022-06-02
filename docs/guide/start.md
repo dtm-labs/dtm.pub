@@ -12,24 +12,11 @@ DTM是一款开源的分布式事务管理器，解决跨数据库、跨服务�
 
 [Tencent 腾讯](../other/using#tencent)
 
+[ByteDance 字节](../other/using#bytedance)
+
 [Ivydad 常青藤爸爸](../other/using#ivydad)
 
 [更多](../other/using)
-
-
-<a style="
-    background-color:#646cff;
-    font-size: 0.9em;
-    color: #fff;
-    margin: 0.2em 0;
-    width: 200px;
-    text-align: center;
-    padding: 12px 24px;
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 2em;
-    font-weight: 600;
-" href="../other/opensource">与Seata对比</a>
 
 ## 快速开始
 
