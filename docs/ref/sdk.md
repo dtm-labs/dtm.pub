@@ -41,7 +41,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 示例: [https://github.com/dtm-labs/dtmcli-csharp-sample](https://github.com/dtm-labs/dtmcli-csharp-sample)
 
-感谢 [catcherwong](https://github.com/catcherwong)、[geffzhang](https://github.com/geffzhang)的帮助，C的sdk和示例，主要由他们贡献
+感谢 [catcherwong](https://github.com/catcherwong)、[geffzhang](https://github.com/geffzhang)的帮助，C#的sdk和示例，主要由他们贡献
 
 客户端sdk grpc版本：[https://github.com/catcherwong/dtmgrpc-csharp](https://github.com/catcherwong/dtmgrpc-csharp)
 
