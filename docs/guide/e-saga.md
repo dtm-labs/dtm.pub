@@ -70,7 +70,7 @@ app.POST(BusiAPI+"/SagaBTransOutCom", dtmutil.WrapHandler2(func(c *gin.Context) 
 ``` GO
 	req := &gin.H{"amount": 30} // 微服务的载荷
 	// DtmServer为DTM服务的地址
-	saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
+	saga := dtmcli.NewSaga(DtmServer, shortuuid.New()).
 		// 添加一个TransOut的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransOutCom"
 		Add(qsBusi+"/SagaBTransOut", qsBusi+"/SagaBTransOutCom", req).
 		// 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransInCom"

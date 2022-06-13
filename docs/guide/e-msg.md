@@ -48,7 +48,7 @@ app.POST(BusiAPI+"/SagaBTransIn", dtmutil.WrapHandler2(func(c *gin.Context) inte
 
 到此各个子事务的处理函数已经OK了，然后是开启二阶段消息事务，进行分支调用
 ``` GO
-		msg := dtmcli.NewMsg(DtmServer, dtmcli.MustGenGid(DtmServer)).
+		msg := dtmcli.NewMsg(DtmServer, shortuuid.New()).
 			Add(busi.Busi+"/SagaBTransIn", &TransReq{ Amount: 30 })
 		err := msg.DoAndSubmitDB(busi.Busi+"/QueryPreparedB", dbGet(), func(tx *sql.Tx) error {
 			return busi.SagaAdjustBalance(tx, busi.TransOutUID, -req.Amount)

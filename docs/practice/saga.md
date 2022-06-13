@@ -33,7 +33,7 @@ SAGA最初出现在1987年Hector Garcaa-Molrna & Kenneth Salem发表的论文[SA
 ``` go
 req := &gin.H{"amount": 30} // 微服务的请求Body
 // DtmServer为DTM服务的地址
-saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
+saga := dtmcli.NewSaga(DtmServer, shortuuid.New()).
   // 添加一个TransOut的子事务，正向操作为url: qsBusi+"/TransOut"， 逆向操作为url: qsBusi+"/TransOutCompensate"
   Add(qsBusi+"/TransOut", qsBusi+"/TransOutCompensate", req).
   // 添加一个TransIn的子事务，正向操作为url: qsBusi+"/TransIn"， 逆向操作为url: qsBusi+"/TransInCompensate"
@@ -151,7 +151,7 @@ dtm默认情况下，重试策略是指数退避算法，可以避免出现故�
 我们把一个事务中的操作分为可回滚的操作，以及不可回滚的操作。那么把可回滚的操作放到前面，把不可回滚的操作放在后面执行，那么就可以解决这类问题
 
 ``` go
-		saga := dtmcli.NewSaga(DtmServer, dtmcli.MustGenGid(DtmServer)).
+		saga := dtmcli.NewSaga(DtmServer, shortuuid.New()).
 			Add(Busi+"/CanRollback1", Busi+"/CanRollback1Revert", req).
 			Add(Busi+"/CanRollback2", Busi+"/CanRollback2Revert", req).
 			Add(Busi+"/UnRollback1", "", req).
