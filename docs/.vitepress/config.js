@@ -185,7 +185,7 @@ module.exports = {
               link: '/ref/store'
             },
             {
-              text: '支持的协议',
+              text: '通信协议',
               link: '/ref/proto'
             },
             {
@@ -195,10 +195,6 @@ module.exports = {
             {
               text: 'go-zero对接',
               link: '/ref/gozero'
-            },
-            {
-              text: 'kratos对接',
-              link: '/ref/kratos'
             },
             {
               text: 'HTTP 参考',

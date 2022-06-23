@@ -62,7 +62,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 示例: [https://github.com/dtm-labs/dtmcli-java-sample](https://github.com/dtm-labs/dtmcli-java-sample)
 
-感谢 [li-xiao-shuang](https://github.com/li-xiao-shuang)，[viticis](https://github.com/viticis) 的帮助，Java的sdk和示例，主要由他们贡献
+感谢 [li-xiao-shuang](https://github.com/li-xiao-shuang)，[viticis](https://github.com/viticis) [Kui Liao](https://github.com/horseLk)的帮助，Java的sdk和示例，主要由他们贡献
 
 [相关博客](../resource/blogs-java)
 
