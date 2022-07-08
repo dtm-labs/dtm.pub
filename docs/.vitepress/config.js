@@ -127,6 +127,10 @@ module.exports = {
               link: '/practice/xa'
             },
             {
+              text: 'Workflow',
+              link: '/practice/workflow'
+            },
+            {
               text: '其他',
               link: '/practice/other'
             },
