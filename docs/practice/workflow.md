@@ -18,7 +18,7 @@ import 	"github.com/dtm-labs/dtmgrpc/workflow"
 // 第二个参数，业务服务器地址
 // 第三个参数，grpcServer
 // workflow的需要从"业务服务器地址"+"grpcServer"上接收dtm服务器的回调
-workflow.InitGrpc(dtmutil.DefaultGrpcServer, busi.BusiGrpc, gsvr)
+workflow.InitGrpc(dtmGrpcServer, busi.BusiGrpc, gsvr)
 ```
 
 #### 然后需要注册workflow的处理函数
@@ -44,8 +44,8 @@ err := workflow.Register(wfName, func(wf *workflow.Workflow, data []byte) error 
 ```
 
 - 这个注册操作需要在业务服务启动之后执行，因为当进程crash，dtm会回调业务服务器，继续未完成的任务
-- 上述代码`NewBranch`会创建一个事务分支，一个分支会包括一个正向操作，以及全局事务的提交/回滚的操作
-- `OnRollback`会给当前事务分支指定全局事务提交的回调，上述代码中，只指定了`OnRollback`，属于Saga模式
+- 上述代码`NewBranch`会创建一个事务分支，一个分支会包括一个正向操作，以及全局事务提交/回滚时的回调
+- `OnRollback`会给当前事务分支指定全局事务回滚时的回调，上述代码中，只指定了`OnRollback`，属于Saga模式
 - 这里面的 `busi.BusiCli` 需要添加workflow的拦截器，该拦截器会自动把rpc的请求结果记录到dtm，如下所示
 ``` Go
 conn1, err := grpc.Dial(busi.BusiGrpc, grpc.WithUnaryInterceptor(workflow.Interceptor), nossl)
@@ -70,14 +70,67 @@ workflow是如何保证分布式事务的数据一致性呢？当业务进程出
 
 工作流函数需要做到幂等，即第一次调用，或者后续重试，都应当获得同样的结果
 
-## 优势
-workflow模式下
-- 强类型gRPC调用：在workflow模式下，用户不在需要像原有的Saga或Tcc模式那样，手动指定分支的url，而是像普通的gRPC调用一样执行分支操作
-- 灵活处理每一步的结果：在workflow模式下，子事务的编排非常灵活，和普通服务调用没有差别
-- 支持XA，Saga，TCC混合使用：在workflow模式下，支持XA，Saga，TCC。可以把没有行锁的业务走XA，一致性要求较高的走TCC，而普通的业务走Saga
-- 可以不用处理空补偿和悬挂：如果工作流中的所有操作能够保证幂等，那么就不会发生空补偿和悬挂，可以简化业务处理
-- 对旧服务兼容度更好：默认情况下，HTTP的409，gRPC的Aborted表示业务失败，但是可以通过Options.HTTPResp2DtmError/GRPCError2DtmError进行定制
+## Workflow下的Saga
+Saga模式源自于这篇论文 [SAGAS](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf)，其核心思想是将长事务拆分为多个短事务，由Saga事务协调器协调，如果每个短事务都成功提交完成，那么全局事务就正常完成，如果某个步骤失败，则根据相反顺序一次调用补偿操作。
+
+在Workflow模式下，您可以在函数中，直接调用正向操作的函数，然后将补偿操作写到分支的`OnRollback`，那么补偿操作就会自动被调用，达到了Saga模式的效果
+
+## Workflow下的Tcc
+Tcc模式源自于这篇论文 [Life beyond Distributed Transactions:an Apostate’s Opinion](https://www.ics.uci.edu/~cs223/papers/cidr07p15.pdf)，他将一个大事务分成多个小事务，每个小事务有三个操作：
+- Try 阶段：尝试执行，完成所有业务检查（一致性）, 预留必须业务资源（准隔离性）
+- Confirm 阶段：如果所有分支的Try都成功了，则走到Confirm阶段。Confirm真正执行业务，不作任何业务检查，只使用 Try 阶段预留的业务资源
+- Cancel 阶段：如果所有分支的Try有一个失败了，则走到Cancel阶段。Cancel释放 Try 阶段预留的业务资源。
+
+对于我们的 A 跨行转账给 B 的场景，如果采用SAGA，在正向操作中调余额，在补偿操作中，反向调整余额，那么会出现这种情况：如果A扣款成功，金额转入B失败，最后回滚，把A的余额调整为初始值。整个过程中如果A发现自己的余额被扣减了，但是收款方B迟迟没有收到资金，那么会对A造成非常大的困扰。
+
+上述需求在SAGA中无法解决，但是可以通过TCC来解决，设计技巧如下：
+- 在账户中的 balance 字段之外，再引入一个 trading_balance 字段
+- Try 阶段检查账户是否被冻结，检查账户余额是否充足，没问题后，调整 trading_balance （即业务上的冻结资金）
+- Confirm 阶段，调整 balance ，调整 trading_balance （即业务上的解冻资金）
+- Cancel 阶段，调整 trading_balance （即业务上的解冻资金）
+
+这种情况下，终端用户 A 就不会看到自己的余额扣减了，但是 B 又迟迟收不到资金的情况
+
+在Workflow模式下，您可以在函数中，直接调用`Try`操作，然后将`Confirm`操作写到分支的`OnCommit`，将`Cancel`操作写到分支的`OnRollback`，达到了`Tcc`模式的效果
+
+## Workflow下的XA
+XA是由X/Open组织提出的分布式事务的规范，XA规范主要定义了(全局)事务管理器(TM)和(局部)资源管理器(RM)之间的接口。本地的数据库如mysql在XA中扮演的是RM角色
+
+XA一共分为两阶段：
+
+第一阶段（prepare）：即所有的参与者RM准备执行事务并锁住需要的资源。参与者ready时，向TM报告已准备就绪。
+第二阶段 (commit/rollback)：当事务管理者(TM)确认所有参与者(RM)都ready后，向所有参与者发送commit命令。
+
+目前主流的数据库基本都支持XA事务，包括mysql、oracle、sqlserver、postgre
+
+在Workflow模式下，你可以在工作流函数中，调用`NewBranch().DoXa`来开启您的XA事务分支。
+
+## 多种模式混合使用
+在Workflow模式下，上述的Saga、Tcc、XA都是分支事务的模式，因此可以部分分支采用一种模式，其他分支采用另一种模式。这种混合模式带来的灵活性可以做到根据分支事务的特性选择子模式，因此建议如下：
+- XA：如果业务没有行锁争抢，那么可以采用XA，这个模式需要的额外开发量比较低，`Commit/Rollback`是数据库自动完成的。例如这个模式适合创建订单业务，不同的订单锁定的订单行不同，相互之间并发无影响；不适合扣减库存，因为涉及同一个商品的订单都会争抢这个商品的行锁，会导致并发度低。
+- Saga：不适合XA的普通业务可以采用这个模式，这个模式额外的开发量比Tcc要少，只需要开发正向操作和补偿操作
+- Tcc：适合一致性要求较高，例如前面介绍的转账，这个模式额外的开发量最多，需要开发包括`Try/Confirm/Cancel`
+
+## 幂等要求
+在Workflow模式下，当crash发生时，会进行重试，因此要求各个操作支持幂等，即第多次调用和一次调用的结果是一样的，返回相同的结果。业务中，通常采用数据库的`unique key`来实现幂等，具体为`insert ignore "unique-key"`，如果插入失败，说明这个操作已完成，此次直接忽略返回；如果插入成功，说明这是首次操作，继续后续的业务操作。
+
+如果您的业务本身就是幂等的，那么您直接操作您的业务即可；如果您的业务为提供幂等功能，那么dtm提供了`BranchBarrier`辅助类，基于上述unique-key原理，可以方便的帮助开发者实现在`Mysql/Mongo/Redis`中实现幂等操作。
+
+以下两个是典型的非幂等操作，请注意：
+- 超时回滚：假如您的业务中有一个操作可能耗时长，并且您想要让您的全局事务在等待超时后，返回失败，进行回滚。那么这个就不是幂等操作，因为在极端情况下，两个进程同时调用了该操作，一个返回了超时失败，而另一个返回了成功，导致结果不同
+- 达到重试上限后回滚：分析过程同上。
+
+Workflow模式暂未支持上述的超时回滚及重试达到上限后回滚，如果您有相关的场景需求，欢迎把具体场景给我们，我们将积极考虑是否添加这种的支持
+
+## 分支操作结果
+分支操作会返回以下几种结果：
+- 成功：分支操作返回`HTTP-200/gRPC-nil`
+- 业务失败：分支操作返回`HTTP-409/gRPC-Aborted`，不再重试，全局事务需要进行回滚
+- 进行中：分支操作返回`HTTP-425/gRPC-FailPrecondition`，这个结果表示事务正在正常进行中，要求dtm重试时，不要采用指数退避算法，而是采用固定间隔重试
+- 未知错误 ：分支操作返回其他结果，表示未知错误，dtm会重试这个工作流，采用指数退避算法
+
+Saga的补偿操作、Tcc的Confirm/Cancel操作，按照Saga和Tcc的协议，是不允许返回业务上的失败，因为到了工作流的第二阶段Commit/Rollback，此时既不成功，也不让重试，那么全局事务无法完成，这点请开发者在设计时就要注意避免
 
 ## 下一步工作
 - 逐步完善workflow的例子以及文档
-- 支持并发
+- 支持分支事务并发
