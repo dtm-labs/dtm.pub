@@ -4,15 +4,11 @@
 
 #### go
 
-这里的dtmcli和dtmgrpc都是dtm项目里面内容的复制。采用这里的包，而不是dtm，会让你的应用程序依赖更少，包体更小
+这里的client都是dtm/client里面内容的同步复制。采用这里的包，而不是dtm，会让你的应用程序依赖更少，包体更小
 
-http sdk: [https://github.com/dtm-labs/dtmcli](https://github.com/dtm-labs/dtmcli)
+client: [https://github.com/dtm-labs/client](https://github.com/dtm-labs/client)
 
-最简示例: [https://github.com/dtm-labs/dtmcli-go-sample](https://github.com/dtm-labs/dtmcli-go-sample)
-
-grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmgrpc)
-
-最简示例: [https://github.com/dtm-labs/dtmgrpc-go-sample](https://github.com/dtm-labs/dtmgrpc-go-sample)
+最简示例: [https://github.com/dtm-labs/quick-start-sample](https://github.com/dtm-labs/quick-start-sample)
 
 关于SDK使用的最全的示例，包括了grpc/http/xa/msg/saga/tcc/barrier 等等，都合并在下面这个项目
 
@@ -58,7 +54,7 @@ grpc sdk: [https://github.com/dtm-labs/dtmgrpc](https://github.com/dtm-labs/dtmg
 
 #### Java
 
-客户端sdk（TCC、子事务屏障）: [https://github.com/dtm-labs/dtmcli-java](https://github.com/dtm-labs/dtmcli-java)
+客户端sdk（SAGA、TCC、子事务屏障）: [https://github.com/dtm-labs/dtmcli-java](https://github.com/dtm-labs/dtmcli-java)
 
 示例: [https://github.com/dtm-labs/dtmcli-java-sample](https://github.com/dtm-labs/dtmcli-java-sample)
 

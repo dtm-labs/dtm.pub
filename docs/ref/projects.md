@@ -14,11 +14,11 @@
 
 dtm项目主要有一下几个目录
 
+- admin: 管理后台，技术栈为 vue3 + typescript + vite + pinia
 - bench: 性能测试的服务器代码，以及相关的测试脚本
-- dtmcli: dtm的http客户端，发版时同步到 dtm-labs/dtmcli
-- dtmgrpc: dtm的grpc客户端，发版时同步到 dtm-labs/dtmgrpc
+- client: dtm的客户端，里面包含了dtmcli/dtmgrpc/workflow，发布时同步到dtm-labs/client
 - dtmsvr: dtm的服务端，包含http、grpc的服务
-- dtmutil: dtm使用的工具类，会在 dtmsvr 和 test 中共用
+- dtmutil: dtm使用的工具类，会在 dtmsvr 和 test 中共用，也会在dtm-labs/dtm-examples中使用
 - helper: 各类辅助文件
 - qs: quick-start 例子
 - sqls: 包含了dtm使用的sql

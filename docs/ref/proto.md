@@ -6,7 +6,7 @@ dtm支持多种协议，包括通用类协议HTTP，gRPC，和微服务协议，
 
 HTTP作为前端与后端交互中最通用的协议，通常也用于后端内部的通讯协议。
 
-dtm服务器启动时，默认监听36789端口，提供http服务。建议您使用[dtmcli](https://github.com/dtm-labs/dtmcli)这个SDK，使用HTTP的最简示例，可以参考[dtmcli-go-sample](https://github.com/dtm-labs/dtmcli-go-sample)
+dtm服务器启动时，默认监听36789端口，提供http服务。您可以使用[dtm-labs/client/dtmcli](https://github.com/dtm-labs/client/dtmcli)这个SDK，使用HTTP的最简示例，可以参考[dtmcli-qs](https://github.com/dtm-labs/quick-start-sample/dtmcli-qs)
 
 更多高级的HTTP使用示例，可以参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)下的带有http的文件内容
 
@@ -17,7 +17,7 @@ dtm服务器启动时，默认监听36789端口，提供http服务。建议您�
 
 gRPC广泛应用于后端微服务中，大量云原生应用，大量微服务框架，构建在此协议之上，应用非常广泛
 
-dtm服务器启动时，默认监听36790端口，提供gRPC服务。对于通过gRPC协议使用dtm的用户，建议您使用[dtmgrpc](https://github.com/dtm-labs/dtmgrpc)这个SDK，使用gRPC的最简示例，可以参考[dtmgrpc-go-sample](https://github.com/dtm-labs/dtmgrpc-go-sample)
+dtm服务器启动时，默认监听36790端口，提供gRPC服务。对于通过gRPC协议使用dtm的用户，您可以使用[dtm-labs/clientdtmgrpc](https://github.com/dtm-labs/client/dtmgrpc)这个SDK，使用gRPC的最简示例，可以参考[dtmgrpc-qs](https://github.com/dtm-labs/quick-start-sample/dtmgrpc-qs)
 
 更多高级的gRPC使用示例，可以参考[dtm-examples](https://github.com/dtm-labs/dtm-examples)下的带有grpc的文件内容
 
