@@ -45,7 +45,7 @@ err := workflow.Register(wfName, func(wf *workflow.Workflow, data []byte) error 
 
 - 这个注册操作需要在业务服务启动之后执行，因为当进程crash，dtm会回调业务服务器，继续未完成的任务
 - 上述代码`NewBranch`会创建一个事务分支，一个分支会包括一个正向操作，以及全局事务提交/回滚时的回调
-- `OnRollback`会给当前事务分支指定全局事务回滚时的回调，上述代码中，只指定了`OnRollback`，属于Saga模式
+- `OnRollback/OnCommit`会给当前事务分支指定全局事务回滚/提交时的回调，上述代码中，只指定了`OnRollback`，属于Saga模式
 - 这里面的 `busi.BusiCli` 需要添加workflow的拦截器，该拦截器会自动把rpc的请求结果记录到dtm，如下所示
 ``` Go
 conn1, err := grpc.Dial(busi.BusiGrpc, grpc.WithUnaryInterceptor(workflow.Interceptor), nossl)
@@ -81,15 +81,20 @@ Tcc模式源自于这篇论文 [Life beyond Distributed Transactions:an Apostate
 - Confirm 阶段：如果所有分支的Try都成功了，则走到Confirm阶段。Confirm真正执行业务，不作任何业务检查，只使用 Try 阶段预留的业务资源
 - Cancel 阶段：如果所有分支的Try有一个失败了，则走到Cancel阶段。Cancel释放 Try 阶段预留的业务资源。
 
-对于我们的 A 跨行转账给 B 的场景，如果采用SAGA，在正向操作中调余额，在补偿操作中，反向调整余额，那么会出现这种情况：如果A扣款成功，金额转入B失败，最后回滚，把A的余额调整为初始值。整个过程中如果A发现自己的余额被扣减了，但是收款方B迟迟没有收到资金，那么会对A造成非常大的困扰。
+对于我们的 A 跨行转账给 B 的场景，如果采用SAGA，在正向操作中调余额，在补偿操作中，反向调整余额，那
+么会出现以下情况：
+- A扣款成功
+- A看到余额减少，并告诉B
+- 金额转入B失败，整个事务回滚
+- B一直收不到这笔资金
 
-上述需求在SAGA中无法解决，但是可以通过TCC来解决，设计技巧如下：
+这样给AB双方带来了极大的困扰。这种情况在SAGA中无法避免，但是可以通过TCC来解决，设计技巧如下：
 - 在账户中的 balance 字段之外，再引入一个 trading_balance 字段
 - Try 阶段检查账户是否被冻结，检查账户余额是否充足，没问题后，调整 trading_balance （即业务上的冻结资金）
 - Confirm 阶段，调整 balance ，调整 trading_balance （即业务上的解冻资金）
 - Cancel 阶段，调整 trading_balance （即业务上的解冻资金）
 
-这种情况下，终端用户 A 就不会看到自己的余额扣减了，但是 B 又迟迟收不到资金的情况
+这种情况下，一旦终端用户 A 看到自己的余额扣减了，那么 B 一定能够收到资金
 
 在Workflow模式下，您可以在函数中，直接调用`Try`操作，然后将`Confirm`操作写到分支的`OnCommit`，将`Cancel`操作写到分支的`OnRollback`，达到了`Tcc`模式的效果
 
