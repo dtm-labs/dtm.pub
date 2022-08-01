@@ -1,9 +1,9 @@
 # Workflow模式
 
-Workflow 模式是DTM首创推出的模式，在这个模式下，可以混合使用XA、SAGA、TCC，也可以混合使用HTTP、gRPC，用户可以对分布式事务里面的绝大部分内容进行定制，具备极大的灵活性，下面我们以转账场景，讲述如何在Workflow下进行实现。
+Workflow 模式是DTM首创推出的模式，在这个模式下，可以混合使用XA、SAGA、TCC，也可以混合使用HTTP、gRPC、本地操作，用户可以对分布式事务里面的绝大部分内容进行定制，具备极大的灵活性，下面我们以转账场景，讲述如何在Workflow下进行实现。
 
 ## workflow例子
-Workflow模式下，既可以使用HTTP协议，也可以使用gRPC协议，下面以gRPC协议作为例子，一共分为一下几步：
+Workflow模式下，既可以使用HTTP协议，也可以使用gRPC协议，或者是本地操作。下面以gRPC协议作为例子，一共分为一下几步：
 - 初始化 SDK
 - 注册workflow
 - 执行workflow
@@ -115,6 +115,31 @@ XA一共分为两阶段：
 - XA：如果业务没有行锁争抢，那么可以采用XA，这个模式需要的额外开发量比较低，`Commit/Rollback`是数据库自动完成的。例如这个模式适合创建订单业务，不同的订单锁定的订单行不同，相互之间并发无影响；不适合扣减库存，因为涉及同一个商品的订单都会争抢这个商品的行锁，会导致并发度低。
 - Saga：不适合XA的普通业务可以采用这个模式，这个模式额外的开发量比Tcc要少，只需要开发正向操作和补偿操作
 - Tcc：适合一致性要求较高，例如前面介绍的转账，这个模式额外的开发量最多，需要开发包括`Try/Confirm/Cancel`
+
+## gRPC支持
+对gRPC的支持，包括两个方面：
+- 以gRPC协议方式与dtm服务器通信，例如上面例子中，调用上述的`workflow.InitGrpc`初始化后，dtm的SDK会走gRPC接口与dtm服务器交互
+- 以gRPC协议方式访问事务分支，例如上面例子中`reply, err = busi.BusiCli.TransIn(wf.Context, req)`，这个gRPC调用中，会通过gRPC的拦截器，自动将调用结果保存到dtm服务器，并在workflow再次执行时，自动将dtm服务器保存的结果，直接返回给调用者。
+
+## HTTP 支持
+对HTTP的支持，包括两个方面：
+- 以HTTP协议方式与dtm服务器通信，Workflow下的`workflow.InitHTTP`初始化后，dtm的SDK会走HTTP接口与dtm服务器交互
+- 以HTTP协议方式访问事务分支，例如`resp, err := wf.NewBranch().NewRequest().SetBody(req).Post(Busi + "/TransOut")`，在这个HTTP的调用中，会通过HTTP的拦截器，自动将调用结果保存到dtm服务器，并在workflow再次执行时，自动将dtm服务器保存的结果，直接返回给调用者。
+
+## 本地操作支持
+在Workflow模式下，你的事务分支，不仅可以采用HTTP/gRPC等远程分支，也可以是本地操作。下面的代码演示了一个本地事务操作：
+``` Go
+wf.Do(func(bb *dtmcli.BranchBarrier) ([]byte, error) {
+  return nil, bb.CallWithDB(dbGet(), func(tx *sql.Tx) error {
+    return busi.SagaAdjustBalance(tx, busi.TransOutUID, -req.Amount, "")
+  })
+})
+```
+
+您可以进行本地事务操作，也可以进行其他操作，灵活使用
+
+## gRPC/HTTP/本地 混合使用
+在一个分布式事务中，您也可以混合使用gRPC/HTTP/本地 这些方式去处理你的事务分支，可以给您极大的灵活性。对于多技术栈，对于多协议并存，以及将已有的遗留系统接入分布式事务等各种场景，提供了非常好的解决方案。
 
 ## 幂等要求
 在Workflow模式下，当crash发生时，会进行重试，因此要求各个操作支持幂等，即多次调用和一次调用的结果是一样的，返回相同的结果。业务中，通常采用数据库的`unique key`来实现幂等，具体为`insert ignore "unique-key"`，如果插入失败，说明这个操作已完成，此次直接忽略返回；如果插入成功，说明这是首次操作，继续后续的业务操作。
