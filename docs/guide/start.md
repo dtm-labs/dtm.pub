@@ -67,9 +67,10 @@ go run main.go
 在实际的业务中，子事务可能出现失败，例如转入的子账号被冻结导致转账失败。我们对业务代码进行修改，让TransIn的正向操作失败，然后看看结果
 
 ``` go
-	app.POST(qsBusiAPI+"/TransIn", common.WrapHandler(func(c *gin.Context) (interface{}, error) {
-		return M{"dtm_result": "FAILURE"}, nil
-	}))
+	app.POST(qsBusiAPI+"/TransIn", func(c *gin.Context) {
+		log.Printf("TransIn")
+		c.JSON(409, "") // Status 409 表示失败，不再重试，直接回滚
+	})
 ```
 
 再运行这个例子，整个事务最终失败，时序图如下：
