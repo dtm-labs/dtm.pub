@@ -17,11 +17,11 @@ client: [https://github.com/dtm-labs/client](https://github.com/dtm-labs/client)
 [相关博客](../resource/blogs-go)
 
 #### php
-客户端sdk 协程版（支持Hyperf、SAGA、TCC、MSG、子事务屏障）[https://github.com/dtm-php/dtm-client](https://github.com/dtm-php/dtm-client)
+客户端sdk 协程版（支持Hyperf、SAGA、TCC、MSG、XA、子事务屏障）[https://github.com/dtm-php/dtm-client](https://github.com/dtm-php/dtm-client)
 
 示例：[https://github.com/dtm-php/dtm-sample](https://github.com/dtm-php/dtm-sample)
 
-上述SDK由PHP界大佬[黄朝晖](https://github.com/huangzhhui)亲自操刀，并获得Swool创始人推荐，代码质量高，社区活跃
+上述SDK由PHP界大佬[黄朝晖](https://github.com/huangzhhui)亲自操刀设计，主要代码由[PandaLIU-1111](https://github.com/PandaLIU-1111)贡献，并获得Swool创始人推荐，代码质量高，社区活跃
 
 普通版客户端sdk（当前只支持TCC）: [https://github.com/dtm-labs/dtmcli-php](https://github.com/dtm-labs/dtmcli-php)
 
