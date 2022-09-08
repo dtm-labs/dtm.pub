@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'DTM教程',
+  title: 'DTM开源项目文档',
   description: 'GO语言分布式事务管理服务',
   lang: 'zh-CN',
   head: [
