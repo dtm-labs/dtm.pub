@@ -65,6 +65,34 @@ app.GET(BusiAPI+"/QueryPreparedB", dtmutil.WrapHandler2(func(c *gin.Context) int
 
 至此，一个完整的二阶段消息分布式事务编写完成。
 
+## 按topic投递消息
+
+您还可以通过按topic投递消息来实现分支事务调用。
+
+首先为执行分支事务的API订阅名为`TransIn` 的topic：
+
+> 这一步可以在管理后台完成
+
+```go
+resp, err := dtmcli.GetRestyClient().R().SetQueryParams(map[string]string{
+		"topic":  "TransIn",
+		"url":    busi.Busi+"/SagaBTransIn",
+		"remark": "trans in api",
+	}).Get(dtmutil.DefaultHTTPServer + "/subscribe")
+```
+
+然后开启二阶段消息事务，通过向该topic投递消息实现分支事务调用
+
+```go
+		msg := dtmcli.NewMsg(DtmServer, shortuuid.New()).
+			AddTopic("TransIn", &TransReq{ Amount: 30 })
+		err := msg.DoAndSubmitDB(busi.Busi+"/QueryPreparedB", dbGet(), func(tx *sql.Tx) error {
+			return busi.SagaAdjustBalance(tx, busi.TransOutUID, -req.Amount)
+		})
+```
+
+需要注意的是，topic订阅信息的变更有一个生效时间，由`ConfigUpdateInterval`参数决定。
+
 ## 运行
 如果您想要完整运行一个成功的示例，步骤如下：
 1. 运行dtm
