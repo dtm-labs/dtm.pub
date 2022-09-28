@@ -21,7 +21,7 @@ client: [https://github.com/dtm-labs/client](https://github.com/dtm-labs/client)
 
 示例：[https://github.com/dtm-php/dtm-sample](https://github.com/dtm-php/dtm-sample)
 
-上述SDK由PHP界大佬[黄朝晖](https://github.com/huangzhhui)发起，并亲自操刀设计，主要代码由[PandaLIU-1111](https://github.com/PandaLIU-1111)贡献，并获得Swool创始人推荐，代码质量高，社区活跃
+上述SDK由PHP界大佬[黄朝晖](https://github.com/huangzhhui)发起，并亲自操刀设计，主要代码由[PandaLIU-1111](https://github.com/PandaLIU-1111)贡献，并获得Swoole创始人推荐，代码质量高，社区活跃
 
 普通版客户端sdk（当前只支持TCC）: [https://github.com/dtm-labs/dtmcli-php](https://github.com/dtm-labs/dtmcli-php)
 
