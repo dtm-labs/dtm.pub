@@ -47,6 +47,13 @@ dtm从v1.6.3开始原生支持grpc-polaris微服务框架
 
 具体的接入指南待完善
 
+## ego
+[EGO](https://github.com/gotomicro/ego)是一个集成了各种工程实践的框架。通过组件化的设计模式，保证了业务方能够统一的调用方式启动各种组件。
+
+dtm从v1.16.3开始原生支持ego，该微服务驱动由[vicnoah](https://github.com/vicnoah)完成，非常感谢[vicnoah](https://github.com/vicnoah)的接触贡献
+
+详细使用方式参考 [https://github.com/dtm-labs/dtmdriver-clients/tree/main/ego](https://github.com/dtm-labs/dtmdriver-clients/tree/main/ego)
+
 #### 其他
 其他gRPC之上的微服务框架协议，正在快速接入中，如果您有相关的需求或者您是框架维护者，欢迎联系我(微信yedf2008)，我们将非常乐意接入您的微服务框架
 
