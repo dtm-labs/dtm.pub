@@ -115,7 +115,7 @@ module.exports = {
               link: '/practice/saga'
             },
             {
-              text: '二阶消息',
+              text: '二阶段消息',
               link: '/practice/msg'
             },
             {
