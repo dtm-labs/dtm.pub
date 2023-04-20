@@ -131,7 +131,7 @@ module.exports = {
               link: '/practice/workflow'
             },
             {
-              text: '其他',
+              text: '其他事务模式',
               link: '/practice/other'
             },
             {
