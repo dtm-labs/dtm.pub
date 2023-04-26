@@ -115,7 +115,7 @@ module.exports = {
               link: '/practice/saga'
             },
             {
-              text: '二阶消息',
+              text: '二阶段消息',
               link: '/practice/msg'
             },
             {
@@ -131,7 +131,7 @@ module.exports = {
               link: '/practice/workflow'
             },
             {
-              text: '其他',
+              text: '其他事务模式',
               link: '/practice/other'
             },
             {
