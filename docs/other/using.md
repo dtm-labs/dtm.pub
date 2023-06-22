@@ -41,7 +41,12 @@ dtm的这几个特性是优先考虑腾讯同学的需求开发的：
     <img alt='360' height='80'  src='../imgs/company/360.png'  />
     <img alt='聚爱优选' height='80'  src='../imgs/company/juaiyouxuan.png'  />
     <img alt='竹芒科技' height='80'  src='../imgs/company/zhumangkeji.jpeg'  />
-    <img alt='镜小二' height='80'  src='../imgs/company/eglass.png'  />
-    <img alt='极欧科技' height='80'  src='../imgs/company/jiou.png'  />
     <img alt='金数智联' height='80'  src='../imgs/company/gdci.png'  />
+    <img alt='控维通信' height='80'  src='../imgs/company/cowave.png'  />
+    <img alt='托云信息' height='80'  src='../imgs/company/openim.png'  />
+    <img alt='遇乐网络' height='80'  src='../imgs/company/yzg.png'  />
+    <img alt='深信服科技' height='80'  src='../imgs/company/sangfor.png'  />
+    <img alt='华中时讯' height='80'  src='../imgs/company/sencent.png'  />
+    <img alt='云飞CLOUDFIT' height='80'  src='../imgs/company/cloudfit.png'  />
+    <img alt='建发致新' height='80'  src='../imgs/company/jfzx.png'  />
 </div>
