@@ -14,7 +14,7 @@ DTM是一款开源的分布式事务管理器，解决跨数据库、跨服务�
 
 [ByteDance 字节](../other/using#bytedance)
 
-[360](../other/using#360)
+[360](../other/using#qihu)
 
 [更多](../other/using)
 

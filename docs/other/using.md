@@ -26,7 +26,7 @@ dtm的这几个特性是优先考虑腾讯同学的需求开发的：
 
 [公司官网](https://www.bytedance.com)
 
-### 360 {#360}
+### 360 {#qihu}
 360 公司的新交易平台使用了dtm，详细的使用情况参考这篇文章 [DTM在新交易平台的落地](https://mp.weixin.qq.com/s/iG9eKnZEdYCIVriktiXdYw)
 
 [公司官网](https://www.360.cn/)
