@@ -36,8 +36,8 @@ dtm的这几个特性是优先考虑腾讯同学的需求开发的：
 下面仅包含部分使用者
 
 <div style='vertical-align: middle'>
-    <img alt='腾讯' height='80'  src='../imgs/company/tencent.jpeg'  />
-    <img alt='字节' height='80'  src='../imgs/company/bytedance.webp'  />
+    <img alt='腾讯' height='160'  src='../imgs/company/tencent.jpeg'  />
+    <img alt='字节' height='160'  src='../imgs/company/bytedance.webp'  />
     <img alt='360' height='80'  src='../imgs/company/360.png'  />
     <img alt='聚爱优选' height='80'  src='../imgs/company/juaiyouxuan.png'  />
     <img alt='竹芒科技' height='80'  src='../imgs/company/zhumangkeji.jpeg'  />
