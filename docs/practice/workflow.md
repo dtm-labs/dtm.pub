@@ -3,7 +3,7 @@
 Workflow 模式是DTM首创推出的模式，在这个模式下，可以混合使用XA、SAGA、TCC，也可以混合使用HTTP、gRPC、本地操作，用户可以对分布式事务里面的绝大部分内容进行定制，具备极大的灵活性，下面我们以转账场景，讲述如何在Workflow下进行实现。
 
 ## workflow例子
-Workflow模式下，既可以使用HTTP协议，也可以使用gRPC协议，或者是本地操作。下面以gRPC协议作为例子，一共分为一下几步：
+Workflow模式下，既可以使用HTTP协议，也可以使用gRPC协议，或者是本地操作。下面以gRPC协议作为例子，一共分为以下几步：
 - 初始化 SDK
 - 注册workflow
 - 执行workflow

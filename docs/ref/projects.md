@@ -12,7 +12,7 @@
 
 ## 主项目dtm
 
-dtm项目主要有一下几个目录
+dtm项目主要有以下几个目录
 
 - admin: 管理后台，技术栈为 vue3 + typescript + vite + pinia
 - bench: 性能测试的服务器代码，以及相关的测试脚本
