@@ -84,7 +84,7 @@ app.POST(BusiAPI+"/TccBTransInTry", dtmutil.WrapHandler2(func(c *gin.Context) in
     return tccAdjustTrading(tx, TransInUID, req.Amount)
   })
 }))
-app.POST(BusiAPI+"/TccBTransOutConfirm", dtmutil.WrapHandler2(func(c *gin.Context) interface{} {
+app.POST(BusiAPI+"/TccBTransInConfirm", dtmutil.WrapHandler2(func(c *gin.Context) interface{} {
   bb := MustBarrierFromGin(c)
   return bb.Call(txGet(), func(tx *sql.Tx) error {
     return tccAdjustBalance(tx, TransInUID, reqFrom(c).Amount)
