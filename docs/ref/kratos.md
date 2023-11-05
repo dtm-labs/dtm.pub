@@ -61,16 +61,38 @@ INFO msg=[gRPC] server listening on: [::]:9000
 参考 [dtm-labs/dtmdriver-clients](https://github.com/dtm-labs/dtmdriver-clients/blob/main/kratos/app/main.go) 的代码
 
 ```go
-// 下面这些导入 kratos 的 dtm 驱动
+
 import (
+	"github.com/dtm-labs/client/dtmcli/logger"
+	"github.com/dtm-labs/client/dtmgrpc"
+  // 导入 kratos 的 dtm 驱动
 	_ "github.com/dtm-labs/driver-kratos"
+	"github.com/dtm-labs/dtmdriver-clients/busi"
+	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
+	"github.com/go-kratos/kratos/v2/transport/grpc/resolver/discovery"
+	etcdAPI "go.etcd.io/etcd/client/v3"
+	"google.golang.org/grpc/resolver"
+	"strings"
 )
 
-// dtm 已经经过前面的配置，注册到下面这个地址，因此在 dtmgrpc 中使用该地址
-var dtmServer = "etcd://localhost:2379/dtmservice"
+var etcdServer = "localhost:2379"
+//采用Kratos的方法创建registry, https://go-kratos.dev/docs/component/registry/
+client, err := etcdAPI.New(etcdAPI.Config{
+  Endpoints: strings.Split(etcdServer, ","),
+})
+if err != nil {
+  panic(err)
+}
+registry := etcd.New(client)
 
-// 业务地址，下面的 busi 换成实际在 server 初始化设置的名字
-var busiServer = "discovery://localhost:2379/busi"
+//注册全局的resolver,  现在business server可以使用 discovery:///dtmservice 来访问dtm
+resolver.Register(discovery.NewBuilder(registry, discovery.WithInsecure(true)))
+
+
+var dtmServer = "discovery:///dtmservice"
+
+// 业务地址，下面的 busi 换成实际在 server 初始化设置的名字, dtm将采用registry来访问busi
+var busiServer = "discovery:///busi"
 
 // 发起一个msg事务，保证TransOut和TransIn都会完成
 gid := dtmgrpc.MustGenGid(dtmServer)
@@ -102,11 +124,6 @@ grpc 的调用，可以类比于 HTTP 的 POST，其中：
 
 kratos 的微服务还有非 etcd 的其他方式，下面列出它们的接入方式
 
-#### 直连
-
-对于直连这种方式，您只需要在上面 dtm 的 etcd 配置基础上，将 Target 设置为空字符串即可。
-
-直连的情况，不需要将 dtm 注册到注册中心
 
 #### Consul
 
@@ -122,13 +139,31 @@ MicroService:
 
 ```go
 // client:
-// dtm 已经经过前面的配置，注册到下面这个地址，因此在 dtmgrpc 中使用该地址
-var dtmServer = "consul://localhost:8500/dtmservice"
+import(
+  consulAPI "github.com/hashicorp/consul/api"
+  consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
+  ...
+)
+var consulServer = "localhost:2379"
+//采用Kratos的方法创建registry, https://go-kratos.dev/docs/component/registry/
+client, err := consulAPI.New(consulAPI.Config{
+  Endpoints: strings.Split(consulServer, ","),
+})
+if err != nil {
+  panic(err)
+}
+registry := consul.New(client)
 
-// 业务地址，下面的 busi 换成实际在 server 初始化设置的名字，对于 kratos 应用地址遵循框架即可，不用变动
-var busiServer = "discovery://localhost:8500/busi"
+//注册全局的resolver,  现在business server可以使用 discovery:///dtmservice 来访问dtm
+resolver.Register(discovery.NewBuilder(registry, discovery.WithInsecure(true)))
+
 
 // 实际的调用逻辑
+var dtmServer = "discovery:///dtmservice"
+
+// 业务地址，下面的 busi 换成实际在 server 初始化设置的名字
+var busiServer = "discovery:///busi"
+
 ...
 ```
 
