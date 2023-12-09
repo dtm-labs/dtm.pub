@@ -201,6 +201,10 @@ module.exports = {
               link: '/ref/gozero'
             },
             {
+              text: 'kratos对接',
+              link: '/ref/kratos'
+            },
+            {
               text: 'HTTP 参考',
               link: '/ref/http'
             },
